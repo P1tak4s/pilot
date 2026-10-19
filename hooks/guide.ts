@@ -38,6 +38,12 @@ Mark deliberate simplifications with a "ponytail:" comment naming the ceiling an
 - Lithuanian copy anywhere in the UI: lt-rasyba. Charts or dashboards: dataviz.
 Do not load several design skills for one small change; one is enough.
 
+## SEO and AI search: the seo-geo skill
+Load seo-geo (bundled with pilot) for anything about search visibility: titles and meta, indexing, sitemaps,
+robots.txt, Core Web Vitals, schema/JSON-LD, AI search citations (AI Overviews, ChatGPT, Perplexity),
+llms.txt, local SEO and Business Profile, hreflang, programmatic pages, audits. Lithuanian sites:
+its references/lithuania.md. Before a full audit, show the plan and wait for a yes.
+
 ## Security: the security-audit skill
 Load the security-audit skill (bundled with this plugin, Cloudflare's) in guidance mode for any change that touches
 auth, sessions, tokens, payments, money or tax, file uploads, user input reaching SQL/shell/HTML, permissions/RLS,

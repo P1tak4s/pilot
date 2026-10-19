@@ -12,6 +12,7 @@ A Claude Code plugin that spends your usage where it matters.
   The higher the effort, the slower it moves.
 - **Compaction by Haiku**, far cheaper than the chat's model.
 - **Design.** Bundles the [ui-ux skill](https://github.com/P1tak4s/ui-ux-skill): direction, type, colour, motion and review for any UI change.
+- **SEO and AI search.** Bundles the [seo-geo skill](https://github.com/P1tak4s/seo-geo-skill): technical SEO, content, schema, AI citations, local, hreflang.
 - **Security.** Bundles Cloudflare's [security-audit skill](https://github.com/cloudflare/security-audit-skill).
 
 ## Install
