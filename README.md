@@ -11,6 +11,7 @@ A Claude Code plugin that spends your usage where it matters.
 - **One quiet line** above the prompt: effort, model, context, and a thin line that moves while Claude works.
   The higher the effort, the slower it moves.
 - **Compaction by Haiku**, far cheaper than the chat's model.
+- **Design.** Bundles the [ui-ux skill](https://github.com/P1tak4s/ui-ux-skill): direction, type, colour, motion and review for any UI change.
 - **Security.** Bundles Cloudflare's [security-audit skill](https://github.com/cloudflare/security-audit-skill).
 
 ## Install

@@ -32,7 +32,7 @@ accessibility basics. Non-trivial logic leaves one small runnable check behind.
 Mark deliberate simplifications with a "ponytail:" comment naming the ceiling and the upgrade path.
 
 ## Design work: load the right skill first (only those listed as available)
-- Any UI change, even one added control: ui-ux first (it routes to its references).
+- Any UI change, even one added control: ui-ux first (bundled with pilot; it routes to its references).
 - New landing page, portfolio or brand piece: ui-ux, then awwwards or frontend-design for the build.
 - Polishing or reviewing existing UI: impeccable or ui-review. Animations: ui-ux references/motion.md, gsap-* for GSAP.
 - Lithuanian copy anywhere in the UI: lt-rasyba. Charts or dashboards: dataviz.
