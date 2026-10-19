@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>textless for Claude Code</title>
+<meta name="description" content="A Claude Code mod that hides the step-by-step text while Claude works. You see pixel art, a quote, a scene from the Marketplace or a game of chess instead, then the answer.">
+<meta name="theme-color" content="#1a1614">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%222%202%2060%2060%22%20shape-rendering%3D%22crispEdges%22%3E%3Cmask%20id%3D%22aa32%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%23fff%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%2235%22%20width%3D%2258%22%20height%3D%221%22%20fill%3D%22%23000%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%2239%22%20width%3D%2258%22%20height%3D%221%22%20fill%3D%22%23000%22%2F%3E%3C%2Fmask%3E%3Cg%20fill%3D%22%23d97757%22%3E%3Cg%20mask%3D%22url(%23aa32)%22%3E%3Crect%20x%3D%2219%22%20y%3D%2217%22%20width%3D%224%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%2218%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%2219%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2218%22%20y%3D%2220%22%20width%3D%227%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2221%22%20width%3D%228%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%2222%22%20width%3D%228%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%2223%22%20width%3D%2210%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%2224%22%20width%3D%2210%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2215%22%20y%3D%2225%22%20width%3D%2212%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2215%22%20y%3D%2226%22%20width%3D%2212%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2244%22%20y%3D%2226%22%20width%3D%224%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2215%22%20y%3D%2227%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2222%22%20y%3D%2227%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2241%22%20y%3D%2227%22%20width%3D%229%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2252%22%20y%3D%2227%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2228%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2222%22%20y%3D%2228%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2240%22%20y%3D%2228%22%20width%3D%2217%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2229%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2223%22%20y%3D%2229%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2239%22%20y%3D%2229%22%20width%3D%2218%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%2230%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2223%22%20y%3D%2230%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2238%22%20y%3D%2230%22%20width%3D%2219%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%2231%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2223%22%20y%3D%2231%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2237%22%20y%3D%2231%22%20width%3D%229%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2248%22%20y%3D%2231%22%20width%3D%229%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%2232%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2232%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2237%22%20y%3D%2232%22%20width%3D%227%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2250%22%20y%3D%2232%22%20width%3D%227%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2233%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2233%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2237%22%20y%3D%2233%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2251%22%20y%3D%2233%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2234%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2234%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2236%22%20y%3D%2234%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2252%22%20y%3D%2234%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%2235%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2225%22%20y%3D%2235%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2236%22%20y%3D%2235%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2252%22%20y%3D%2235%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%2236%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2225%22%20y%3D%2236%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2236%22%20y%3D%2236%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2252%22%20y%3D%2236%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%2237%22%20width%3D%2220%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2236%22%20y%3D%2237%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2252%22%20y%3D%2237%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%2238%22%20width%3D%2222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2236%22%20y%3D%2238%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2252%22%20y%3D%2238%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%2239%22%20width%3D%2222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2236%22%20y%3D%2239%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2252%22%20y%3D%2239%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2240%22%20width%3D%2224%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2237%22%20y%3D%2240%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2251%22%20y%3D%2240%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2241%22%20width%3D%2224%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2237%22%20y%3D%2241%22%20width%3D%227%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2250%22%20y%3D%2241%22%20width%3D%227%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2242%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2227%22%20y%3D%2242%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2238%22%20y%3D%2242%22%20width%3D%2219%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%2243%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2228%22%20y%3D%2243%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2238%22%20y%3D%2243%22%20width%3D%2219%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%2244%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2228%22%20y%3D%2244%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2239%22%20y%3D%2244%22%20width%3D%2218%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%2245%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2229%22%20y%3D%2245%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2240%22%20y%3D%2245%22%20width%3D%2217%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%2246%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2229%22%20y%3D%2246%22%20width%3D%226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2242%22%20y%3D%2246%22%20width%3D%228%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2252%22%20y%3D%2246%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3C%2Fg%3E%3Crect%20x%3D%224%22%20y%3D%2236%22%20width%3D%2256%22%20height%3D%223%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600&family=Pixelify+Sans:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Warm near-black like a campfire night, Clawd orange from the plugin, and paper for text. The same type as effortless:
+   Outfit for the name and headings, Inter for reading. Pixels only where the plugin draws them. */
+:root{--night:#1a1614;--panel:#241e1b;--panel2:#2e2622;--line:#3a302b;--orange:#d97757;--drop:#a8573c;--paper:#ece6dc;--body:#d6cfc9;--mute:#a39a93;--dim:#857b74;--sans:Inter,"Segoe UI",system-ui,-apple-system,sans-serif;--display:Outfit,Inter,"Segoe UI",system-ui,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--frame:clamp(16px,4vw,48px);color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+/* Pixels behind the page: faint ones flicker along the screen's edges. */
+#px-bg{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+body{margin:0;background:var(--night);color:var(--paper);font:17px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img{display:block}
+:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
+
+/* Top bar */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px var(--frame);background:#1a1614e6;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.brand{display:inline-flex;align-items:center;gap:10px;font:500 23px var(--display);letter-spacing:-.01em;text-decoration:none}
+.brand .logo{width:36px;height:auto}
+.top nav{display:flex;align-items:center;gap:26px}
+.top nav a{color:var(--mute);text-decoration:none;font-size:15.5px}
+.top nav a:hover{color:var(--paper)}
+.top .get{display:inline-flex;align-items:center;height:38px;padding:0 16px;border-radius:9px;background:var(--orange);color:#1b120d;font-weight:700;font-size:15px;text-decoration:none}
+.top .get:hover{background:#e3896b}
+
+main{max-width:1180px;margin:0 auto;padding:0 var(--frame)}
+section{scroll-margin-top:80px}
+h1,h2,h3{margin:0;font-family:var(--display);font-weight:500;letter-spacing:-.02em;color:var(--paper)}
+h2{font-size:clamp(30px,3.6vw,42px);line-height:1.12}
+.lead{margin:14px 0 0;max-width:34em;color:var(--body);font-size:18.5px}
+
+/* Hero: the name and the pitch, then the comparison under them at full width. */
+.hero{padding:64px 0 100px}
+/* The name, as big as the page allows, then the claim and the buttons on one line under it. */
+/* Everything above the window is centred: the name, one line, the buttons. */
+.intro{text-align:center}
+.intro h1{justify-content:center;margin:0 0 28px}
+.sub{display:flex;flex-direction:column;align-items:center;gap:26px}
+.hero h1{display:flex;align-items:center;gap:.2em;font:500 clamp(64px,13.5vw,196px)/.95 var(--display);letter-spacing:-.035em}
+.hero h1 .logo{width:1.1em;height:auto;flex-shrink:0;margin-top:.12em}
+/* The word goes soft at its bottom right, like effortless: a crisp copy fades out there and a grainy blurred copy
+   takes over. */
+.word{position:relative;display:inline-block;padding:0 .08em .12em 0}
+.word .crisp{-webkit-mask-image:radial-gradient(46% 80% at 100% 100%,transparent 15%,#000 85%);mask-image:radial-gradient(46% 80% at 100% 100%,transparent 15%,#000 85%)}
+.word .soft{position:absolute;left:0;top:0;padding:0 .3em .3em 0;color:var(--paper);filter:url(#grainy);-webkit-mask-image:radial-gradient(40% 72% at 86% 82%,#000 30%,transparent 100%);mask-image:radial-gradient(40% 72% at 86% 82%,#000 30%,transparent 100%);pointer-events:none;user-select:none}
+.claim{margin:0;font:500 clamp(24px,2.4vw,30px)/1.2 var(--display);letter-spacing:-.015em;color:var(--paper)}
+.claim .hl{font-style:normal;color:var(--orange)}
+.claim .wall{position:relative;color:var(--body);white-space:nowrap}
+.claim .wall::after{content:"";position:absolute;left:-2px;right:-2px;top:54%;height:4px;background:repeating-linear-gradient(90deg,var(--orange) 0 6px,transparent 6px 9px)}
+.hero .lead{margin:12px auto 0;max-width:36em;font-size:18px;text-wrap:balance}
+.acts{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.btn.gh{background:#f4f3f1;color:#161210;padding-left:16px}
+.btn.gh:hover{background:#fff}
+.btn.gh svg{width:20px;height:20px}
+.btn.gh .stars{margin-left:2px;padding:3px 8px;border-radius:6px;background:#e4e1dd;font-size:13px;font-variant-numeric:tabular-nums}
+.btn{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 20px;border-radius:10px;font:600 16px var(--sans);text-decoration:none;cursor:pointer;border:0}
+.btn .ico{width:19px;height:19px;flex:none}
+.n.mk{display:inline-flex;align-items:center;gap:6px}.n.mk .ico{width:15px;height:15px}
+.btn.main{background:var(--orange);color:#1b120d}
+.btn.main:hover{background:#e3896b}
+.btn.quiet{background:transparent;color:var(--paper);border:1px solid var(--line)}
+.btn.quiet:hover{background:var(--panel)}
+/* Hover: a few pixels pop out on each side of a button, in the button's own colour, moving in pixel steps. */
+.btn{position:relative;--px:var(--orange)}
+.btn.gh{--px:#f4f3f1}
+.btn.quiet{--px:var(--line)}
+.btn::before,.btn::after{content:"";position:absolute;top:50%;width:5px;height:5px;margin-top:-3px;opacity:0;pointer-events:none}
+.btn::before{left:-12px;box-shadow:0 -11px var(--px),-8px 0 var(--px),0 11px var(--px),-16px -6px var(--px),-13px 8px var(--px),-24px 2px var(--px)}
+.btn::after{right:-12px;box-shadow:0 -11px var(--px),8px 0 var(--px),0 11px var(--px),16px -6px var(--px),13px 8px var(--px),24px 2px var(--px)}
+.btn:hover::before{animation:pxl .42s steps(4) forwards}
+.btn:hover::after{animation:pxr .42s steps(4) forwards}
+@keyframes pxl{0%{opacity:1;transform:translateX(8px) scale(.5)}60%{opacity:1}100%{opacity:0;transform:translateX(-6px) scale(1)}}
+@keyframes pxr{0%{opacity:1;transform:translateX(-8px) scale(.5)}60%{opacity:1}100%{opacity:0;transform:translateX(6px) scale(1)}}
+@media (prefers-reduced-motion:reduce){.btn:hover::before,.btn:hover::after{animation:none}}
+
+
+/* The comparison: Claude Code's desktop app, four chats split side by side, in the app's own colours. The plain
+   window is underneath; the same window with textless sits on top, cut away left of the handle, so the handle wipes
+   the mod in from the right. */
+.compare{--x:50%;--cc:#151515;--cc2:#1e1e1e;--cc3:#2b2b2a;--cct:#e3e2de;--ccm:#9c9b97;--ccd:#6d6c69;position:relative;margin-top:52px;border-radius:12px;background:var(--cc);border:1px solid #2c2c2b;box-shadow:0 40px 90px -40px #000;overflow:hidden;user-select:none;touch-action:pan-y;color:var(--cct);font-family:var(--sans)}
+.compare svg.i{width:16px;height:16px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.appbar{display:flex;align-items:center;gap:16px;padding:10px 14px;color:var(--ccm)}
+.appbar .gap,.strip .gap{flex:1}
+.sides{position:relative}
+.side{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--cc)}
+.after{position:absolute;inset:0;clip-path:inset(0 0 0 var(--x));-webkit-clip-path:inset(0 0 0 var(--x))}
+.pane{display:flex;flex-direction:column;height:520px;min-width:0;padding:0 12px 10px;border-left:1px solid #232322}
+.pane:first-child{border-left:0}
+.ph{display:flex;align-items:center;gap:8px;height:42px;color:var(--ccm)}
+.ph b{color:var(--cct);font-weight:500;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph .tools{display:flex;gap:12px;margin-left:auto}
+.pc{position:relative;flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:12px;padding:10px 4px 14px}
+.before .pc{justify-content:flex-end;-webkit-mask-image:linear-gradient(180deg,transparent,#000 18%);mask-image:linear-gradient(180deg,transparent,#000 18%)}
+.you{align-self:flex-end;max-width:92%;margin:0;padding:9px 13px;border-radius:12px;background:var(--cc2);color:var(--cct);font-size:14px;line-height:1.45}
+.say,.ans{margin:0;color:var(--cct);font-size:14px;line-height:1.55}
+.st{display:flex;align-items:center;gap:6px;margin:0;color:var(--ccd);font-size:14px;line-height:1.4}
+.st i{font-style:normal;color:var(--ccd)}
+.st.run{color:var(--ccm)}
+.st.cut{color:var(--ccd);font-style:italic}
+.spin{width:11px;height:11px;border-radius:50%;border:1.6px solid #4a4a48;border-top-color:var(--ccm);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.asks{display:flex;flex-direction:column;gap:10px;padding-left:2px}
+.ask{display:flex;align-items:flex-start;gap:8px;color:var(--cct);font-size:14px;line-height:1.45}
+.ask-n{color:var(--orange);font-weight:700;min-width:8px}
+.ask-badge{flex:none;margin-top:1px}
+.ask-b p{margin:0;font-weight:600}
+.ask-b .ask-o{display:flex;gap:8px;margin-top:3px;font-weight:400}
+.ask-o b{color:var(--orange)}
+.ask-sep{display:block;width:120px;height:1px;background:var(--orange);opacity:.7;margin-left:16px}
+.card{display:flex;flex-direction:column;align-items:center;gap:6px;margin:auto 0}
+.card .ctl{align-self:flex-end;display:flex;align-items:center;gap:9px;margin-bottom:2px;color:var(--ccm)}
+.card .ctl svg.i{width:14px;height:14px}
+.card .ctl .aa{padding:0;color:var(--orange);font-weight:700;font-size:13px;text-decoration:line-through;text-decoration-thickness:1.5px}
+.card img{width:100%;height:190px;object-fit:contain;image-rendering:pixelated}
+.card img[src$=".webp"]{image-rendering:auto}
+.card .busy{margin:4px 0 0;color:var(--orange);font-weight:600;font-size:14px}
+.card .step{margin:0;color:var(--ccm);font-size:13px}
+.row{display:flex;flex-direction:column;gap:6px}
+.facts{color:var(--ccd);font-size:12.5px}
+.facts span{margin-left:12px}
+.mark svg{display:block;max-width:100%;height:auto}
+.composer{display:flex;align-items:center;justify-content:space-between;gap:8px;white-space:nowrap;overflow:hidden;height:46px;padding:0 12px;border-radius:12px;background:var(--cc2);border:1px solid #262625;color:var(--ccd);font-size:14px}
+.strip{display:flex;align-items:center;gap:7px;height:34px;padding:0 4px;color:var(--ccm);font-size:13px;white-space:nowrap;overflow:hidden}
+/* The app's strip is wider than a quarter of this window: the mic, the menu arrow and Fast make way for the marks. */
+.strip>svg:nth-child(2),.strip>svg:nth-child(3),.strip .fast{display:none}
+.strip .model{color:var(--cct)}
+.strip .fast{color:var(--ccd)}
+.strip .ring{width:12px;height:12px;border-radius:50%;border:1.6px solid #3d6fd0;border-right-color:transparent}
+.tl{display:inline-flex;align-items:center;gap:9px;color:var(--ccm)}
+.tl .aa{color:var(--orange);font-weight:700;text-decoration:line-through;text-decoration-thickness:1.5px}
+.big-strip[data-on=true] .aa{color:var(--orange);font-weight:700;text-decoration:line-through;text-decoration-thickness:2px}
+.aa{padding:1px 4px;border-radius:5px;color:var(--mute)}
+.handle{position:absolute;top:0;bottom:0;left:var(--x);width:2px;margin-left:-1px;background:var(--orange);pointer-events:none}
+.knob{position:absolute;top:50%;left:50%;display:grid;place-items:center;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:var(--orange);color:#1b120d;font:600 15px var(--sans);box-shadow:0 6px 20px -6px #000a}
+.drag{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;pointer-events:none;-webkit-appearance:none;appearance:none}
+.compare{cursor:ew-resize}
+.compare.held{cursor:grabbing}
+.knob{transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s}
+.compare:hover .knob{transform:scale(1.06)}
+.compare.held .knob{transform:scale(.92);box-shadow:0 2px 10px -4px #000a}
+.compare:has(.drag:focus-visible) .knob{outline:2px solid var(--paper);outline-offset:3px}
+/* Before and After ride along with the knob, one each side, so the two halves always say which is which. */
+.ba{position:absolute;top:50%;margin-top:-14px;height:28px;display:flex;align-items:center;padding:0 12px;border-radius:999px;font:600 13px var(--sans);white-space:nowrap;box-shadow:0 6px 18px -8px #000}
+.ba.b{right:34px;background:#2b2b2a;color:var(--cct)}
+.ba.a{left:34px;background:var(--orange);color:#1b120d}
+/* The set picker: a strip of little screens, one real scene from each set, and an orange pixel bar that slides
+   under the one showing. */
+/* The set picker is the art itself: no frames. The picked set is in colour and a size up, the rest small and grey;
+   its name, the only label, slides under it. */
+.setpick{position:relative;display:flex;justify-content:center;align-items:center;gap:clamp(14px,3vw,40px);margin:34px auto 0;padding-bottom:30px;width:max-content;max-width:100%}
+.setpick button{padding:0;border:0;background:none;cursor:pointer;transform:scale(.78);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.setpick img{display:block;height:84px;width:auto;max-width:150px;image-rendering:pixelated;filter:grayscale(1) brightness(.55);transition:filter .3s}
+.setpick button:hover img,.setpick button:focus-visible img{filter:grayscale(.2) brightness(.9)}
+.setpick button[aria-pressed="true"]{transform:scale(1)}
+.setpick button[aria-pressed="true"] img{filter:none}
+.setpick button:focus-visible{outline:none}
+.setpick .bar{position:absolute;bottom:0;left:0;white-space:nowrap;color:var(--orange);font:600 12px var(--mono,monospace);letter-spacing:.14em;text-transform:uppercase;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+@media (max-width:560px){.setpick img{height:52px;max-width:90px}}
+.tags{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px;color:var(--mute);font-size:14.5px}
+.tags b{color:var(--paper);font-weight:600}
+.tags .on b{color:var(--orange)}
+.tags button{padding:7px 14px;border:1px solid var(--line);border-radius:8px;background:none;color:var(--paper);font:14px var(--sans);cursor:pointer}
+.tags button:hover{background:var(--panel)}
+.icon{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:28px;padding:0 6px;border:0;border-radius:6px;background:none;color:var(--mute);font:15px var(--sans);cursor:pointer}
+.icon:hover{background:#2e2622;color:var(--paper)}
+.icon[aria-pressed=true]{color:var(--orange)}
+
+/* Scenes */
+.scenes{padding:40px 0 100px}
+/* The marquee: rows run edge to edge of the window, fading out at both sides, and stop under the cursor or focus. */
+body{overflow-x:clip}
+.mq-wrap{position:relative;left:50%;width:100vw;overflow:hidden;margin:36px 0 0;transform:translateX(-50%);display:grid;gap:16px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.mq{display:flex;width:max-content}
+.track{display:flex;gap:40px;align-items:flex-end;margin:0;padding:0 8px;list-style:none;animation:mq var(--dur,60s) linear infinite}
+.mq.back .track{animation-direction:reverse}
+.mq-wrap:hover .track,.mq-wrap:focus-within .track{animation-play-state:paused}
+@keyframes mq{to{transform:translateX(-100%)}}
+/* The scenes float on the page: no boxes, the art's own faded edges do the framing. One height for all. */
+.scene-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 0 12px;border:0;background:none;cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.scene-card img{display:block;height:150px;width:auto;max-width:300px;image-rendering:pixelated;filter:brightness(.82);transition:filter .25s}
+.scene-card span{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);white-space:nowrap;color:var(--mute);font:600 11.5px var(--mono,monospace);letter-spacing:.06em;text-transform:uppercase;opacity:0;transition:opacity .2s}
+.scene-card::after{content:"";position:absolute;left:30%;right:30%;bottom:2px;height:4px;background:repeating-linear-gradient(90deg,var(--orange) 0 6px,transparent 6px 8px);opacity:0;transition:opacity .2s}
+.scene-card:hover,.scene-card:focus-visible{transform:translateY(-4px)}
+.scene-card:hover img,.scene-card:focus-visible img,.scene-card[aria-pressed=true] img{filter:none}
+.scene-card:hover span,.scene-card:focus-visible span{opacity:1}
+.scene-card[aria-pressed=true]::after{opacity:1}
+.scene-card:focus-visible{outline:none}
+@media (max-width:760px){.scene-card img{height:112px}}
+.picked{margin:18px 0 0;min-height:1.5em;color:var(--mute);font-size:15px;text-align:center}
+.picked a{color:var(--paper)}
+.yours{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:720px;margin:64px auto 0;padding:40px 24px 34px;text-decoration:none;color:var(--body);text-align:center;border-radius:6px;background:
+  linear-gradient(90deg,var(--orange) 50%,transparent 0) top/16px 3px repeat-x,
+  linear-gradient(90deg,var(--orange) 50%,transparent 0) bottom/16px 3px repeat-x,
+  linear-gradient(0deg,var(--orange) 50%,transparent 0) left/3px 16px repeat-y,
+  linear-gradient(0deg,var(--orange) 50%,transparent 0) right/3px 16px repeat-y,#d977570d;transition:background-color .2s,transform .2s}
+.yours:hover{background-color:#d977571f;transform:translateY(-2px)}
+.y-plus{width:36px;height:36px;background:linear-gradient(var(--orange),var(--orange)) center/36px 8px no-repeat,linear-gradient(var(--orange),var(--orange)) center/8px 36px no-repeat}
+.y-h{font:500 clamp(22px,2.4vw,28px)/1.2 var(--display);color:var(--paper)}
+.y-note{color:var(--mute);font:14.5px var(--sans)}
+.yours .btn .ico{width:19px;height:19px}
+@media (prefers-reduced-motion:reduce){.mq-wrap{-webkit-mask-image:none;mask-image:none;left:auto;width:auto;transform:none}.mq{width:auto;overflow-x:auto;padding-bottom:6px}.track{animation:none}.track.copy{display:none}}
+.own code,.cmds code{font:14.5px var(--mono);color:var(--paper);background:#2e2622;padding:2px 7px;border-radius:5px}
+
+/* Controls */
+.controls{padding:40px 0 100px}
+/* Cubit breaks through: a torn hole in square pixels, Cubit's own sky inside, the real Cubit peeking in from its edge. */
+.cubit{overflow-x:clip;display:grid;grid-template-columns:max-content minmax(0,1fr);align-items:center;gap:clamp(40px,5vw,96px);padding:60px 0 120px}
+.cu-kicker{white-space:nowrap;margin:0 0 4px;color:var(--cubit);font:500 clamp(18px,1.4vw,24px)/1.2 "Pixelify Sans",var(--mono,monospace)}
+.cubit h2{white-space:nowrap;margin:10px 0 0;font:500 clamp(28px,3.9vw,64px)/1.08 var(--display);letter-spacing:-.025em;color:var(--paper)}
+.cubit{--cubit:#b4e8f7}
+.cubit h2 .cu-logo{display:inline-block;height:1.12em;aspect-ratio:1325 / 480;margin-left:.16em;vertical-align:-.2em;background:var(--cubit);-webkit-mask:var(--logo) center/contain no-repeat;mask:var(--logo) center/contain no-repeat}
+.cubit .lead{margin:12px 0 26px}
+.rip{position:relative;width:100%;max-width:820px;justify-self:end;aspect-ratio:44 / 30}
+.rip-hole,.rip-edge{position:absolute;inset:0}
+.rip-hole{background:url("assets/cubit/sky-flat-1x.webp") left bottom/auto 140% no-repeat,url("assets/cubit/sky-flat-1x.webp") right bottom/auto 140% no-repeat,linear-gradient(180deg,#7fbcd3,rgb(81,150,176));-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2044%2030%22%20preserveAspectRatio%3D%22none%22%20shape-rendering%3D%22crispEdges%22%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2215%22%20y%3D%223%22%20width%3D%2214%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%224%22%20width%3D%2219%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%225%22%20width%3D%2222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%226%22%20width%3D%2226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%227%22%20width%3D%2229%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%228%22%20width%3D%2231%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%229%22%20width%3D%2233%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2210%22%20width%3D%2234%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2211%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%2212%22%20width%3D%2237%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%2213%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2214%22%20width%3D%2237%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2215%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2216%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2217%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2218%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2219%22%20width%3D%2235%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2220%22%20width%3D%2234%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2221%22%20width%3D%2233%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2222%22%20width%3D%2229%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%2223%22%20width%3D%2227%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2224%22%20width%3D%2222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%2225%22%20width%3D%2220%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2226%22%20width%3D%2217%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%2227%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2044%2030%22%20preserveAspectRatio%3D%22none%22%20shape-rendering%3D%22crispEdges%22%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2215%22%20y%3D%223%22%20width%3D%2214%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%224%22%20width%3D%2219%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%225%22%20width%3D%2222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%226%22%20width%3D%2226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%227%22%20width%3D%2229%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%228%22%20width%3D%2231%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%229%22%20width%3D%2233%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2210%22%20width%3D%2234%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2211%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%2212%22%20width%3D%2237%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%2213%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2214%22%20width%3D%2237%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2215%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2216%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2217%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2218%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2219%22%20width%3D%2235%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2220%22%20width%3D%2234%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2221%22%20width%3D%2233%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2222%22%20width%3D%2229%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%2223%22%20width%3D%2227%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2224%22%20width%3D%2222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%2225%22%20width%3D%2220%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2226%22%20width%3D%2217%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%2227%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center/100% 100% no-repeat}
+.rip-edge{background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2044%2030%22%20preserveAspectRatio%3D%22none%22%20shape-rendering%3D%22crispEdges%22%3E%3Cg%20fill%3D%22%23d97757%22%3E%3Crect%20x%3D%2215%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.61%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.76%22%2F%3E%3Crect%20x%3D%2217%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.93%22%2F%3E%3Crect%20x%3D%2219%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.76%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.68%22%2F%3E%3Crect%20x%3D%2221%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.95%22%2F%3E%3Crect%20x%3D%2223%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.64%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.96%22%2F%3E%3Crect%20x%3D%2225%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.54%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.61%22%2F%3E%3Crect%20x%3D%2227%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.68%22%2F%3E%3Crect%20x%3D%2228%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.74%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.58%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.70%22%2F%3E%3Crect%20x%3D%2229%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.80%22%2F%3E%3Crect%20x%3D%2230%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.73%22%2F%3E%3Crect%20x%3D%2231%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.83%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.67%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.59%22%2F%3E%3Crect%20x%3D%2232%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.64%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.67%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.93%22%2F%3E%3Crect%20x%3D%2233%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.49%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.53%22%2F%3E%3Crect%20x%3D%2235%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.57%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.53%22%2F%3E%3Crect%20x%3D%2236%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.78%22%2F%3E%3Crect%20x%3D%2237%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.96%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%228%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.94%22%2F%3E%3Crect%20x%3D%2238%22%20y%3D%228%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.95%22%2F%3E%3Crect%20x%3D%2239%22%20y%3D%228%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.60%22%2F%3E%3Crect%20x%3D%2240%22%20y%3D%229%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.49%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2210%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.58%22%2F%3E%3Crect%20x%3D%2240%22%20y%3D%2210%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.72%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%2211%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.58%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%2211%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.58%22%2F%3E%3Crect%20x%3D%2240%22%20y%3D%2211%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.94%22%2F%3E%3Crect%20x%3D%2239%22%20y%3D%2212%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.45%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%2213%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.80%22%2F%3E%3Crect%20x%3D%2239%22%20y%3D%2213%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.46%22%2F%3E%3Crect%20x%3D%2240%22%20y%3D%2213%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.55%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%2214%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.76%22%2F%3E%3Crect%20x%3D%2241%22%20y%3D%2214%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.60%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2215%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.56%22%2F%3E%3Crect%20x%3D%2241%22%20y%3D%2215%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.48%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2216%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.84%22%2F%3E%3Crect%20x%3D%2241%22%20y%3D%2216%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.72%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2218%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.52%22%2F%3E%3Crect%20x%3D%2241%22%20y%3D%2218%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.94%22%2F%3E%3Crect%20x%3D%2241%22%20y%3D%2219%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.92%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2220%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.97%22%2F%3E%3Crect%20x%3D%2240%22%20y%3D%2220%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.68%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2221%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.85%22%2F%3E%3Crect%20x%3D%2239%22%20y%3D%2221%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.67%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.67%22%2F%3E%3Crect%20x%3D%2235%22%20y%3D%2222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.76%22%2F%3E%3Crect%20x%3D%2236%22%20y%3D%2222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.79%22%2F%3E%3Crect%20x%3D%2237%22%20y%3D%2222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.63%22%2F%3E%3Crect%20x%3D%2238%22%20y%3D%2222%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.68%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2223%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.62%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%2223%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%221.00%22%2F%3E%3Crect%20x%3D%2235%22%20y%3D%2223%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.93%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%2224%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.56%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%2224%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.52%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%2224%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.76%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%2224%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.97%22%2F%3E%3Crect%20x%3D%2234%22%20y%3D%2224%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.55%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2225%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.54%22%2F%3E%3Crect%20x%3D%2233%22%20y%3D%2225%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.74%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%2226%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.73%22%2F%3E%3Crect%20x%3D%2231%22%20y%3D%2226%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.65%22%2F%3E%3Crect%20x%3D%2232%22%20y%3D%2226%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.46%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2227%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.75%22%2F%3E%3Crect%20x%3D%2215%22%20y%3D%2227%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.85%22%2F%3E%3Crect%20x%3D%2221%22%20y%3D%2227%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.58%22%2F%3E%3Crect%20x%3D%2222%22%20y%3D%2227%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.69%22%2F%3E%3Crect%20x%3D%2224%22%20y%3D%2227%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.90%22%2F%3E%3Crect%20x%3D%2225%22%20y%3D%2227%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.95%22%2F%3E%3Crect%20x%3D%2226%22%20y%3D%2227%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.98%22%2F%3E%3Crect%20x%3D%2228%22%20y%3D%2227%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.78%22%2F%3E%3Crect%20x%3D%2229%22%20y%3D%2227%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.94%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%2228%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.49%22%2F%3E%3Crect%20x%3D%2220%22%20y%3D%2228%22%20width%3D%221%22%20height%3D%221%22%20opacity%3D%220.97%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center/100% 100% no-repeat;filter:drop-shadow(0 0 10px #d9775766);pointer-events:none}
+.rip{--ripmask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2044%2030%22%20preserveAspectRatio%3D%22none%22%20shape-rendering%3D%22crispEdges%22%3E%3Cg%20fill%3D%22%23fff%22%3E%3Crect%20x%3D%2215%22%20y%3D%223%22%20width%3D%2214%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%224%22%20width%3D%2219%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%225%22%20width%3D%2222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%226%22%20width%3D%2226%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%227%22%20width%3D%2229%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%228%22%20width%3D%2231%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%229%22%20width%3D%2233%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2210%22%20width%3D%2234%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2211%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%222%22%20y%3D%2212%22%20width%3D%2237%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%223%22%20y%3D%2213%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%224%22%20y%3D%2214%22%20width%3D%2237%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2215%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2216%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2217%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%225%22%20y%3D%2218%22%20width%3D%2236%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2219%22%20width%3D%2235%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2220%22%20width%3D%2234%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2221%22%20width%3D%2233%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%226%22%20y%3D%2222%22%20width%3D%2229%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%228%22%20y%3D%2223%22%20width%3D%2227%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2212%22%20y%3D%2224%22%20width%3D%2222%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2213%22%20y%3D%2225%22%20width%3D%2220%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2226%22%20width%3D%2217%22%20height%3D%221%22%2F%3E%3Crect%20x%3D%2216%22%20y%3D%2227%22%20width%3D%225%22%20height%3D%221%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E")}
+.rip-peek{position:absolute;pointer-events:none;-webkit-mask-image:var(--ripmask),linear-gradient(#000,#000);mask-image:var(--ripmask),linear-gradient(#000,#000);-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.edge-peek{position:fixed;z-index:40;left:0;top:50%;transform:translateY(-50%);--h:min(360px,46vh);--cubit:#b4e8f7;transition:opacity .3s}
+.edge-peek[hidden]{display:none}
+.edge-peek.gone{opacity:0}
+.edge-peek.right{left:auto;right:0}
+.ep-go{display:block;text-decoration:none;color:inherit}
+.ep-cubit{display:block;height:var(--h);width:calc(var(--h) * 220 / 390)}
+.edge-peek.right .ep-cubit{transform:scaleX(-1)}
+.ep-bubble{position:absolute;top:calc(var(--h) * .02);left:calc(var(--h) * .62);display:flex;flex-direction:column;align-items:center;padding:4px 2px;color:#20232a;font:650 18px/1.2 var(--sans,system-ui);white-space:nowrap;opacity:0;transform:translateY(6px) scale(.92);transform-origin:0 100%;transition:opacity .3s,transform .35s cubic-bezier(.2,1.4,.4,1);pointer-events:none}
+.ep-dot{position:absolute;z-index:-1;border-radius:50%;background:#dfe3eb;filter:drop-shadow(0 6px 12px #0006);pointer-events:none}
+.ep-cloud{position:absolute;z-index:-1;overflow:visible;filter:drop-shadow(0 10px 22px #0007);pointer-events:none}
+.edge-peek.right .ep-bubble{left:auto;right:calc(var(--h) * .62);transform-origin:100% 100%}
+.edge-peek.talk .ep-bubble{opacity:1;transform:none;pointer-events:auto;cursor:pointer}
+@media (max-width:860px){.edge-peek{--h:min(240px,34vh)}.ep-bubble{font-size:16px}}
+@media (max-width:860px){.cubit{grid-template-columns:minmax(0,1fr);text-align:center}.cubit .btn{margin:0 auto}.rip{justify-self:center}}
+.uses{padding:120px 0 30px;text-align:center}
+.uses h2{margin:0;font:500 clamp(34px,4.6vw,60px)/1.1 var(--display);letter-spacing:-.025em;color:var(--paper)}
+.uses .rot{color:var(--orange);display:inline-block;transition:opacity .25s,transform .25s}
+.uses .rot.out{opacity:0;transform:translateY(8px)}
+.use-cap{margin:16px 0 0;color:var(--mute);font-size:18px;min-height:1.6em}
+.big-strip{display:flex;align-items:center;gap:6px;margin-top:30px;padding:14px 18px;border-radius:14px;background:var(--panel);border:1px solid var(--line);font-size:22px;width:max-content;max-width:100%}
+.big-strip .model{margin-right:18px;color:var(--mute);font-size:17px}
+.big-strip .aa{font-size:24px;padding:2px 8px}
+.big-strip .icon{min-width:44px;height:44px;font-size:22px}
+/* The prompt bar, as the desktop app draws it. */
+.cbar{--cc:#151515;--cc2:#1e1e1e;--cct:#e3e2de;--ccm:#9c9b97;--ccd:#6d6c69;max-width:760px;margin-top:30px;padding:16px 18px 12px;border-radius:16px;background:var(--cc);border:1px solid #2c2c2b;color:var(--cct)}
+.cbar svg.i{width:17px;height:17px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.cb-comp{display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 16px;border-radius:13px;background:var(--cc2);border:1px solid #262625;color:var(--ccd);font-size:16px}
+.cb-stop{width:16px;height:16px;border-radius:50%;border:2px solid var(--ccm);box-shadow:inset 0 0 0 3px var(--cc2);background:var(--ccm)}
+.cb-strip{display:flex;align-items:center;gap:9px;height:44px;padding:0 4px;color:var(--ccm);font-size:15px;white-space:nowrap}
+.cb-strip .gap{flex:1}
+.cb-strip .model{color:var(--cct);margin-left:6px}
+.cb-strip .fast{color:var(--ccd)}
+.cb-strip .ring{width:14px;height:14px;border-radius:50%;border:1.8px solid #3d6fd0;border-right-color:transparent}
+.cb-tl{display:inline-flex;gap:6px}
+.cb-card{display:flex;flex-direction:column;align-items:center;padding:8px 10px 14px;margin-bottom:14px}
+.cb-top{align-self:stretch;display:flex;justify-content:flex-end}
+.cb-art{display:block;width:430px;height:269px;margin-top:6px;image-rendering:pixelated}
+.cb-busy{margin:8px 0 0;color:var(--orange);font-weight:600;font-size:15px}
+.controls>h2,.controls>.lead{text-align:center;margin-left:auto;margin-right:auto}
+.cb-zoom{position:relative;height:clamp(300px,30vw,420px);margin:26px calc(var(--frame) * -1) 0;overflow:hidden;-webkit-mask-image:radial-gradient(ellipse 62% 78% at 50% 56%,#000 30%,#000a 55%,transparent 92%);mask-image:radial-gradient(ellipse 62% 78% at 50% 56%,#000 30%,#000a 55%,transparent 92%)}
+.cb-zoom .cbar{position:absolute;left:0;top:0;width:460px;max-width:none;margin:0;transform-origin:0 0}
+.cb-cmd{margin:6px 0 0;min-height:1.4em;text-align:center;font:500 17px var(--mono,monospace);color:var(--orange)}
+.cb-type{color:var(--ccd)}
+.cb-type.typed{color:var(--cct);font-family:var(--mono,monospace)}
+.cb-type.typed::after{content:"";display:inline-block;width:2px;height:1.1em;margin-left:2px;vertical-align:-3px;background:var(--cct);animation:caret 1s steps(1) infinite}
+@keyframes caret{50%{opacity:0}}
+.cb-say{max-width:none;margin:4px 0 0;text-align:center;min-height:1.2em;font:500 clamp(24px,2.6vw,32px)/1.2 var(--display);letter-spacing:-.015em;color:var(--paper)}
+.cb-b{display:inline-grid;place-items:center;min-width:32px;height:30px;padding:0 6px;border:0;border-radius:8px;background:#222221;color:var(--ccm);font:600 15px var(--sans);cursor:pointer;transition:background .15s,color .15s,box-shadow .15s}
+.cb-b:hover,.cb-b.lit{background:#2c2c2b;color:var(--cct);box-shadow:0 0 0 1.5px var(--orange)}
+.cb-b[data-power][aria-pressed=true]{color:var(--cct)}
+.cbar .cb-aa{display:inline-grid;place-items:center;min-width:32px;height:30px;padding:0 4px;font:600 15px var(--sans);color:var(--ccm);text-decoration:none}
+.cbar[data-on=true] .cb-aa{color:var(--orange);text-decoration:line-through;text-decoration-thickness:1.5px}
+
+/* Install: the effortless layout. Ask Claude on the left, the terminal line on the right. */
+.ways{margin-top:32px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.way{display:flex;flex-direction:column;min-width:0;padding:26px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
+.way-claude{background:radial-gradient(120% 100% at 0% 0%,#d9775724,transparent 62%),var(--panel)}
+.way-k{display:flex;align-items:center;gap:9px;margin:0;font:600 14px var(--sans);color:var(--mute)}
+.way-claude .way-k{color:#e8a487}
+.way-k img,.way-k svg{width:20px;height:20px;flex-shrink:0}
+.way-t{margin:10px 0 22px;font:500 24px/1.2 var(--display);letter-spacing:-.01em;color:var(--paper)}
+.big{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:58px;margin-top:auto;border:0;border-radius:12px;font:600 17px var(--sans);cursor:pointer;transition:background .2s}
+.big img,.big svg{width:20px;height:20px;flex-shrink:0}
+.big.claude{background:#d97757;color:#1f1009}.big.claude:hover{background:#e48a6b}
+.big.term{background:#2e2622;color:var(--paper)}.big.term:hover{background:#3a302b}
+.big.ok{background:#5d9a6c;color:#0e1a11}
+.way-h{margin:12px 0 0;color:var(--dim);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.way-claude .way-h{white-space:normal}
+.way-h code{font:12.5px var(--mono);color:var(--mute)}
+.then{margin:18px 0 0;color:var(--body)}
+.fit{max-width:640px;margin:22px 0 0;color:var(--mute);font-size:15px}
+.then code{font:14px var(--mono);color:var(--paper);background:#2e2622;padding:2px 7px;border-radius:5px}
+@media (max-width:720px){.ways{grid-template-columns:minmax(0,1fr)}}
+/* Install, older */
+.chess{padding:40px 0 100px;text-align:center}
+.chess>.lead{margin-left:auto;margin-right:auto}
+.ch-board{display:block;width:min(520px,100%);height:auto;margin:32px auto 0;border-radius:10px}
+.install{padding:40px 0 110px}
+
+footer{position:relative;isolation:isolate;overflow:hidden;border-top:1px solid var(--line);padding:34px var(--frame) 0}
+/* The name, huge, sinking into an orange haze at the bottom of the page: effortless's footer in Clawd orange. */
+footer:before{content:"";position:absolute;left:50%;bottom:-30%;width:120%;height:110%;transform:translateX(-50%);z-index:-1;pointer-events:none;background:radial-gradient(50% 55% at 50% 100%,#d9775766,#a8573c33 45%,transparent 75%)}
+.foot-word{position:relative;margin:30px 0 -.2em;text-align:center;font:600 clamp(96px,21vw,340px)/.9 var(--display);letter-spacing:-.055em;white-space:nowrap;user-select:none;pointer-events:none}
+.foot-word span{display:block}
+.foot-word .crisp{background:linear-gradient(180deg,#ffd9c8 0%,#e8916f 38%,#a8573c 70%,transparent 96%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.foot-word .soft{position:absolute;inset:0;color:#e07f5c;opacity:.35;filter:blur(26px) url(#grainy)}
+.foot{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;color:var(--mute);font-size:15px}
+.foot .by{display:flex;flex-direction:column;gap:6px}
+.foot .maker{font-size:13.5px;color:var(--mute);text-decoration:none}
+.foot .maker b{font-weight:600;color:var(--orange)}
+.foot .maker:hover{color:var(--paper)}
+.foot .brand{font-size:18px;color:var(--paper)}
+.foot .brand .logo{width:30px;height:auto}
+.foot nav{display:flex;flex-wrap:wrap;gap:22px}
+.foot nav a{text-decoration:none}
+.foot nav a:hover{color:var(--paper)}
+
+@media (max-width:980px){.top nav a.n{display:none}.sub{gap:22px}.hero{padding-top:44px}.side{grid-template-columns:repeat(2,minmax(0,1fr))}.pane{height:420px}.pane:nth-child(3){border-left:0}.pane:nth-child(n+3){border-top:1px solid #232322}.ph .tools{display:none}.controls{grid-template-columns:minmax(0,1fr);gap:22px}}
+@media (max-width:560px){body{font-size:16px}.pane{height:390px;padding:0 8px 6px}.pc{gap:8px;padding:6px 2px 10px}.you,.say,.ans,.st{font-size:11.5px}.you{padding:7px 10px}.composer{height:34px;padding:0 9px;font-size:11.5px}.composer svg{display:none}.strip{gap:6px;font-size:11px}.strip>span:not(.model):not(.tl),.strip>svg{display:none}.tl{gap:6px}.appbar{display:none}.ph b{font-size:13px}.card img{max-height:120px}.tags{flex-wrap:wrap}.tags span{flex-basis:100%}.stage{min-height:0;padding:18px}.stage img{height:200px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.big-strip{font-size:18px}.top .get{height:44px}.btn{flex:0 0 auto}}
+@media (pointer:coarse){.tags button,.icon{min-height:44px}.top nav a{padding:10px 0}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="grainy" x="-20%" y="-20%" width="140%" height="160%">
+    <feTurbulence type="fractalNoise" baseFrequency="1.7" numOctaves="1" seed="7" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="G" result="moved"/>
+    <feGaussianBlur in="moved" stdDeviation="1" result="soft"/>
+    <feComponentTransfer in="noise" result="dots"><feFuncA type="discrete" tableValues="0 0 1 1 1"/></feComponentTransfer>
+    <feComposite in="soft" in2="dots" operator="in"/>
+  </filter>
+</svg>
+<header class="top">
+  <a class="brand" href="#top"><svg class="logo" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="2 14 60 36" shape-rendering="crispEdges"><mask id="aa30"><rect width="64" height="64" fill="#fff"/><rect x="3" y="35" width="58" height="1" fill="#000"/><rect x="3" y="39" width="58" height="1" fill="#000"/></mask><g fill="#d97757"><g mask="url(#aa30)"><rect x="19" y="17" width="4" height="1"/><rect x="18" y="18" width="6" height="1"/><rect x="18" y="19" width="6" height="1"/><rect x="18" y="20" width="7" height="1"/><rect x="17" y="21" width="8" height="1"/><rect x="17" y="22" width="8" height="1"/><rect x="16" y="23" width="10" height="1"/><rect x="16" y="24" width="10" height="1"/><rect x="15" y="25" width="12" height="1"/><rect x="15" y="26" width="12" height="1"/><rect x="44" y="26" width="4" height="1"/><rect x="15" y="27" width="5" height="1"/><rect x="22" y="27" width="5" height="1"/><rect x="41" y="27" width="9" height="1"/><rect x="52" y="27" width="5" height="1"/><rect x="14" y="28" width="6" height="1"/><rect x="22" y="28" width="6" height="1"/><rect x="40" y="28" width="17" height="1"/><rect x="14" y="29" width="6" height="1"/><rect x="23" y="29" width="5" height="1"/><rect x="39" y="29" width="18" height="1"/><rect x="13" y="30" width="6" height="1"/><rect x="23" y="30" width="6" height="1"/><rect x="38" y="30" width="19" height="1"/><rect x="13" y="31" width="6" height="1"/><rect x="23" y="31" width="6" height="1"/><rect x="37" y="31" width="9" height="1"/><rect x="48" y="31" width="9" height="1"/><rect x="13" y="32" width="5" height="1"/><rect x="24" y="32" width="5" height="1"/><rect x="37" y="32" width="7" height="1"/><rect x="50" y="32" width="7" height="1"/><rect x="12" y="33" width="6" height="1"/><rect x="24" y="33" width="6" height="1"/><rect x="37" y="33" width="6" height="1"/><rect x="51" y="33" width="6" height="1"/><rect x="12" y="34" width="6" height="1"/><rect x="24" y="34" width="6" height="1"/><rect x="36" y="34" width="6" height="1"/><rect x="52" y="34" width="5" height="1"/><rect x="11" y="35" width="6" height="1"/><rect x="25" y="35" width="6" height="1"/><rect x="36" y="35" width="6" height="1"/><rect x="52" y="35" width="5" height="1"/><rect x="11" y="36" width="6" height="1"/><rect x="25" y="36" width="6" height="1"/><rect x="36" y="36" width="6" height="1"/><rect x="52" y="36" width="5" height="1"/><rect x="11" y="37" width="20" height="1"/><rect x="36" y="37" width="6" height="1"/><rect x="52" y="37" width="5" height="1"/><rect x="10" y="38" width="22" height="1"/><rect x="36" y="38" width="6" height="1"/><rect x="52" y="38" width="5" height="1"/><rect x="10" y="39" width="22" height="1"/><rect x="36" y="39" width="6" height="1"/><rect x="52" y="39" width="5" height="1"/><rect x="9" y="40" width="24" height="1"/><rect x="37" y="40" width="6" height="1"/><rect x="51" y="40" width="6" height="1"/><rect x="9" y="41" width="24" height="1"/><rect x="37" y="41" width="7" height="1"/><rect x="50" y="41" width="7" height="1"/><rect x="9" y="42" width="6" height="1"/><rect x="27" y="42" width="6" height="1"/><rect x="38" y="42" width="19" height="1"/><rect x="8" y="43" width="6" height="1"/><rect x="28" y="43" width="6" height="1"/><rect x="38" y="43" width="19" height="1"/><rect x="8" y="44" width="6" height="1"/><rect x="28" y="44" width="6" height="1"/><rect x="39" y="44" width="18" height="1"/><rect x="7" y="45" width="6" height="1"/><rect x="29" y="45" width="6" height="1"/><rect x="40" y="45" width="17" height="1"/><rect x="7" y="46" width="6" height="1"/><rect x="29" y="46" width="6" height="1"/><rect x="42" y="46" width="8" height="1"/><rect x="52" y="46" width="5" height="1"/></g><rect x="4" y="36" width="56" height="3"/></g></svg>textless</a>
+  <nav aria-label="Site"><a class="n" href="#compare">Compare</a><a class="n" href="#uses">Uses</a><a class="n" href="#scenes">Scenes</a><a class="n" href="#controls">Controls</a><a class="n mk" href="market/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0"/><path d="M5 12v8h14v-8"/><path d="M10 20v-5h4v5"/></svg>Marketplace</a><a class="get" href="#install">Get textless</a></nav>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="h1">
+    <div class="intro">
+      <h1 id="h1"><svg class="logo" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="2 14 60 36" shape-rendering="crispEdges"><mask id="aa30"><rect width="64" height="64" fill="#fff"/><rect x="3" y="35" width="58" height="1" fill="#000"/><rect x="3" y="39" width="58" height="1" fill="#000"/></mask><g fill="#d97757"><g mask="url(#aa30)"><rect x="19" y="17" width="4" height="1"/><rect x="18" y="18" width="6" height="1"/><rect x="18" y="19" width="6" height="1"/><rect x="18" y="20" width="7" height="1"/><rect x="17" y="21" width="8" height="1"/><rect x="17" y="22" width="8" height="1"/><rect x="16" y="23" width="10" height="1"/><rect x="16" y="24" width="10" height="1"/><rect x="15" y="25" width="12" height="1"/><rect x="15" y="26" width="12" height="1"/><rect x="44" y="26" width="4" height="1"/><rect x="15" y="27" width="5" height="1"/><rect x="22" y="27" width="5" height="1"/><rect x="41" y="27" width="9" height="1"/><rect x="52" y="27" width="5" height="1"/><rect x="14" y="28" width="6" height="1"/><rect x="22" y="28" width="6" height="1"/><rect x="40" y="28" width="17" height="1"/><rect x="14" y="29" width="6" height="1"/><rect x="23" y="29" width="5" height="1"/><rect x="39" y="29" width="18" height="1"/><rect x="13" y="30" width="6" height="1"/><rect x="23" y="30" width="6" height="1"/><rect x="38" y="30" width="19" height="1"/><rect x="13" y="31" width="6" height="1"/><rect x="23" y="31" width="6" height="1"/><rect x="37" y="31" width="9" height="1"/><rect x="48" y="31" width="9" height="1"/><rect x="13" y="32" width="5" height="1"/><rect x="24" y="32" width="5" height="1"/><rect x="37" y="32" width="7" height="1"/><rect x="50" y="32" width="7" height="1"/><rect x="12" y="33" width="6" height="1"/><rect x="24" y="33" width="6" height="1"/><rect x="37" y="33" width="6" height="1"/><rect x="51" y="33" width="6" height="1"/><rect x="12" y="34" width="6" height="1"/><rect x="24" y="34" width="6" height="1"/><rect x="36" y="34" width="6" height="1"/><rect x="52" y="34" width="5" height="1"/><rect x="11" y="35" width="6" height="1"/><rect x="25" y="35" width="6" height="1"/><rect x="36" y="35" width="6" height="1"/><rect x="52" y="35" width="5" height="1"/><rect x="11" y="36" width="6" height="1"/><rect x="25" y="36" width="6" height="1"/><rect x="36" y="36" width="6" height="1"/><rect x="52" y="36" width="5" height="1"/><rect x="11" y="37" width="20" height="1"/><rect x="36" y="37" width="6" height="1"/><rect x="52" y="37" width="5" height="1"/><rect x="10" y="38" width="22" height="1"/><rect x="36" y="38" width="6" height="1"/><rect x="52" y="38" width="5" height="1"/><rect x="10" y="39" width="22" height="1"/><rect x="36" y="39" width="6" height="1"/><rect x="52" y="39" width="5" height="1"/><rect x="9" y="40" width="24" height="1"/><rect x="37" y="40" width="6" height="1"/><rect x="51" y="40" width="6" height="1"/><rect x="9" y="41" width="24" height="1"/><rect x="37" y="41" width="7" height="1"/><rect x="50" y="41" width="7" height="1"/><rect x="9" y="42" width="6" height="1"/><rect x="27" y="42" width="6" height="1"/><rect x="38" y="42" width="19" height="1"/><rect x="8" y="43" width="6" height="1"/><rect x="28" y="43" width="6" height="1"/><rect x="38" y="43" width="19" height="1"/><rect x="8" y="44" width="6" height="1"/><rect x="28" y="44" width="6" height="1"/><rect x="39" y="44" width="18" height="1"/><rect x="7" y="45" width="6" height="1"/><rect x="29" y="45" width="6" height="1"/><rect x="40" y="45" width="17" height="1"/><rect x="7" y="46" width="6" height="1"/><rect x="29" y="46" width="6" height="1"/><rect x="42" y="46" width="8" height="1"/><rect x="52" y="46" width="5" height="1"/></g><rect x="4" y="36" width="56" height="3"/></g></svg><span class="word" aria-label="textless"><span class="crisp" aria-hidden="true">textless</span><span class="soft" aria-hidden="true">textless</span></span></h1>
+      <div class="sub">
+        <div><p class="claim">Feeling <em class="hl">overwhelmed</em> by the <span class="wall">walls of text</span>?</p>
+        <p class="lead">Ease your mind with textless when it gets a bit too much. Anything goes.</p>
+        </div>
+        <div class="acts"><a class="btn gh" href="https://github.com/HeyCubit/effortless"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg><span>Star on GitHub</span><span class="stars">210</span></a><a class="btn main" href="market/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0"/><path d="M5 12v8h14v-8"/><path d="M10 20v-5h4v5"/></svg>Marketplace</a></div>
+      </div>
+    </div>
+
+    <div class="compare" id="compare" aria-label="The same four chats in Claude Code, without and with textless">
+<div class="appbar" aria-hidden="true"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M2.5 3.5h11v9h-11zM6 3.5v9"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M9.5 3.5 5 8l4.5 4.5M5 8h8"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M6.5 3.5 11 8l-4.5 4.5M11 8H3"/></svg><span class="gap"></span><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4 8h8"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 4.5h7v7h-7z"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></div>
+<div class="sides"><div class="side before" aria-label="Without textless"><article class="pane">
+  <header class="ph"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3.5 4.5h9v6h-9zM2 12.5h12"/></svg><b>Working</b><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span class="tools"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3 4.5 6 8l-3 3.5M8 11.5h5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M2.5 4.5h4l1.5 1.5h5.5v6.5h-11z"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" stroke-width="2.4"><path d="M8 3.5v.01M8 8v.01M8 12.5v.01"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></span></header>
+  <div class="pc"><p class="you">Add a dark mode to the settings page</p><p class="say">I'll start by looking at how the settings page sets its colours.</p><p class="st">Read page.tsx<i>›</i></p><p class="st">Searched for colour values<i>›</i></p><p class="say">Colours are set in two places. I'll move them into the theme first, then add the switch.</p><p class="st">Read theme.ts<i>›</i></p><p class="st">Edited theme.ts<i>›</i></p><p class="st">Edited page.tsx<i>›</i></p><p class="say">Now the switch itself, under Appearance.</p><p class="st">Edited appearance.tsx<i>›</i></p><p class="st run"><span class="spin" aria-hidden="true"></span>Running npm test</p></div>
+  <div class="composer"><span>Type / for commands</span><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M12.5 3.5v5h-8M7 6 4.5 8.5 7 11"/></svg></div>
+  <div class="strip"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 3.5v9M3.5 8h9"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 2.5a2 2 0 0 1 2 2V8a2 2 0 0 1-4 0V4.5a2 2 0 0 1 2-2zM4.5 7.5a3.5 3.5 0 0 0 7 0M8 11v2.5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span>Auto</span><span class="gap"></span><span class="model">Opus 5.5</span><span class="fast">Fast</span><span>High</span><span class="ring" aria-hidden="true"></span></div>
+</article><article class="pane">
+  <header class="ph"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3.5 4.5h9v6h-9zM2 12.5h12"/></svg><b>Working</b><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span class="tools"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3 4.5 6 8l-3 3.5M8 11.5h5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M2.5 4.5h4l1.5 1.5h5.5v6.5h-11z"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" stroke-width="2.4"><path d="M8 3.5v.01M8 8v.01M8 12.5v.01"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></span></header>
+  <div class="pc"><p class="you">Fix the flaky login test</p><p class="say">Running it a few times to see how often it fails.</p><p class="st">Ran npm test -- login (x5)<i>›</i></p><p class="say">Two of five failed, both on the redirect. Looks like a timing issue.</p><p class="st">Read login.test.tsx<i>›</i></p><p class="st">Read session.ts<i>›</i></p><p class="st">Searched for setTimeout<i>›</i></p><p class="say">The test checks the URL before the redirect finishes. I'll wait for it instead.</p><p class="st">Edited login.test.tsx<i>›</i></p><p class="st run"><span class="spin" aria-hidden="true"></span>Running npm test -- login (x10)</p></div>
+  <div class="composer"><span>Type / for commands</span><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M12.5 3.5v5h-8M7 6 4.5 8.5 7 11"/></svg></div>
+  <div class="strip"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 3.5v9M3.5 8h9"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 2.5a2 2 0 0 1 2 2V8a2 2 0 0 1-4 0V4.5a2 2 0 0 1 2-2zM4.5 7.5a3.5 3.5 0 0 0 7 0M8 11v2.5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span>Auto</span><span class="gap"></span><span class="model">Opus 5.5</span><span class="fast">Fast</span><span>High</span><span class="ring" aria-hidden="true"></span></div>
+</article><article class="pane">
+  <header class="ph"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3.5 4.5h9v6h-9zM2 12.5h12"/></svg><b>Working</b><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span class="tools"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3 4.5 6 8l-3 3.5M8 11.5h5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M2.5 4.5h4l1.5 1.5h5.5v6.5h-11z"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" stroke-width="2.4"><path d="M8 3.5v.01M8 8v.01M8 12.5v.01"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></span></header>
+  <div class="pc"><p class="you">Add a CSV export to the reports page</p><p class="say">Checking how the reports table gets its rows.</p><p class="st">Read reports/page.tsx<i>›</i></p><p class="st">Read useReports.ts<i>›</i></p><p class="say">The rows are already in memory, so the export can build the file in the browser.</p><p class="st">Created toCsv.ts<i>›</i></p><p class="st">Edited reports/page.tsx<i>›</i></p><p class="say">Adding a test for commas and quotes inside cells.</p><p class="st">Created toCsv.test.ts<i>›</i></p><p class="st run"><span class="spin" aria-hidden="true"></span>Running npm test</p></div>
+  <div class="composer"><span>Type / for commands</span><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M12.5 3.5v5h-8M7 6 4.5 8.5 7 11"/></svg></div>
+  <div class="strip"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 3.5v9M3.5 8h9"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 2.5a2 2 0 0 1 2 2V8a2 2 0 0 1-4 0V4.5a2 2 0 0 1 2-2zM4.5 7.5a3.5 3.5 0 0 0 7 0M8 11v2.5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span>Auto</span><span class="gap"></span><span class="model">Opus 5.5</span><span class="fast">Fast</span><span>High</span><span class="ring" aria-hidden="true"></span></div>
+</article><article class="pane">
+  <header class="ph"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3.5 4.5h9v6h-9zM2 12.5h12"/></svg><b>Working</b><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span class="tools"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3 4.5 6 8l-3 3.5M8 11.5h5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M2.5 4.5h4l1.5 1.5h5.5v6.5h-11z"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" stroke-width="2.4"><path d="M8 3.5v.01M8 8v.01M8 12.5v.01"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></span></header>
+  <div class="pc"><p class="you">Clean up the old date helpers</p><p class="say">Looking for every place the old helpers are used.</p><p class="st">Searched for formatDay and toIsoDay<i>›</i></p><p class="st">Read dates.ts<i>›</i></p><p class="st">Read export.ts<i>›</i></p><p class="say">Two of them are unused. The other three are still used by the export code.</p><p class="st">Edited dates.ts<i>›</i></p><p class="st">Edited export.ts<i>›</i></p><p class="st run"><span class="spin" aria-hidden="true"></span>Running npx tsc --noEmit</p></div>
+  <div class="composer"><span>Type / for commands</span><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M12.5 3.5v5h-8M7 6 4.5 8.5 7 11"/></svg></div>
+  <div class="strip"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 3.5v9M3.5 8h9"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 2.5a2 2 0 0 1 2 2V8a2 2 0 0 1-4 0V4.5a2 2 0 0 1 2-2zM4.5 7.5a3.5 3.5 0 0 0 7 0M8 11v2.5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span>Auto</span><span class="gap"></span><span class="model">Opus 5.5</span><span class="fast">Fast</span><span>High</span><span class="ring" aria-hidden="true"></span></div>
+</article></div><div class="side after" aria-label="With textless"><article class="pane">
+  <header class="ph"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3.5 4.5h9v6h-9zM2 12.5h12"/></svg><b>Working</b><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span class="tools"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3 4.5 6 8l-3 3.5M8 11.5h5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M2.5 4.5h4l1.5 1.5h5.5v6.5h-11z"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" stroke-width="2.4"><path d="M8 3.5v.01M8 8v.01M8 12.5v.01"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></span></header>
+  <div class="pc"><p class="you">Add a dark mode to the settings page</p><div class="card"><div class="ctl" aria-hidden="true"><b class="aa">Aa</b><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path stroke-width="1.9" d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3" stroke-width="1.9"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M13 3 9.5 6.5M9.5 3.5v3h3M3 13l3.5-3.5M3.5 9.5h3v3"/></svg></div><img class="scene" id="scene" data-n="0" src="assets/scenes/scenery/meadow.svg" alt="A scene while Claude works" width="560" height="350"><p class="busy">Claude is working</p><p class="step" data-n="0">Edited page.tsx</p></div></div>
+  <div class="composer"><span>Type / for commands</span><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M12.5 3.5v5h-8M7 6 4.5 8.5 7 11"/></svg></div>
+  <div class="strip"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 3.5v9M3.5 8h9"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 2.5a2 2 0 0 1 2 2V8a2 2 0 0 1-4 0V4.5a2 2 0 0 1 2-2zM4.5 7.5a3.5 3.5 0 0 0 7 0M8 11v2.5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span>Auto</span><span class="gap"></span><span class="model">Opus 5.5</span><span class="fast">Fast</span><span>High</span><span class="ring" aria-hidden="true"></span></div>
+</article><article class="pane">
+  <header class="ph"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3.5 4.5h9v6h-9zM2 12.5h12"/></svg><b>Working</b><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span class="tools"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3 4.5 6 8l-3 3.5M8 11.5h5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M2.5 4.5h4l1.5 1.5h5.5v6.5h-11z"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" stroke-width="2.4"><path d="M8 3.5v.01M8 8v.01M8 12.5v.01"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></span></header>
+  <div class="pc"><p class="you">Fix the flaky login test</p><div class="card"><div class="ctl" aria-hidden="true"><b class="aa">Aa</b><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path stroke-width="1.9" d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3" stroke-width="1.9"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M13 3 9.5 6.5M9.5 3.5v3h3M3 13l3.5-3.5M3.5 9.5h3v3"/></svg></div><img class="scene fixed" src="assets/scenes/quotes/twain-kindness.svg" alt="A scene while Claude works" width="560" height="350" loading="lazy"><p class="busy">Claude is working</p><p class="step">Read session.ts</p></div></div>
+  <div class="composer"><span>Type / for commands</span><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M12.5 3.5v5h-8M7 6 4.5 8.5 7 11"/></svg></div>
+  <div class="strip"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 3.5v9M3.5 8h9"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 2.5a2 2 0 0 1 2 2V8a2 2 0 0 1-4 0V4.5a2 2 0 0 1 2-2zM4.5 7.5a3.5 3.5 0 0 0 7 0M8 11v2.5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span>Auto</span><span class="gap"></span><span class="model">Opus 5.5</span><span class="fast">Fast</span><span>High</span><span class="ring" aria-hidden="true"></span></div>
+</article><article class="pane">
+  <header class="ph"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3.5 4.5h9v6h-9zM2 12.5h12"/></svg><b>Working</b><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span class="tools"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3 4.5 6 8l-3 3.5M8 11.5h5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M2.5 4.5h4l1.5 1.5h5.5v6.5h-11z"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" stroke-width="2.4"><path d="M8 3.5v.01M8 8v.01M8 12.5v.01"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></span></header>
+  <div class="pc"><p class="you">Add a CSV export to the reports page</p><div class="card"><div class="ctl" aria-hidden="true"><b class="aa">Aa</b><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path stroke-width="1.9" d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3" stroke-width="1.9"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M13 3 9.5 6.5M9.5 3.5v3h3M3 13l3.5-3.5M3.5 9.5h3v3"/></svg></div><img class="scene fixed" src="assets/scenes/scenery/fishing.svg" alt="A scene while Claude works" width="560" height="350" loading="lazy"><p class="busy">Claude is working</p><p class="step">From the Marketplace</p></div></div>
+  <div class="composer"><span>Type / for commands</span><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M12.5 3.5v5h-8M7 6 4.5 8.5 7 11"/></svg></div>
+  <div class="strip"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 3.5v9M3.5 8h9"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 2.5a2 2 0 0 1 2 2V8a2 2 0 0 1-4 0V4.5a2 2 0 0 1 2-2zM4.5 7.5a3.5 3.5 0 0 0 7 0M8 11v2.5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span>Auto</span><span class="gap"></span><span class="model">Opus 5.5</span><span class="fast">Fast</span><span>High</span><span class="ring" aria-hidden="true"></span></div>
+</article><article class="pane">
+  <header class="ph"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3.5 4.5h9v6h-9zM2 12.5h12"/></svg><b>Working</b><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span class="tools"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M3 4.5 6 8l-3 3.5M8 11.5h5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M2.5 4.5h4l1.5 1.5h5.5v6.5h-11z"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" stroke-width="2.4"><path d="M8 3.5v.01M8 8v.01M8 12.5v.01"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></span></header>
+  <div class="pc"><p class="you">Clean up the old date helpers</p><div class="card"><div class="ctl" aria-hidden="true"><b class="aa">Aa</b><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path stroke-width="1.9" d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3" stroke-width="1.9"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M13 3 9.5 6.5M9.5 3.5v3h3M3 13l3.5-3.5M3.5 9.5h3v3"/></svg></div><img class="scene fixed" src="assets/chess.webp" alt="A scene while Claude works" width="560" height="350" loading="lazy"><p class="busy">Claude is working</p><p class="step">Chess against Claude · your move</p></div></div>
+  <div class="composer"><span>Type / for commands</span><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M12.5 3.5v5h-8M7 6 4.5 8.5 7 11"/></svg></div>
+  <div class="strip"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 3.5v9M3.5 8h9"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M8 2.5a2 2 0 0 1 2 2V8a2 2 0 0 1-4 0V4.5a2 2 0 0 1 2-2zM4.5 7.5a3.5 3.5 0 0 0 7 0M8 11v2.5"/></svg><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M4.5 6.5 8 10l3.5-3.5"/></svg><span>Auto</span><span class="gap"></span><span class="model">Opus 5.5</span><span class="fast">Fast</span><span>High</span><span class="ring" aria-hidden="true"></span></div>
+</article></div>
+  <div class="handle" aria-hidden="true"><span class="ba b">Before</span><span class="knob">⇆</span><span class="ba a">After</span></div>
+  <input class="drag" id="drag" type="range" min="0" max="100" value="50" aria-label="Slide to compare: left shows Claude Code without textless, right shows it with textless">
+</div>
+    </div>
+    <div class="tags"><span>Without textless</span><button type="button" id="play" aria-pressed="true">Pause</button><span class="on">With textless</span></div>
+    <div class="setpick" id="sets" role="group" aria-label="What the Working panes show"><span class="bar" aria-hidden="true"></span></div>
+  </section>
+
+  <section class="uses" id="uses" aria-labelledby="us-h">
+    <h2 id="us-h">Made for <span class="rot" id="rot">a more playful Claude</span></h2>
+    <p class="use-cap" id="use-cap" aria-live="polite">Pixel art where the wall of text used to be.</p>
+  </section>
+
+  <section class="scenes" id="scenes" aria-labelledby="sc-h">
+    <h2 id="sc-h">254 scenes, or your own</h2>
+    <p class="lead">Each turn shows the next one, unless you pick a favourite with the gear. Tap a scene to try it in the Working pane above.</p>
+    <div class="mq-wrap"><div class="mq" style="--dur:84s"><ul class="track" aria-label="Scenes, row 1"><li><button type="button" class="scene-card" data-scene="28" aria-pressed="false" title="Campfire"><img src="assets/scenes/scenery/campfire.svg" alt="Campfire" loading="lazy"><span>Campfire</span></button></li><li><button type="button" class="scene-card" data-scene="29" aria-pressed="false" title="Coffee"><img src="assets/scenes/scenery/coffee.svg" alt="Coffee" loading="lazy"><span>Coffee</span></button></li><li><button type="button" class="scene-card" data-scene="30" aria-pressed="false" title="Fishing"><img src="assets/scenes/scenery/fishing.svg" alt="Fishing" loading="lazy"><span>Fishing</span></button></li><li><button type="button" class="scene-card" data-scene="31" aria-pressed="false" title="Laptop"><img src="assets/scenes/scenery/laptop.svg" alt="Laptop" loading="lazy"><span>Laptop</span></button></li><li><button type="button" class="scene-card" data-scene="32" aria-pressed="false" title="Meadow"><img src="assets/scenes/scenery/meadow.svg" alt="Meadow" loading="lazy"><span>Meadow</span></button></li><li><button type="button" class="scene-card sq" data-scene="33" aria-pressed="false" title="Blocks"><img src="assets/scenes/abstract/blocks.svg" alt="Blocks" loading="lazy"><span>Blocks</span></button></li><li><button type="button" class="scene-card sq" data-scene="34" aria-pressed="false" title="Orbit"><img src="assets/scenes/abstract/orbit.svg" alt="Orbit" loading="lazy"><span>Orbit</span></button></li><li><button type="button" class="scene-card sq" data-scene="35" aria-pressed="false" title="Plasma"><img src="assets/scenes/abstract/plasma.svg" alt="Plasma" loading="lazy"><span>Plasma</span></button></li><li><button type="button" class="scene-card" data-scene="36" aria-pressed="false" title="Autumn"><img src="assets/scenes/paintings/autumn.svg" alt="Autumn" loading="lazy"><span>Autumn</span></button></li><li><button type="button" class="scene-card" data-scene="37" aria-pressed="false" title="Mountain lake"><img src="assets/scenes/paintings/mountain-lake.svg" alt="Mountain lake" loading="lazy"><span>Mountain lake</span></button></li><li><button type="button" class="scene-card" data-scene="38" aria-pressed="false" title="Sunset sea"><img src="assets/scenes/paintings/sunset-sea.svg" alt="Sunset sea" loading="lazy"><span>Sunset sea</span></button></li><li><button type="button" class="scene-card" data-scene="39" aria-pressed="false" title="Winter cabin"><img src="assets/scenes/paintings/winter-cabin.svg" alt="Winter cabin" loading="lazy"><span>Winter cabin</span></button></li></ul><ul class="track copy" aria-hidden="true"><li><button type="button" class="scene-card" data-scene="28" aria-pressed="false" tabindex="-1" title="Campfire"><img src="assets/scenes/scenery/campfire.svg" alt="" loading="lazy"><span>Campfire</span></button></li><li><button type="button" class="scene-card" data-scene="29" aria-pressed="false" tabindex="-1" title="Coffee"><img src="assets/scenes/scenery/coffee.svg" alt="" loading="lazy"><span>Coffee</span></button></li><li><button type="button" class="scene-card" data-scene="30" aria-pressed="false" tabindex="-1" title="Fishing"><img src="assets/scenes/scenery/fishing.svg" alt="" loading="lazy"><span>Fishing</span></button></li><li><button type="button" class="scene-card" data-scene="31" aria-pressed="false" tabindex="-1" title="Laptop"><img src="assets/scenes/scenery/laptop.svg" alt="" loading="lazy"><span>Laptop</span></button></li><li><button type="button" class="scene-card" data-scene="32" aria-pressed="false" tabindex="-1" title="Meadow"><img src="assets/scenes/scenery/meadow.svg" alt="" loading="lazy"><span>Meadow</span></button></li><li><button type="button" class="scene-card sq" data-scene="33" aria-pressed="false" tabindex="-1" title="Blocks"><img src="assets/scenes/abstract/blocks.svg" alt="" loading="lazy"><span>Blocks</span></button></li><li><button type="button" class="scene-card sq" data-scene="34" aria-pressed="false" tabindex="-1" title="Orbit"><img src="assets/scenes/abstract/orbit.svg" alt="" loading="lazy"><span>Orbit</span></button></li><li><button type="button" class="scene-card sq" data-scene="35" aria-pressed="false" tabindex="-1" title="Plasma"><img src="assets/scenes/abstract/plasma.svg" alt="" loading="lazy"><span>Plasma</span></button></li><li><button type="button" class="scene-card" data-scene="36" aria-pressed="false" tabindex="-1" title="Autumn"><img src="assets/scenes/paintings/autumn.svg" alt="" loading="lazy"><span>Autumn</span></button></li><li><button type="button" class="scene-card" data-scene="37" aria-pressed="false" tabindex="-1" title="Mountain lake"><img src="assets/scenes/paintings/mountain-lake.svg" alt="" loading="lazy"><span>Mountain lake</span></button></li><li><button type="button" class="scene-card" data-scene="38" aria-pressed="false" tabindex="-1" title="Sunset sea"><img src="assets/scenes/paintings/sunset-sea.svg" alt="" loading="lazy"><span>Sunset sea</span></button></li><li><button type="button" class="scene-card" data-scene="39" aria-pressed="false" tabindex="-1" title="Winter cabin"><img src="assets/scenes/paintings/winter-cabin.svg" alt="" loading="lazy"><span>Winter cabin</span></button></li></ul></div><div class="mq back" style="--dur:175s"><ul class="track" aria-label="Scenes, row 2"><li><button type="button" class="scene-card" data-scene="15" aria-pressed="false" title="Campfire"><img src="assets/scenes/campfire-bare.svg" alt="Campfire" loading="lazy"><span>Campfire</span></button></li><li><button type="button" class="scene-card" data-scene="40" aria-pressed="false" title="Working campfire"><img src="assets/scenes/status/working-campfire.svg" alt="Working campfire" loading="lazy"><span>Working campfire</span></button></li><li><button type="button" class="scene-card" data-scene="16" aria-pressed="false" title="Gardener"><img src="assets/scenes/gardener.svg" alt="Gardener" loading="lazy"><span>Gardener</span></button></li><li><button type="button" class="scene-card" data-scene="41" aria-pressed="false" title="Working crate"><img src="assets/scenes/status/working-crate.svg" alt="Working crate" loading="lazy"><span>Working crate</span></button></li><li><button type="button" class="scene-card" data-scene="17" aria-pressed="false" title="Gym"><img src="assets/scenes/gym.svg" alt="Gym" loading="lazy"><span>Gym</span></button></li><li><button type="button" class="scene-card" data-scene="42" aria-pressed="false" title="Working gardener"><img src="assets/scenes/status/working-gardener.svg" alt="Working gardener" loading="lazy"><span>Working gardener</span></button></li><li><button type="button" class="scene-card" data-scene="18" aria-pressed="false" title="Hop"><img src="assets/scenes/hop.svg" alt="Hop" loading="lazy"><span>Hop</span></button></li><li><button type="button" class="scene-card" data-scene="43" aria-pressed="false" title="Working gym"><img src="assets/scenes/status/working-gym.svg" alt="Working gym" loading="lazy"><span>Working gym</span></button></li><li><button type="button" class="scene-card" data-scene="19" aria-pressed="false" title="Juggle"><img src="assets/scenes/juggle.svg" alt="Juggle" loading="lazy"><span>Juggle</span></button></li><li><button type="button" class="scene-card" data-scene="44" aria-pressed="false" title="Working hop"><img src="assets/scenes/status/working-hop.svg" alt="Working hop" loading="lazy"><span>Working hop</span></button></li><li><button type="button" class="scene-card" data-scene="20" aria-pressed="false" title="Laptop"><img src="assets/scenes/laptop-bare.svg" alt="Laptop" loading="lazy"><span>Laptop</span></button></li><li><button type="button" class="scene-card" data-scene="45" aria-pressed="false" title="Working laptop"><img src="assets/scenes/status/working-laptop.svg" alt="Working laptop" loading="lazy"><span>Working laptop</span></button></li><li><button type="button" class="scene-card" data-scene="21" aria-pressed="false" title="Meadow"><img src="assets/scenes/meadow-bare.svg" alt="Meadow" loading="lazy"><span>Meadow</span></button></li><li><button type="button" class="scene-card" data-scene="46" aria-pressed="false" title="Working lift"><img src="assets/scenes/status/working-lift.svg" alt="Working lift" loading="lazy"><span>Working lift</span></button></li><li><button type="button" class="scene-card" data-scene="22" aria-pressed="false" title="Nap"><img src="assets/scenes/nap.svg" alt="Nap" loading="lazy"><span>Nap</span></button></li><li><button type="button" class="scene-card" data-scene="47" aria-pressed="false" title="Working nap"><img src="assets/scenes/status/working-nap.svg" alt="Working nap" loading="lazy"><span>Working nap</span></button></li><li><button type="button" class="scene-card" data-scene="23" aria-pressed="false" title="Painter"><img src="assets/scenes/painter.svg" alt="Painter" loading="lazy"><span>Painter</span></button></li><li><button type="button" class="scene-card" data-scene="48" aria-pressed="false" title="Working paint"><img src="assets/scenes/status/working-paint.svg" alt="Working paint" loading="lazy"><span>Working paint</span></button></li><li><button type="button" class="scene-card" data-scene="24" aria-pressed="false" title="Paperplane"><img src="assets/scenes/paperplane.svg" alt="Paperplane" loading="lazy"><span>Paperplane</span></button></li><li><button type="button" class="scene-card" data-scene="49" aria-pressed="false" title="Working push"><img src="assets/scenes/status/working-push.svg" alt="Working push" loading="lazy"><span>Working push</span></button></li><li><button type="button" class="scene-card" data-scene="25" aria-pressed="false" title="Reading"><img src="assets/scenes/reading.svg" alt="Reading" loading="lazy"><span>Reading</span></button></li><li><button type="button" class="scene-card" data-scene="50" aria-pressed="false" title="Working reading"><img src="assets/scenes/status/working-reading.svg" alt="Working reading" loading="lazy"><span>Working reading</span></button></li><li><button type="button" class="scene-card" data-scene="26" aria-pressed="false" title="Tea"><img src="assets/scenes/sit.svg" alt="Tea" loading="lazy"><span>Tea</span></button></li><li><button type="button" class="scene-card" data-scene="51" aria-pressed="false" title="Working, sitting"><img src="assets/scenes/status/working-sit.svg" alt="Working, sitting" loading="lazy"><span>Working, sitting</span></button></li><li><button type="button" class="scene-card" data-scene="27" aria-pressed="false" title="Teacher"><img src="assets/scenes/teacher.svg" alt="Teacher" loading="lazy"><span>Teacher</span></button></li></ul><ul class="track copy" aria-hidden="true"><li><button type="button" class="scene-card" data-scene="15" aria-pressed="false" tabindex="-1" title="Campfire"><img src="assets/scenes/campfire-bare.svg" alt="" loading="lazy"><span>Campfire</span></button></li><li><button type="button" class="scene-card" data-scene="40" aria-pressed="false" tabindex="-1" title="Working campfire"><img src="assets/scenes/status/working-campfire.svg" alt="" loading="lazy"><span>Working campfire</span></button></li><li><button type="button" class="scene-card" data-scene="16" aria-pressed="false" tabindex="-1" title="Gardener"><img src="assets/scenes/gardener.svg" alt="" loading="lazy"><span>Gardener</span></button></li><li><button type="button" class="scene-card" data-scene="41" aria-pressed="false" tabindex="-1" title="Working crate"><img src="assets/scenes/status/working-crate.svg" alt="" loading="lazy"><span>Working crate</span></button></li><li><button type="button" class="scene-card" data-scene="17" aria-pressed="false" tabindex="-1" title="Gym"><img src="assets/scenes/gym.svg" alt="" loading="lazy"><span>Gym</span></button></li><li><button type="button" class="scene-card" data-scene="42" aria-pressed="false" tabindex="-1" title="Working gardener"><img src="assets/scenes/status/working-gardener.svg" alt="" loading="lazy"><span>Working gardener</span></button></li><li><button type="button" class="scene-card" data-scene="18" aria-pressed="false" tabindex="-1" title="Hop"><img src="assets/scenes/hop.svg" alt="" loading="lazy"><span>Hop</span></button></li><li><button type="button" class="scene-card" data-scene="43" aria-pressed="false" tabindex="-1" title="Working gym"><img src="assets/scenes/status/working-gym.svg" alt="" loading="lazy"><span>Working gym</span></button></li><li><button type="button" class="scene-card" data-scene="19" aria-pressed="false" tabindex="-1" title="Juggle"><img src="assets/scenes/juggle.svg" alt="" loading="lazy"><span>Juggle</span></button></li><li><button type="button" class="scene-card" data-scene="44" aria-pressed="false" tabindex="-1" title="Working hop"><img src="assets/scenes/status/working-hop.svg" alt="" loading="lazy"><span>Working hop</span></button></li><li><button type="button" class="scene-card" data-scene="20" aria-pressed="false" tabindex="-1" title="Laptop"><img src="assets/scenes/laptop-bare.svg" alt="" loading="lazy"><span>Laptop</span></button></li><li><button type="button" class="scene-card" data-scene="45" aria-pressed="false" tabindex="-1" title="Working laptop"><img src="assets/scenes/status/working-laptop.svg" alt="" loading="lazy"><span>Working laptop</span></button></li><li><button type="button" class="scene-card" data-scene="21" aria-pressed="false" tabindex="-1" title="Meadow"><img src="assets/scenes/meadow-bare.svg" alt="" loading="lazy"><span>Meadow</span></button></li><li><button type="button" class="scene-card" data-scene="46" aria-pressed="false" tabindex="-1" title="Working lift"><img src="assets/scenes/status/working-lift.svg" alt="" loading="lazy"><span>Working lift</span></button></li><li><button type="button" class="scene-card" data-scene="22" aria-pressed="false" tabindex="-1" title="Nap"><img src="assets/scenes/nap.svg" alt="" loading="lazy"><span>Nap</span></button></li><li><button type="button" class="scene-card" data-scene="47" aria-pressed="false" tabindex="-1" title="Working nap"><img src="assets/scenes/status/working-nap.svg" alt="" loading="lazy"><span>Working nap</span></button></li><li><button type="button" class="scene-card" data-scene="23" aria-pressed="false" tabindex="-1" title="Painter"><img src="assets/scenes/painter.svg" alt="" loading="lazy"><span>Painter</span></button></li><li><button type="button" class="scene-card" data-scene="48" aria-pressed="false" tabindex="-1" title="Working paint"><img src="assets/scenes/status/working-paint.svg" alt="" loading="lazy"><span>Working paint</span></button></li><li><button type="button" class="scene-card" data-scene="24" aria-pressed="false" tabindex="-1" title="Paperplane"><img src="assets/scenes/paperplane.svg" alt="" loading="lazy"><span>Paperplane</span></button></li><li><button type="button" class="scene-card" data-scene="49" aria-pressed="false" tabindex="-1" title="Working push"><img src="assets/scenes/status/working-push.svg" alt="" loading="lazy"><span>Working push</span></button></li><li><button type="button" class="scene-card" data-scene="25" aria-pressed="false" tabindex="-1" title="Reading"><img src="assets/scenes/reading.svg" alt="" loading="lazy"><span>Reading</span></button></li><li><button type="button" class="scene-card" data-scene="50" aria-pressed="false" tabindex="-1" title="Working reading"><img src="assets/scenes/status/working-reading.svg" alt="" loading="lazy"><span>Working reading</span></button></li><li><button type="button" class="scene-card" data-scene="26" aria-pressed="false" tabindex="-1" title="Tea"><img src="assets/scenes/sit.svg" alt="" loading="lazy"><span>Tea</span></button></li><li><button type="button" class="scene-card" data-scene="51" aria-pressed="false" tabindex="-1" title="Working, sitting"><img src="assets/scenes/status/working-sit.svg" alt="" loading="lazy"><span>Working, sitting</span></button></li><li><button type="button" class="scene-card" data-scene="27" aria-pressed="false" tabindex="-1" title="Teacher"><img src="assets/scenes/teacher.svg" alt="" loading="lazy"><span>Teacher</span></button></li></ul></div></div>
+    <p class="picked" id="picked" aria-live="polite"></p>
+    <a class="yours" href="market/#share">
+      <span class="y-plus" aria-hidden="true"></span>
+      <span class="y-h">Made one? Put it in the Marketplace.</span>
+      <span class="btn main"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0"/><path d="M5 12v8h14v-8"/><path d="M10 20v-5h4v5"/></svg>Share a scene</span>
+      <span class="y-note">Or keep it private: drop a GIF, PNG, WebP, JPG or SVG into <code>~/.claude/textless/scenes</code>.</span>
+    </a>
+  </section>
+
+  <section class="controls" id="controls" aria-labelledby="ct-h">
+    <h2 id="ct-h">Right on the card</h2>
+    <p class="lead">Point at a button, or watch the commands type themselves.</p>
+    <div class="cb-zoom" id="cb-zoom"><div class="cbar" id="strip" data-on="true">
+      <div class="cb-card">
+        <div class="cb-top"><span class="cb-tl">
+          <button type="button" class="cb-b cb-aa" data-power data-tip="power" aria-pressed="true" aria-label="textless on or off in this chat" title="Orange and struck through while the steps are hidden">Aa</button>
+          <button type="button" class="cb-b" data-tip="gear" aria-label="textless settings"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path stroke-width="1.9" d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3" stroke-width="1.9"/></svg></button>
+          <button type="button" class="cb-b" data-tip="min" aria-label="Minimize the card"><svg class="i" viewBox="0 0 16 16" aria-hidden="true" ><path d="M13 3 9.5 6.5M9.5 3.5v3h3M3 13l3.5-3.5M3.5 9.5h3v3"/></svg></button>
+        </span></div>
+        <img class="cb-art" src="assets/scenes/scenery/campfire.svg" alt="" width="560" height="350">
+        <p class="cb-busy">Claude is working</p>
+      </div>
+      <div class="cb-comp"><span class="cb-type" id="cb-type">Type / for commands</span><span class="cb-stop" aria-hidden="true"></span></div>
+    </div>
+</div>
+    <p class="cb-cmd" id="cb-cmd" aria-hidden="true"></p>
+    <p class="cb-say" id="cb-say" aria-live="polite">Turn it off at any time.</p>
+  </section>
+
+  <section class="chess" id="chess" aria-labelledby="ch-h">
+    <h2 id="ch-h">Play chess against Claude while you wait</h2>
+    <p class="lead">Type <code>/chess claude</code> and a board opens in the chat. Click a piece, then the square it goes to, and Claude answers with its move. <code>/chess</code> plays the computer instead, <code>/chess end</code> closes the board.</p>
+    <img class="ch-board" src="assets/chess.webp" width="653" height="576" alt="The textless chess board in the chat" loading="lazy">
+  </section>
+
+  <section class="install" id="install" aria-labelledby="in-h">
+    <h2 id="in-h">Install</h2>
+    <p class="lead">textless 0.15.16 installs from the effortless marketplace and runs on your own Claude login. It works in the Claude desktop app only; the terminal is not supported.</p>
+    <div class="ways"><div class="way way-claude"><p class="way-k"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%20248%20248%22%3E%3Cstyle%3Esvg%7Bbackground%3Atransparent%3Bdisplay%3Ablock%7D%3C%2Fstyle%3E%3Cpath%20d%3D%22M52.4285%20162.873L98.7844%20136.879L99.5485%20134.602L98.7844%20133.334H96.4921L88.7237%20132.862L62.2346%20132.153L39.3113%20131.207L17.0249%20130.026L11.4214%20128.844L6.2%20121.873L6.7094%20118.447L11.4214%20115.257L18.171%20115.847L33.0711%20116.911L55.485%20118.447L71.6586%20119.392L95.728%20121.873H99.5485L100.058%20120.337L98.7844%20119.392L97.7656%20118.447L74.5877%20102.732L49.4995%2086.1905L36.3823%2076.62L29.3779%2071.7757L25.8121%2067.2858L24.2839%2057.3608L30.6515%2050.2716L39.3113%2050.8623L41.4763%2051.4531L50.2636%2058.1879L68.9842%2072.7209L93.4357%2090.6804L97.0015%2093.6343L98.4374%2092.6652L98.6571%2091.9801L97.0015%2089.2625L83.757%2065.2772L69.621%2040.8192L63.2534%2030.6579L61.5978%2024.632C60.9565%2022.1032%2060.579%2020.0111%2060.579%2017.4246L67.8381%207.49965L71.9133%206.19995L81.7193%207.49965L85.7946%2011.0443L91.9074%2024.9865L101.714%2046.8451L116.996%2076.62L121.453%2085.4816L123.873%2093.6343L124.764%2096.1155H126.292V94.6976L127.566%2077.9197L129.858%2057.3608L132.15%2030.8942L132.915%2023.4505L136.608%2014.4708L143.994%209.62643L149.725%2012.344L154.437%2019.0788L153.8%2023.4505L150.998%2041.6463L145.522%2070.1215L141.957%2089.2625H143.994L146.414%2086.7813L156.093%2074.0206L172.266%2053.698L179.398%2045.6635L187.803%2036.802L193.152%2032.5484H203.34L210.726%2043.6549L207.415%2055.1159L196.972%2068.3492L188.312%2079.5739L175.896%2096.2095L168.191%20109.585L168.882%20110.689L170.738%20110.53L198.755%20104.504L213.91%20101.787L231.994%2098.7149L240.144%20102.496L241.036%20106.395L237.852%20114.311L218.495%20119.037L195.826%20123.645L162.07%20131.592L161.696%20131.893L162.137%20132.547L177.36%20133.925L183.855%20134.279H199.774L229.447%20136.524L237.215%20141.605L241.8%20147.867L241.036%20152.711L229.065%20158.737L213.019%20154.956L175.45%20145.977L162.587%20142.787H160.805V143.85L171.502%20154.366L191.242%20172.089L215.82%20195.011L217.094%20200.682L213.91%20205.172L210.599%20204.699L188.949%20188.394L180.544%20181.069L161.696%20165.118H160.422V166.772L164.752%20173.152L187.803%20207.771L188.949%20218.405L187.294%20221.832L181.308%20223.959L174.813%20222.777L161.187%20203.754L147.305%20182.486L136.098%20163.345L134.745%20164.2L128.075%20235.42L125.019%20239.082L117.887%20241.8L111.902%20237.31L108.718%20229.984L111.902%20215.452L115.722%20196.547L118.779%20181.541L121.58%20162.873L123.291%20156.636L123.14%20156.219L121.773%20156.449L107.699%20175.752L86.304%20204.699L69.3663%20222.777L65.291%20224.431L58.2867%20220.768L58.9235%20214.27L62.8713%20208.48L86.304%20178.705L100.44%20160.155L109.551%20149.507L109.462%20147.967L108.959%20147.924L46.6977%20188.512L35.6182%20189.93L30.7788%20185.44L31.4156%20178.115L33.7079%20175.752L52.4285%20162.873Z%22%20fill%3D%22%23d97757%22%2F%3E%3C%2Fsvg%3E%0D%0A" alt="" width="20" height="20">Ask Claude</p><p class="way-t">Claude installs it for you.</p><button type="button" class="big claude" data-copy="Install the textless plugin for me: run `claude plugin marketplace add HeyCubit/effortless` and then `claude plugin install textless@effortless`. When both succeed, tell me to run /reload-plugins." aria-label="Copy the install request for Claude"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%20248%20248%22%3E%3Cstyle%3Esvg%7Bbackground%3Atransparent%3Bdisplay%3Ablock%7D%3C%2Fstyle%3E%3Cpath%20d%3D%22M52.4285%20162.873L98.7844%20136.879L99.5485%20134.602L98.7844%20133.334H96.4921L88.7237%20132.862L62.2346%20132.153L39.3113%20131.207L17.0249%20130.026L11.4214%20128.844L6.2%20121.873L6.7094%20118.447L11.4214%20115.257L18.171%20115.847L33.0711%20116.911L55.485%20118.447L71.6586%20119.392L95.728%20121.873H99.5485L100.058%20120.337L98.7844%20119.392L97.7656%20118.447L74.5877%20102.732L49.4995%2086.1905L36.3823%2076.62L29.3779%2071.7757L25.8121%2067.2858L24.2839%2057.3608L30.6515%2050.2716L39.3113%2050.8623L41.4763%2051.4531L50.2636%2058.1879L68.9842%2072.7209L93.4357%2090.6804L97.0015%2093.6343L98.4374%2092.6652L98.6571%2091.9801L97.0015%2089.2625L83.757%2065.2772L69.621%2040.8192L63.2534%2030.6579L61.5978%2024.632C60.9565%2022.1032%2060.579%2020.0111%2060.579%2017.4246L67.8381%207.49965L71.9133%206.19995L81.7193%207.49965L85.7946%2011.0443L91.9074%2024.9865L101.714%2046.8451L116.996%2076.62L121.453%2085.4816L123.873%2093.6343L124.764%2096.1155H126.292V94.6976L127.566%2077.9197L129.858%2057.3608L132.15%2030.8942L132.915%2023.4505L136.608%2014.4708L143.994%209.62643L149.725%2012.344L154.437%2019.0788L153.8%2023.4505L150.998%2041.6463L145.522%2070.1215L141.957%2089.2625H143.994L146.414%2086.7813L156.093%2074.0206L172.266%2053.698L179.398%2045.6635L187.803%2036.802L193.152%2032.5484H203.34L210.726%2043.6549L207.415%2055.1159L196.972%2068.3492L188.312%2079.5739L175.896%2096.2095L168.191%20109.585L168.882%20110.689L170.738%20110.53L198.755%20104.504L213.91%20101.787L231.994%2098.7149L240.144%20102.496L241.036%20106.395L237.852%20114.311L218.495%20119.037L195.826%20123.645L162.07%20131.592L161.696%20131.893L162.137%20132.547L177.36%20133.925L183.855%20134.279H199.774L229.447%20136.524L237.215%20141.605L241.8%20147.867L241.036%20152.711L229.065%20158.737L213.019%20154.956L175.45%20145.977L162.587%20142.787H160.805V143.85L171.502%20154.366L191.242%20172.089L215.82%20195.011L217.094%20200.682L213.91%20205.172L210.599%20204.699L188.949%20188.394L180.544%20181.069L161.696%20165.118H160.422V166.772L164.752%20173.152L187.803%20207.771L188.949%20218.405L187.294%20221.832L181.308%20223.959L174.813%20222.777L161.187%20203.754L147.305%20182.486L136.098%20163.345L134.745%20164.2L128.075%20235.42L125.019%20239.082L117.887%20241.8L111.902%20237.31L108.718%20229.984L111.902%20215.452L115.722%20196.547L118.779%20181.541L121.58%20162.873L123.291%20156.636L123.14%20156.219L121.773%20156.449L107.699%20175.752L86.304%20204.699L69.3663%20222.777L65.291%20224.431L58.2867%20220.768L58.9235%20214.27L62.8713%20208.48L86.304%20178.705L100.44%20160.155L109.551%20149.507L109.462%20147.967L108.959%20147.924L46.6977%20188.512L35.6182%20189.93L30.7788%20185.44L31.4156%20178.115L33.7079%20175.752L52.4285%20162.873Z%22%20fill%3D%22%231f1009%22%2F%3E%3C%2Fsvg%3E%0D%0A" alt="" width="20" height="20"><span>Copy for Claude</span></button><p class="way-h">Paste it into Claude Code and press Enter.</p></div><div class="way way-cmd"><p class="way-k"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="1.5" y="3" width="17" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 8l2.5 2-2.5 2M10 12.5h4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Terminal</p><p class="way-t">Run one command.</p><button type="button" class="big term" data-copy="claude plugin marketplace add HeyCubit/effortless; claude plugin install textless@effortless" aria-label="Copy the install command"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="8.5" height="8.5" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M3 10.5V4a1.5 1.5 0 011.5-1.5H11" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span>Copy command</span></button><p class="way-h"><code>claude plugin marketplace add HeyCubit/effortless; claude plugin install textless@effortless</code></p></div></div><p class="then">Then run <code>/reload-plugins</code> in Claude Code.</p>
+    <p class="fit">Made for long work turns, when the steps pile up and you only want to know when it is your move. When Claude plans or writes a spec, textless spots it and steps aside, so you can read what you are asked to approve.</p>
+  </section>
+
+  <section class="cubit" id="cubit" aria-labelledby="cu-h">
+    <div class="cu-text">
+      <p class="cu-kicker">Meanwhile, in another dimension</p>
+      <h2 id="cu-h">Also building <span class="cu-logo" role="img" aria-label="Cubit" style="--logo:url(assets/cubit/cubit-logo-white.svg)"></span></h2>
+      <p class="lead">Send anything to anyone, anywhere.</p>
+      <a class="btn main" href="https://heycubit.com" rel="noopener">Join the waitlist</a>
+    </div>
+    <div class="rip" aria-hidden="true">
+      <div class="rip-hole"></div>
+      <div class="rip-edge"></div>
+      <canvas class="rip-peek" id="rip-peek" width="900" height="900"></canvas>
+    </div>
+  </section>
+</main>
+
+<div class="edge-peek" id="edge-peek" hidden>
+  <a class="ep-go" href="#cubit" tabindex="-1" aria-hidden="true"><canvas class="ep-cubit" width="220" height="390"></canvas></a>
+  <div class="ep-bubble" role="group" aria-label="Cubit">
+    <b>Pssst, I'm further down!</b>
+  </div>
+</div>
+
+<footer>
+  <div class="foot">
+    <div class="by"><a class="brand" href="#top"><svg class="logo" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="18" viewBox="2 14 60 36" shape-rendering="crispEdges"><mask id="aa30"><rect width="64" height="64" fill="#fff"/><rect x="3" y="35" width="58" height="1" fill="#000"/><rect x="3" y="39" width="58" height="1" fill="#000"/></mask><g fill="#d97757"><g mask="url(#aa30)"><rect x="19" y="17" width="4" height="1"/><rect x="18" y="18" width="6" height="1"/><rect x="18" y="19" width="6" height="1"/><rect x="18" y="20" width="7" height="1"/><rect x="17" y="21" width="8" height="1"/><rect x="17" y="22" width="8" height="1"/><rect x="16" y="23" width="10" height="1"/><rect x="16" y="24" width="10" height="1"/><rect x="15" y="25" width="12" height="1"/><rect x="15" y="26" width="12" height="1"/><rect x="44" y="26" width="4" height="1"/><rect x="15" y="27" width="5" height="1"/><rect x="22" y="27" width="5" height="1"/><rect x="41" y="27" width="9" height="1"/><rect x="52" y="27" width="5" height="1"/><rect x="14" y="28" width="6" height="1"/><rect x="22" y="28" width="6" height="1"/><rect x="40" y="28" width="17" height="1"/><rect x="14" y="29" width="6" height="1"/><rect x="23" y="29" width="5" height="1"/><rect x="39" y="29" width="18" height="1"/><rect x="13" y="30" width="6" height="1"/><rect x="23" y="30" width="6" height="1"/><rect x="38" y="30" width="19" height="1"/><rect x="13" y="31" width="6" height="1"/><rect x="23" y="31" width="6" height="1"/><rect x="37" y="31" width="9" height="1"/><rect x="48" y="31" width="9" height="1"/><rect x="13" y="32" width="5" height="1"/><rect x="24" y="32" width="5" height="1"/><rect x="37" y="32" width="7" height="1"/><rect x="50" y="32" width="7" height="1"/><rect x="12" y="33" width="6" height="1"/><rect x="24" y="33" width="6" height="1"/><rect x="37" y="33" width="6" height="1"/><rect x="51" y="33" width="6" height="1"/><rect x="12" y="34" width="6" height="1"/><rect x="24" y="34" width="6" height="1"/><rect x="36" y="34" width="6" height="1"/><rect x="52" y="34" width="5" height="1"/><rect x="11" y="35" width="6" height="1"/><rect x="25" y="35" width="6" height="1"/><rect x="36" y="35" width="6" height="1"/><rect x="52" y="35" width="5" height="1"/><rect x="11" y="36" width="6" height="1"/><rect x="25" y="36" width="6" height="1"/><rect x="36" y="36" width="6" height="1"/><rect x="52" y="36" width="5" height="1"/><rect x="11" y="37" width="20" height="1"/><rect x="36" y="37" width="6" height="1"/><rect x="52" y="37" width="5" height="1"/><rect x="10" y="38" width="22" height="1"/><rect x="36" y="38" width="6" height="1"/><rect x="52" y="38" width="5" height="1"/><rect x="10" y="39" width="22" height="1"/><rect x="36" y="39" width="6" height="1"/><rect x="52" y="39" width="5" height="1"/><rect x="9" y="40" width="24" height="1"/><rect x="37" y="40" width="6" height="1"/><rect x="51" y="40" width="6" height="1"/><rect x="9" y="41" width="24" height="1"/><rect x="37" y="41" width="7" height="1"/><rect x="50" y="41" width="7" height="1"/><rect x="9" y="42" width="6" height="1"/><rect x="27" y="42" width="6" height="1"/><rect x="38" y="42" width="19" height="1"/><rect x="8" y="43" width="6" height="1"/><rect x="28" y="43" width="6" height="1"/><rect x="38" y="43" width="19" height="1"/><rect x="8" y="44" width="6" height="1"/><rect x="28" y="44" width="6" height="1"/><rect x="39" y="44" width="18" height="1"/><rect x="7" y="45" width="6" height="1"/><rect x="29" y="45" width="6" height="1"/><rect x="40" y="45" width="17" height="1"/><rect x="7" y="46" width="6" height="1"/><rect x="29" y="46" width="6" height="1"/><rect x="42" y="46" width="8" height="1"/><rect x="52" y="46" width="5" height="1"/></g><rect x="4" y="36" width="56" height="3"/></g></svg>textless</a><a class="maker" href="https://heycubit.github.io/effortless/">from the creator of <b>effortless</b> &rarr;</a></div>
+    <span>Also building <a href="https://heycubit.com">Cubit</a>. Hobby project, not made by or affiliated with Anthropic.</span>
+    <nav aria-label="Footer"><a href="#compare">Compare</a><a href="#scenes">Scenes</a><a href="#controls">Controls</a><a href="market/">Marketplace</a><a href="whats-new/">What's new</a><a href="#install">Install</a><a href="https://x.com/heycubit">X</a></nav>
+  </div>
+  <div class="foot-word" aria-hidden="true"><span class="soft">textless</span><span class="crisp">textless</span></div>
+</footer>
+
+<script>
+var SCENES = [{"name":"Clawd","src":"assets/scenes/minimal/clawd.svg","sq":false,"set":"Minimal"},{"name":"Dot","src":"assets/scenes/minimal/dot.svg","sq":false,"set":"Minimal"},{"name":"Dots","src":"assets/scenes/minimal/dots.svg","sq":false,"set":"Minimal"},{"name":"Line","src":"assets/scenes/minimal/line.svg","sq":false,"set":"Minimal"},{"name":"Orbit","src":"assets/scenes/minimal/orbit.svg","sq":false,"set":"Minimal"},{"name":"Spark","src":"assets/scenes/minimal/spark.svg","sq":false,"set":"Minimal"},{"name":"Ajax","src":"assets/scenes/nostalgia/ajax.svg","sq":false,"set":"Nostalgia"},{"name":"Boot","src":"assets/scenes/nostalgia/boot.svg","sq":false,"set":"Nostalgia"},{"name":"Copy","src":"assets/scenes/nostalgia/copy.svg","sq":false,"set":"Nostalgia"},{"name":"Dvd","src":"assets/scenes/nostalgia/dvd.svg","sq":false,"set":"Nostalgia"},{"name":"Hourglass","src":"assets/scenes/nostalgia/hourglass.svg","sq":false,"set":"Nostalgia"},{"name":"Invaders","src":"assets/scenes/nostalgia/invaders.svg","sq":false,"set":"Nostalgia"},{"name":"Pong","src":"assets/scenes/nostalgia/pong.svg","sq":false,"set":"Nostalgia"},{"name":"Progress","src":"assets/scenes/nostalgia/progress.svg","sq":false,"set":"Nostalgia"},{"name":"Snake","src":"assets/scenes/nostalgia/snake.svg","sq":false,"set":"Nostalgia"},{"name":"Campfire","src":"assets/scenes/campfire-bare.svg","sq":false,"set":"Clawd"},{"name":"Gardener","src":"assets/scenes/gardener.svg","sq":false,"set":"Clawd"},{"name":"Gym","src":"assets/scenes/gym.svg","sq":false,"set":"Clawd"},{"name":"Hop","src":"assets/scenes/hop.svg","sq":false,"set":"Clawd"},{"name":"Juggle","src":"assets/scenes/juggle.svg","sq":false,"set":"Clawd"},{"name":"Laptop","src":"assets/scenes/laptop-bare.svg","sq":false,"set":"Clawd"},{"name":"Meadow","src":"assets/scenes/meadow-bare.svg","sq":false,"set":"Clawd"},{"name":"Nap","src":"assets/scenes/nap.svg","sq":false,"set":"Clawd"},{"name":"Painter","src":"assets/scenes/painter.svg","sq":false,"set":"Clawd"},{"name":"Paperplane","src":"assets/scenes/paperplane.svg","sq":false,"set":"Clawd"},{"name":"Reading","src":"assets/scenes/reading.svg","sq":false,"set":"Clawd"},{"name":"Tea","src":"assets/scenes/sit.svg","sq":false,"set":"Clawd"},{"name":"Teacher","src":"assets/scenes/teacher.svg","sq":false,"set":"Clawd"},{"name":"Campfire","src":"assets/scenes/scenery/campfire.svg","sq":false,"set":"Scenery"},{"name":"Coffee","src":"assets/scenes/scenery/coffee.svg","sq":false,"set":"Scenery"},{"name":"Fishing","src":"assets/scenes/scenery/fishing.svg","sq":false,"set":"Scenery"},{"name":"Laptop","src":"assets/scenes/scenery/laptop.svg","sq":false,"set":"Scenery"},{"name":"Meadow","src":"assets/scenes/scenery/meadow.svg","sq":false,"set":"Scenery"},{"name":"Blocks","src":"assets/scenes/abstract/blocks.svg","sq":true,"set":"Abstract"},{"name":"Orbit","src":"assets/scenes/abstract/orbit.svg","sq":true,"set":"Abstract"},{"name":"Plasma","src":"assets/scenes/abstract/plasma.svg","sq":true,"set":"Abstract"},{"name":"Autumn","src":"assets/scenes/paintings/autumn.svg","sq":false,"set":"Paintings"},{"name":"Mountain lake","src":"assets/scenes/paintings/mountain-lake.svg","sq":false,"set":"Paintings"},{"name":"Sunset sea","src":"assets/scenes/paintings/sunset-sea.svg","sq":false,"set":"Paintings"},{"name":"Winter cabin","src":"assets/scenes/paintings/winter-cabin.svg","sq":false,"set":"Paintings"},{"name":"Working campfire","src":"assets/scenes/status/working-campfire.svg","sq":false,"set":"Working"},{"name":"Working crate","src":"assets/scenes/status/working-crate.svg","sq":false,"set":"Working"},{"name":"Working gardener","src":"assets/scenes/status/working-gardener.svg","sq":false,"set":"Working"},{"name":"Working gym","src":"assets/scenes/status/working-gym.svg","sq":false,"set":"Working"},{"name":"Working hop","src":"assets/scenes/status/working-hop.svg","sq":false,"set":"Working"},{"name":"Working laptop","src":"assets/scenes/status/working-laptop.svg","sq":false,"set":"Working"},{"name":"Working lift","src":"assets/scenes/status/working-lift.svg","sq":false,"set":"Working"},{"name":"Working nap","src":"assets/scenes/status/working-nap.svg","sq":false,"set":"Working"},{"name":"Working paint","src":"assets/scenes/status/working-paint.svg","sq":false,"set":"Working"},{"name":"Working push","src":"assets/scenes/status/working-push.svg","sq":false,"set":"Working"},{"name":"Working reading","src":"assets/scenes/status/working-reading.svg","sq":false,"set":"Working"},{"name":"Working, sitting","src":"assets/scenes/status/working-sit.svg","sq":false,"set":"Working"},{"name":"Working, text","src":"assets/scenes/status/working-text.svg","sq":false,"set":"Working"},{"name":"Chess","src":"assets/scenes/chess/chess.svg","sq":false,"set":"Chess"},{"name":"Aesop slow steady","src":"assets/scenes/quotes/aesop-slow-steady.svg","sq":false,"set":"Quotes"},{"name":"Aesop","src":"assets/scenes/quotes/aesop.svg","sq":false,"set":"Quotes"},{"name":"Alexander lions","src":"assets/scenes/quotes/alexander-lions.svg","sq":false,"set":"Quotes"},{"name":"Alexander toil risk","src":"assets/scenes/quotes/alexander-toil-risk.svg","sq":false,"set":"Quotes"},{"name":"Alexander upon conduct","src":"assets/scenes/quotes/alexander-upon-conduct.svg","sq":false,"set":"Quotes"},{"name":"Alexander","src":"assets/scenes/quotes/alexander.svg","sq":false,"set":"Quotes"},{"name":"Archimedes eureka","src":"assets/scenes/quotes/archimedes-eureka.svg","sq":false,"set":"Quotes"},{"name":"Archimedes","src":"assets/scenes/quotes/archimedes.svg","sq":false,"set":"Quotes"},{"name":"Aristotle friendship single","src":"assets/scenes/quotes/aristotle-friendship-single.svg","sq":false,"set":"Quotes"},{"name":"Aristotle happiness depends","src":"assets/scenes/quotes/aristotle-happiness-depends.svg","sq":false,"set":"Quotes"},{"name":"Aristotle mark educated","src":"assets/scenes/quotes/aristotle-mark-educated.svg","sq":false,"set":"Quotes"},{"name":"Aristotle pleasure job","src":"assets/scenes/quotes/aristotle-pleasure-job.svg","sq":false,"set":"Quotes"},{"name":"Aristotle roots education","src":"assets/scenes/quotes/aristotle-roots-education.svg","sq":false,"set":"Quotes"},{"name":"Aristotle","src":"assets/scenes/quotes/aristotle.svg","sq":false,"set":"Quotes"},{"name":"Augustus make haste","src":"assets/scenes/quotes/augustus-make-haste.svg","sq":false,"set":"Quotes"},{"name":"Austen","src":"assets/scenes/quotes/austen.svg","sq":false,"set":"Quotes"},{"name":"Brevity","src":"assets/scenes/quotes/brevity.svg","sq":false,"set":"Quotes"},{"name":"Bulwer pen mightier","src":"assets/scenes/quotes/bulwer-pen-mightier.svg","sq":false,"set":"Quotes"},{"name":"Caesar die cast","src":"assets/scenes/quotes/caesar-die-cast.svg","sq":false,"set":"Quotes"},{"name":"Caesar men willingly","src":"assets/scenes/quotes/caesar-men-willingly.svg","sq":false,"set":"Quotes"},{"name":"Caesar teacher","src":"assets/scenes/quotes/caesar-teacher.svg","sq":false,"set":"Quotes"},{"name":"Caesar","src":"assets/scenes/quotes/caesar.svg","sq":false,"set":"Quotes"},{"name":"Charlotte bronte bird net","src":"assets/scenes/quotes/charlotte-bronte-bird-net.svg","sq":false,"set":"Quotes"},{"name":"Cicero garden library","src":"assets/scenes/quotes/cicero-garden-library.svg","sq":false,"set":"Quotes"},{"name":"Cicero gratitude only","src":"assets/scenes/quotes/cicero-gratitude-only.svg","sq":false,"set":"Quotes"},{"name":"Cicero room without","src":"assets/scenes/quotes/cicero-room-without.svg","sq":false,"set":"Quotes"},{"name":"Confucius everything has","src":"assets/scenes/quotes/confucius-everything-has.svg","sq":false,"set":"Quotes"},{"name":"Confucius greatest glory","src":"assets/scenes/quotes/confucius-greatest-glory.svg","sq":false,"set":"Quotes"},{"name":"Confucius man moves","src":"assets/scenes/quotes/confucius-man-moves.svg","sq":false,"set":"Quotes"},{"name":"Confucius real knowledge","src":"assets/scenes/quotes/confucius-real-knowledge.svg","sq":false,"set":"Quotes"},{"name":"Confucius wherever heart","src":"assets/scenes/quotes/confucius-wherever-heart.svg","sq":false,"set":"Quotes"},{"name":"Confucius","src":"assets/scenes/quotes/confucius.svg","sq":false,"set":"Quotes"},{"name":"Corinthians love patient","src":"assets/scenes/quotes/corinthians-love-patient.svg","sq":false,"set":"Quotes"},{"name":"Curie less curious","src":"assets/scenes/quotes/curie-less-curious.svg","sq":false,"set":"Quotes"},{"name":"Curie nothing life","src":"assets/scenes/quotes/curie-nothing-life.svg","sq":false,"set":"Quotes"},{"name":"Darwin man dares","src":"assets/scenes/quotes/darwin-man-dares.svg","sq":false,"set":"Quotes"},{"name":"Davinci art never","src":"assets/scenes/quotes/davinci-art-never.svg","sq":false,"set":"Quotes"},{"name":"Davinci noblest pleasure","src":"assets/scenes/quotes/davinci-noblest-pleasure.svg","sq":false,"set":"Quotes"},{"name":"Davinci","src":"assets/scenes/quotes/davinci.svg","sq":false,"set":"Quotes"},{"name":"Delphi know thyself","src":"assets/scenes/quotes/delphi-know-thyself.svg","sq":false,"set":"Quotes"},{"name":"Descartes","src":"assets/scenes/quotes/descartes.svg","sq":false,"set":"Quotes"},{"name":"Dickens best times","src":"assets/scenes/quotes/dickens-best-times.svg","sq":false,"set":"Quotes"},{"name":"Dickens","src":"assets/scenes/quotes/dickens.svg","sq":false,"set":"Quotes"},{"name":"Dickinson forever composed","src":"assets/scenes/quotes/dickinson-forever-composed.svg","sq":false,"set":"Quotes"},{"name":"Dickinson hope thing","src":"assets/scenes/quotes/dickinson-hope-thing.svg","sq":false,"set":"Quotes"},{"name":"Diogenes","src":"assets/scenes/quotes/diogenes.svg","sq":false,"set":"Quotes"},{"name":"Dostoevsky beauty save","src":"assets/scenes/quotes/dostoevsky-beauty-save.svg","sq":false,"set":"Quotes"},{"name":"Edison genius percent","src":"assets/scenes/quotes/edison-genius-percent.svg","sq":false,"set":"Quotes"},{"name":"Edison","src":"assets/scenes/quotes/edison.svg","sq":false,"set":"Quotes"},{"name":"Einstein imagination more","src":"assets/scenes/quotes/einstein-imagination-more.svg","sq":false,"set":"Quotes"},{"name":"Einstein important thing","src":"assets/scenes/quotes/einstein-important-thing.svg","sq":false,"set":"Quotes"},{"name":"Einstein","src":"assets/scenes/quotes/einstein.svg","sq":false,"set":"Quotes"},{"name":"Eliot dare disturb","src":"assets/scenes/quotes/eliot-dare-disturb.svg","sq":false,"set":"Quotes"},{"name":"Elizabeth heart stomach","src":"assets/scenes/quotes/elizabeth-heart-stomach.svg","sq":false,"set":"Quotes"},{"name":"Emerson","src":"assets/scenes/quotes/emerson.svg","sq":false,"set":"Quotes"},{"name":"Emily bronte whatever souls","src":"assets/scenes/quotes/emily-bronte-whatever-souls.svg","sq":false,"set":"Quotes"},{"name":"Epictetus man free","src":"assets/scenes/quotes/epictetus-man-free.svg","sq":false,"set":"Quotes"},{"name":"Epictetus only educated","src":"assets/scenes/quotes/epictetus-only-educated.svg","sq":false,"set":"Quotes"},{"name":"Epictetus two ears","src":"assets/scenes/quotes/epictetus-two-ears.svg","sq":false,"set":"Quotes"},{"name":"Epictetus wealth consists","src":"assets/scenes/quotes/epictetus-wealth-consists.svg","sq":false,"set":"Quotes"},{"name":"Epictetus","src":"assets/scenes/quotes/epictetus.svg","sq":false,"set":"Quotes"},{"name":"Epicurus enjoy constitutes","src":"assets/scenes/quotes/epicurus-enjoy-constitutes.svg","sq":false,"set":"Quotes"},{"name":"Epicurus greater difficulty","src":"assets/scenes/quotes/epicurus-greater-difficulty.svg","sq":false,"set":"Quotes"},{"name":"Epicurus spoil desiring","src":"assets/scenes/quotes/epicurus-spoil-desiring.svg","sq":false,"set":"Quotes"},{"name":"Ford","src":"assets/scenes/quotes/ford.svg","sq":false,"set":"Quotes"},{"name":"Franklin early bed","src":"assets/scenes/quotes/franklin-early-bed.svg","sq":false,"set":"Quotes"},{"name":"Franklin energy persistence","src":"assets/scenes/quotes/franklin-energy-persistence.svg","sq":false,"set":"Quotes"},{"name":"Franklin fish visitors","src":"assets/scenes/quotes/franklin-fish-visitors.svg","sq":false,"set":"Quotes"},{"name":"Franklin knowledge","src":"assets/scenes/quotes/franklin-knowledge.svg","sq":false,"set":"Quotes"},{"name":"Franklin little strokes","src":"assets/scenes/quotes/franklin-little-strokes.svg","sq":false,"set":"Quotes"},{"name":"Franklin time","src":"assets/scenes/quotes/franklin-time.svg","sq":false,"set":"Quotes"},{"name":"Franklin today worth","src":"assets/scenes/quotes/franklin-today-worth.svg","sq":false,"set":"Quotes"},{"name":"Franklin world nothing","src":"assets/scenes/quotes/franklin-world-nothing.svg","sq":false,"set":"Quotes"},{"name":"Franklin","src":"assets/scenes/quotes/franklin.svg","sq":false,"set":"Quotes"},{"name":"Frederick defends everything","src":"assets/scenes/quotes/frederick-defends-everything.svg","sq":false,"set":"Quotes"},{"name":"Frost took less","src":"assets/scenes/quotes/frost-took-less.svg","sq":false,"set":"Quotes"},{"name":"Galileo measure measurable","src":"assets/scenes/quotes/galileo-measure-measurable.svg","sq":false,"set":"Quotes"},{"name":"Galileo truths easy","src":"assets/scenes/quotes/galileo-truths-easy.svg","sq":false,"set":"Quotes"},{"name":"Galileo","src":"assets/scenes/quotes/galileo.svg","sq":false,"set":"Quotes"},{"name":"Gandhi where love","src":"assets/scenes/quotes/gandhi-where-love.svg","sq":false,"set":"Quotes"},{"name":"Goethe","src":"assets/scenes/quotes/goethe.svg","sq":false,"set":"Quotes"},{"name":"Grant propose fight","src":"assets/scenes/quotes/grant-propose-fight.svg","sq":false,"set":"Quotes"},{"name":"Hannibal","src":"assets/scenes/quotes/hannibal.svg","sq":false,"set":"Quotes"},{"name":"Heraclitus change","src":"assets/scenes/quotes/heraclitus-change.svg","sq":false,"set":"Quotes"},{"name":"Heraclitus character destiny","src":"assets/scenes/quotes/heraclitus-character-destiny.svg","sq":false,"set":"Quotes"},{"name":"Heraclitus much learning","src":"assets/scenes/quotes/heraclitus-much-learning.svg","sq":false,"set":"Quotes"},{"name":"Heywood rome built","src":"assets/scenes/quotes/heywood-rome-built.svg","sq":false,"set":"Quotes"},{"name":"Horace has begun","src":"assets/scenes/quotes/horace-has-begun.svg","sq":false,"set":"Quotes"},{"name":"Horace seize day","src":"assets/scenes/quotes/horace-seize-day.svg","sq":false,"set":"Quotes"},{"name":"Hubbard friend someone","src":"assets/scenes/quotes/hubbard-friend-someone.svg","sq":false,"set":"Quotes"},{"name":"Hubbard take life","src":"assets/scenes/quotes/hubbard-take-life.svg","sq":false,"set":"Quotes"},{"name":"Joan afraid born","src":"assets/scenes/quotes/joan-afraid-born.svg","sq":false,"set":"Quotes"},{"name":"Kant science organized","src":"assets/scenes/quotes/kant-science-organized.svg","sq":false,"set":"Quotes"},{"name":"Keats beauty truth","src":"assets/scenes/quotes/keats-beauty-truth.svg","sq":false,"set":"Quotes"},{"name":"Keats thing beauty","src":"assets/scenes/quotes/keats-thing-beauty.svg","sq":false,"set":"Quotes"},{"name":"Keller alone little","src":"assets/scenes/quotes/keller-alone-little.svg","sq":false,"set":"Quotes"},{"name":"Keller best most","src":"assets/scenes/quotes/keller-best-most.svg","sq":false,"set":"Quotes"},{"name":"Keller keep face","src":"assets/scenes/quotes/keller-keep-face.svg","sq":false,"set":"Quotes"},{"name":"Laotzu kindness words","src":"assets/scenes/quotes/laotzu-kindness-words.svg","sq":false,"set":"Quotes"},{"name":"Laotzu knows others","src":"assets/scenes/quotes/laotzu-knows-others.svg","sq":false,"set":"Quotes"},{"name":"Laotzu nature does","src":"assets/scenes/quotes/laotzu-nature-does.svg","sq":false,"set":"Quotes"},{"name":"Laotzu when let","src":"assets/scenes/quotes/laotzu-when-let.svg","sq":false,"set":"Quotes"},{"name":"Laotzu","src":"assets/scenes/quotes/laotzu.svg","sq":false,"set":"Quotes"},{"name":"Lincoln give six","src":"assets/scenes/quotes/lincoln-give-six.svg","sq":false,"set":"Quotes"},{"name":"Lincoln slow walker","src":"assets/scenes/quotes/lincoln-slow-walker.svg","sq":false,"set":"Quotes"},{"name":"Lincoln","src":"assets/scenes/quotes/lincoln.svg","sq":false,"set":"Quotes"},{"name":"Maclaren kind everyone","src":"assets/scenes/quotes/maclaren-kind-everyone.svg","sq":false,"set":"Quotes"},{"name":"Marcus best revenge","src":"assets/scenes/quotes/marcus-best-revenge.svg","sq":false,"set":"Quotes"},{"name":"Marcus loss nothing","src":"assets/scenes/quotes/marcus-loss-nothing.svg","sq":false,"set":"Quotes"},{"name":"Marcus right true","src":"assets/scenes/quotes/marcus-right-true.svg","sq":false,"set":"Quotes"},{"name":"Marcus thoughts","src":"assets/scenes/quotes/marcus-thoughts.svg","sq":false,"set":"Quotes"},{"name":"Marcus very little","src":"assets/scenes/quotes/marcus-very-little.svg","sq":false,"set":"Quotes"},{"name":"Marcus waste more","src":"assets/scenes/quotes/marcus-waste-more.svg","sq":false,"set":"Quotes"},{"name":"Napoleon enemy","src":"assets/scenes/quotes/napoleon-enemy.svg","sq":false,"set":"Quotes"},{"name":"Napoleon leader dealer","src":"assets/scenes/quotes/napoleon-leader-dealer.svg","sq":false,"set":"Quotes"},{"name":"Napoleon ten people","src":"assets/scenes/quotes/napoleon-ten-people.svg","sq":false,"set":"Quotes"},{"name":"Napoleon victory belongs","src":"assets/scenes/quotes/napoleon-victory-belongs.svg","sq":false,"set":"Quotes"},{"name":"Napoleon","src":"assets/scenes/quotes/napoleon.svg","sq":false,"set":"Quotes"},{"name":"Newton nature pleased","src":"assets/scenes/quotes/newton-nature-pleased.svg","sq":false,"set":"Quotes"},{"name":"Newton","src":"assets/scenes/quotes/newton.svg","sq":false,"set":"Quotes"},{"name":"Pascal","src":"assets/scenes/quotes/pascal.svg","sq":false,"set":"Quotes"},{"name":"Pasteur fortune favours","src":"assets/scenes/quotes/pasteur-fortune-favours.svg","sq":false,"set":"Quotes"},{"name":"Periander practice everything","src":"assets/scenes/quotes/periander-practice-everything.svg","sq":false,"set":"Quotes"},{"name":"Pericles time wisest","src":"assets/scenes/quotes/pericles-time-wisest.svg","sq":false,"set":"Quotes"},{"name":"Pike ourselves dies","src":"assets/scenes/quotes/pike-ourselves-dies.svg","sq":false,"set":"Quotes"},{"name":"Plato courage knowing","src":"assets/scenes/quotes/plato-courage-knowing.svg","sq":false,"set":"Quotes"},{"name":"Plato wise men","src":"assets/scenes/quotes/plato-wise-men.svg","sq":false,"set":"Quotes"},{"name":"Plato","src":"assets/scenes/quotes/plato.svg","sq":false,"set":"Quotes"},{"name":"Plutarch mind vessel","src":"assets/scenes/quotes/plutarch-mind-vessel.svg","sq":false,"set":"Quotes"},{"name":"Pope err human","src":"assets/scenes/quotes/pope-err-human.svg","sq":false,"set":"Quotes"},{"name":"Pope hope springs","src":"assets/scenes/quotes/pope-hope-springs.svg","sq":false,"set":"Quotes"},{"name":"Protagoras man measure","src":"assets/scenes/quotes/protagoras-man-measure.svg","sq":false,"set":"Quotes"},{"name":"Proust let grateful","src":"assets/scenes/quotes/proust-let-grateful.svg","sq":false,"set":"Quotes"},{"name":"Proverb measure twice","src":"assets/scenes/quotes/proverb-measure-twice.svg","sq":false,"set":"Quotes"},{"name":"River","src":"assets/scenes/quotes/river.svg","sq":false,"set":"Quotes"},{"name":"Rogers diplomacy art","src":"assets/scenes/quotes/rogers-diplomacy-art.svg","sq":false,"set":"Quotes"},{"name":"Roosevelt believe halfway","src":"assets/scenes/quotes/roosevelt-believe-halfway.svg","sq":false,"set":"Quotes"},{"name":"Roosevelt speak softly","src":"assets/scenes/quotes/roosevelt-speak-softly.svg","sq":false,"set":"Quotes"},{"name":"Roosevelt where","src":"assets/scenes/quotes/roosevelt-where.svg","sq":false,"set":"Quotes"},{"name":"Rousseau patience bitter","src":"assets/scenes/quotes/rousseau-patience-bitter.svg","sq":false,"set":"Quotes"},{"name":"Rumi","src":"assets/scenes/quotes/rumi.svg","sq":false,"set":"Quotes"},{"name":"Seneca begin once","src":"assets/scenes/quotes/seneca-begin-once.svg","sq":false,"set":"Quotes"},{"name":"Seneca brave free","src":"assets/scenes/quotes/seneca-brave-free.svg","sq":false,"set":"Quotes"},{"name":"Seneca difficulties strengthen","src":"assets/scenes/quotes/seneca-difficulties-strengthen.svg","sq":false,"set":"Quotes"},{"name":"Seneca every new","src":"assets/scenes/quotes/seneca-every-new.svg","sq":false,"set":"Quotes"},{"name":"Seneca luck","src":"assets/scenes/quotes/seneca-luck.svg","sq":false,"set":"Quotes"},{"name":"Seneca short time","src":"assets/scenes/quotes/seneca-short-time.svg","sq":false,"set":"Quotes"},{"name":"Seneca wherever human","src":"assets/scenes/quotes/seneca-wherever-human.svg","sq":false,"set":"Quotes"},{"name":"Seneca while wait","src":"assets/scenes/quotes/seneca-while-wait.svg","sq":false,"set":"Quotes"},{"name":"Seneca","src":"assets/scenes/quotes/seneca.svg","sq":false,"set":"Quotes"},{"name":"Shakespeare above thine","src":"assets/scenes/quotes/shakespeare-above-thine.svg","sq":false,"set":"Quotes"},{"name":"Shakespeare course true","src":"assets/scenes/quotes/shakespeare-course-true.svg","sq":false,"set":"Quotes"},{"name":"Shakespeare glitters gold","src":"assets/scenes/quotes/shakespeare-glitters-gold.svg","sq":false,"set":"Quotes"},{"name":"Shakespeare love trust","src":"assets/scenes/quotes/shakespeare-love-trust.svg","sq":false,"set":"Quotes"},{"name":"Shakespeare some born","src":"assets/scenes/quotes/shakespeare-some-born.svg","sq":false,"set":"Quotes"},{"name":"Shakespeare","src":"assets/scenes/quotes/shakespeare.svg","sq":false,"set":"Quotes"},{"name":"Socrates beginning wisdom","src":"assets/scenes/quotes/socrates-beginning-wisdom.svg","sq":false,"set":"Quotes"},{"name":"Socrates know know","src":"assets/scenes/quotes/socrates-know-know.svg","sq":false,"set":"Quotes"},{"name":"Socrates wonder beginning","src":"assets/scenes/quotes/socrates-wonder-beginning.svg","sq":false,"set":"Quotes"},{"name":"Socrates","src":"assets/scenes/quotes/socrates.svg","sq":false,"set":"Quotes"},{"name":"Stoic","src":"assets/scenes/quotes/stoic.svg","sq":false,"set":"Quotes"},{"name":"Sunzi instance nation","src":"assets/scenes/quotes/sunzi-instance-nation.svg","sq":false,"set":"Quotes"},{"name":"Sunzi opportunities multiply","src":"assets/scenes/quotes/sunzi-opportunities-multiply.svg","sq":false,"set":"Quotes"},{"name":"Sunzi supreme art","src":"assets/scenes/quotes/sunzi-supreme-art.svg","sq":false,"set":"Quotes"},{"name":"Sunzi","src":"assets/scenes/quotes/sunzi.svg","sq":false,"set":"Quotes"},{"name":"Temptation","src":"assets/scenes/quotes/temptation.svg","sq":false,"set":"Quotes"},{"name":"Tennyson strive seek","src":"assets/scenes/quotes/tennyson-strive-seek.svg","sq":false,"set":"Quotes"},{"name":"Tennyson tis better","src":"assets/scenes/quotes/tennyson-tis-better.svg","sq":false,"set":"Quotes"},{"name":"Tesla present theirs","src":"assets/scenes/quotes/tesla-present-theirs.svg","sq":false,"set":"Quotes"},{"name":"Thoreau","src":"assets/scenes/quotes/thoreau.svg","sq":false,"set":"Quotes"},{"name":"Thucydides secret happiness","src":"assets/scenes/quotes/thucydides-secret-happiness.svg","sq":false,"set":"Quotes"},{"name":"Tolstoy happy families","src":"assets/scenes/quotes/tolstoy-happy-families.svg","sq":false,"set":"Quotes"},{"name":"Twain careful about","src":"assets/scenes/quotes/twain-careful-about.svg","sq":false,"set":"Quotes"},{"name":"Twain clothes make","src":"assets/scenes/quotes/twain-clothes-make.svg","sq":false,"set":"Quotes"},{"name":"Twain get facts","src":"assets/scenes/quotes/twain-get-facts.svg","sq":false,"set":"Quotes"},{"name":"Twain kindness","src":"assets/scenes/quotes/twain-kindness.svg","sq":false,"set":"Quotes"},{"name":"Twain report death","src":"assets/scenes/quotes/twain-report-death.svg","sq":false,"set":"Quotes"},{"name":"Twain tell truth","src":"assets/scenes/quotes/twain-tell-truth.svg","sq":false,"set":"Quotes"},{"name":"Twain tomorrow","src":"assets/scenes/quotes/twain-tomorrow.svg","sq":false,"set":"Quotes"},{"name":"Twain","src":"assets/scenes/quotes/twain.svg","sq":false,"set":"Quotes"},{"name":"Vangogh always doing","src":"assets/scenes/quotes/vangogh-always-doing.svg","sq":false,"set":"Quotes"},{"name":"Vangogh great things","src":"assets/scenes/quotes/vangogh-great-things.svg","sq":false,"set":"Quotes"},{"name":"Vegetius want peace","src":"assets/scenes/quotes/vegetius-want-peace.svg","sq":false,"set":"Quotes"},{"name":"Virgil fortune favours","src":"assets/scenes/quotes/virgil-fortune-favours.svg","sq":false,"set":"Quotes"},{"name":"Virgil love conquers","src":"assets/scenes/quotes/virgil-love-conquers.svg","sq":false,"set":"Quotes"},{"name":"Voltaire common sense","src":"assets/scenes/quotes/voltaire-common-sense.svg","sq":false,"set":"Quotes"},{"name":"Voltaire let read","src":"assets/scenes/quotes/voltaire-let-read.svg","sq":false,"set":"Quotes"},{"name":"Voltaire secret being","src":"assets/scenes/quotes/voltaire-secret-being.svg","sq":false,"set":"Quotes"},{"name":"Voltaire","src":"assets/scenes/quotes/voltaire.svg","sq":false,"set":"Quotes"},{"name":"Wilde clever sometimes","src":"assets/scenes/quotes/wilde-clever-sometimes.svg","sq":false,"set":"Quotes"},{"name":"Wilde enemies","src":"assets/scenes/quotes/wilde-enemies.svg","sq":false,"set":"Quotes"},{"name":"Wilde experience","src":"assets/scenes/quotes/wilde-experience.svg","sq":false,"set":"Quotes"},{"name":"Wilde love oneself","src":"assets/scenes/quotes/wilde-love-oneself.svg","sq":false,"set":"Quotes"},{"name":"Wilde never travel","src":"assets/scenes/quotes/wilde-never-travel.svg","sq":false,"set":"Quotes"},{"name":"Wilde only thing","src":"assets/scenes/quotes/wilde-only-thing.svg","sq":false,"set":"Quotes"},{"name":"Wilde only two","src":"assets/scenes/quotes/wilde-only-two.svg","sq":false,"set":"Quotes"},{"name":"Wilde work curse","src":"assets/scenes/quotes/wilde-work-curse.svg","sq":false,"set":"Quotes"},{"name":"Wilde young enough","src":"assets/scenes/quotes/wilde-young-enough.svg","sq":false,"set":"Quotes"},{"name":"Yeats wait strike","src":"assets/scenes/quotes/yeats-wait-strike.svg","sq":false,"set":"Quotes"},{"name":"Zapata would rather","src":"assets/scenes/quotes/zapata-would-rather.svg","sq":false,"set":"Quotes"}];
+
+// The done line, drawn as the plugin draws it now (register.tsx pixelLine): a small pixel tick, then one clean
+// orange line fading out to the right, with a slow wave of light flowing along it.
+function tide(seed) {
+  var tick = [[6, 0], [5, 1], [0, 2], [4, 2], [1, 3], [3, 3], [2, 4]].map(function (p) { return '<rect x="' + p[0] + '" y="' + p[1] + '" width="1" height="1"/>'; }).join('');
+  return '<svg role="img" aria-label="Done" width="300" height="15" viewBox="0 0 100 5"><defs>'
+    + '<linearGradient id="ln' + seed + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d97757"/><stop offset="0.7" stop-color="#d97757"/><stop offset="1" stop-color="#d97757" stop-opacity="0"/></linearGradient>'
+    + '<linearGradient id="td' + seed + '" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="48" y2="0" spreadMethod="repeat"><stop offset="0" stop-color="#fff" stop-opacity="0.45"/><stop offset="0.5" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0.45"/>'
+    + '<animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="48 0" dur="6s" repeatCount="indefinite"/></linearGradient>'
+    + '<mask id="tm' + seed + '" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="5"><rect width="100" height="5" fill="url(#td' + seed + ')"/></mask></defs>'
+    + '<g fill="#d97757" shape-rendering="crispEdges">' + tick + '</g>'
+    + '<rect x="10" y="2" width="90" height="1" fill="url(#ln' + seed + ')" mask="url(#tm' + seed + ')"/></svg>';
+}
+document.querySelectorAll('.mark.tide').forEach(function (el) { el.innerHTML = tide(+el.dataset.seed); });
+
+// The slider. Left of the handle is plain Claude Code, right of it is the same chat with textless.
+// Until someone touches it, it plays a tour: all plain, then one pane at a time turns to textless from the right,
+// resting on each so the change can be read, then all textless, then one glide back. A drag follows the pointer with
+// a little smoothing; a click or a key glides there. Play picks the tour up from wherever the handle is.
+var compare = document.getElementById('compare'), drag = document.getElementById('drag'), play = document.getElementById('play');
+var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+var STOPS = [{ x: 100, hold: 1300 }, { x: 75, hold: 1900 }, { x: 50, hold: 1900 }, { x: 25, hold: 1900 }, { x: 0, hold: 2600 }];
+var x = 50, target = 50, auto = false, raf = 0, last = 0, held = false;
+var leg = null, next = 0, waitUntil = 0;
+function paint(v) { x = v; compare.style.setProperty('--x', v.toFixed(3) + '%'); drag.value = Math.round(v); }
+function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+// Each glide takes time by distance, so a short hop is quick and the long way back is unhurried.
+function glide(to, now) { leg = { from: x, to: to, t0: now, dur: 380 + Math.abs(to - x) * 19 }; }
+function frame(now) {
+  var dt = Math.min(64, now - (last || now)); last = now;
+  if (auto) {
+    if (leg) {
+      var t = Math.min(1, (now - leg.t0) / leg.dur);
+      paint(leg.from + (leg.to - leg.from) * ease(t));
+      if (t === 1) { leg = null; waitUntil = now + STOPS[next].hold; }
+    } else if (now >= waitUntil) { next = (next + 1) % STOPS.length; glide(STOPS[next].x, now); }
+    target = x;
+  } else if (Math.abs(target - x) > 0.02) {
+    // Follow the target: about 90% of the way in 120 ms, frame-rate independent.
+    paint(x + (target - x) * (1 - Math.exp(-dt / (held ? 40 : 70))));
+  } else if (x !== target) paint(target);
+  raf = requestAnimationFrame(frame);
+}
+function setAuto(v) {
+  auto = v;
+  play.setAttribute('aria-pressed', String(v));
+  play.textContent = v ? 'Pause' : 'Play';
+  if (v) {
+    // Carry on toward the next stop to the left of the handle, or start over from all plain.
+    var i = STOPS.findIndex(function (st) { return st.x < x - 0.5; });
+    next = i < 0 ? 0 : i; glide(STOPS[next].x, performance.now());
+  } else { leg = null; target = x; }
+}
+function goTo(v) { if (auto) setAuto(false); target = Math.max(0, Math.min(100, v)); if (reduce) paint(target); }
+function pointerX(e) { var r = compare.getBoundingClientRect(); return (e.clientX - r.left) / r.width * 100; }
+compare.addEventListener('pointerdown', function (e) {
+  if (e.button !== 0 || e.target.closest('button, a')) return;
+  held = true; compare.classList.add('held'); compare.setPointerCapture(e.pointerId); goTo(pointerX(e)); drag.focus({ preventScroll: true });
+});
+compare.addEventListener('pointermove', function (e) { if (held) goTo(pointerX(e)); });
+function letGo() { held = false; compare.classList.remove('held'); }
+compare.addEventListener('pointerup', letGo); compare.addEventListener('pointercancel', letGo);
+drag.addEventListener('input', function () { if (!held) goTo(+drag.value); });
+play.addEventListener('click', function () { setAuto(!auto); });
+paint(50);
+raf = requestAnimationFrame(frame);
+setAuto(!reduce);
+
+// Uses: one sentence, the end word changes.
+(function () {
+  var rot = document.getElementById('rot'), cap = document.getElementById('use-cap'); if (!rot) return;
+  var USES = [['a more playful Claude', 'Pixel art where the wall of text used to be.'], ['screen shares', 'File paths and commands stay off the shared screen.'], ['five chats at once', 'Each one gets its own picture while it works.'], ['showing your brand', 'Your logo or mascot, in every chat.'], ['a calmer screen', 'One picture, then the answer.']];
+  var i = 0;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  setInterval(function () {
+    i = (i + 1) % USES.length; rot.classList.add('out');
+    setTimeout(function () { rot.textContent = USES[i][0]; cap.textContent = USES[i][1]; rot.classList.remove('out'); }, 250);
+  }, 3200);
+})();
+
+// Close-up: scale the bar so the three textless buttons fill the middle of the frame.
+(function () {
+  var zoom = document.getElementById('cb-zoom'); if (!zoom) return;
+  var bar = zoom.querySelector('.cbar'), tl = zoom.querySelector('.cb-tl');
+  function fit() {
+    bar.style.transform = 'none';
+    var W = zoom.clientWidth, H = zoom.clientHeight, br = bar.getBoundingClientRect(), r = tl.getBoundingClientRect();
+    var cx = r.left - br.left + r.width / 2, cy = r.top - br.top + r.height / 2;
+    var s = Math.min(1.5, Math.max(1, W / 700));
+    bar.style.transform = 'translate(' + (W / 2 - cx * s) + 'px,' + (H * 0.14 - cy * s) + 'px) scale(' + s + ')';
+  }
+  fit(); addEventListener('resize', fit); if (document.fonts) document.fonts.ready.then(fit);
+})();
+
+// The prompt bar types textless's commands one by one and says what each does, in one line. Pointing at a button
+// shows that button's line instead and pauses the typing.
+(function () {
+  var bar = document.getElementById('strip'), type = document.getElementById('cb-type'), say = document.getElementById('cb-say'); if (!type) return;
+  var BTN = { power: 'Aa turns it off in this chat, and the steps come back.', gear: 'Settings: pick scenes, make your own sets.', min: 'Fold the card to one line.' };
+  var CMDS = [['/textless off', 'Back to the wall of text.', false], ['/textless on', 'And it is gone again.', true], ['/textless next', 'Next scene, please.', true], ['/chess claude', 'A game of chess while you wait.', true], ['/textless set scenery', 'Mountains today.', true], ['/textless get <id>', 'Grab one from the Marketplace.', true], ['/textless folder', 'Your own art goes in here.', true]];
+  var n = 0, timer = 0, paused = false;
+  function light(k) { document.querySelectorAll('.cb-b').forEach(function (b) { b.classList.toggle('lit', b.dataset.tip === k); }); }
+  function typeOut(text, done) {
+    var k = 0; type.classList.add('typed'); type.textContent = '';
+    (function step() { if (paused) return; type.textContent = text.slice(0, ++k); if (k < text.length) timer = setTimeout(step, 45); else timer = setTimeout(done, 450); })();
+  }
+  function next() {
+    if (paused) return;
+    var c = CMDS[n]; n = (n + 1) % CMDS.length;
+    typeOut(c[0], function () {
+      say.textContent = c[1]; var cmdEl = document.getElementById('cb-cmd'); if (cmdEl) cmdEl.textContent = c[0]; bar.dataset.on = String(c[2]); light(/ (off|on)$/.test(c[0]) ? 'power' : /folder|set|get|settings/.test(c[0]) ? 'gear' : '');
+      timer = setTimeout(function () { type.classList.remove('typed'); type.textContent = 'Type / for commands'; light(''); timer = setTimeout(next, 700); }, 1800);
+    });
+  }
+  document.querySelectorAll('.cb-b').forEach(function (b) {
+    function show() { paused = true; clearTimeout(timer); type.classList.remove('typed'); type.textContent = 'Type / for commands'; light(b.dataset.tip); say.textContent = BTN[b.dataset.tip]; var cmdEl = document.getElementById('cb-cmd'); if (cmdEl) cmdEl.textContent = ''; }
+    b.addEventListener('mouseenter', show); b.addEventListener('focus', show);
+    b.addEventListener('mouseleave', function () { paused = false; light(''); clearTimeout(timer); timer = setTimeout(next, 900); });
+  });
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) timer = setTimeout(next, 1200);
+})();
+
+// One Cubit in one rip: the packed clips (colour on top, alpha below) drawn to a canvas bigger than the hole, masked to
+// the hole plus a band above it so his head rises over the top edge. The clips are made for this hole: a 1320x1200 frame
+// whose rows 300..1200 are the hole, edge to edge. He rises from behind the bottom rim on the right and never crosses the
+// side rims, so the canvas maps 1:1 onto the rip. Returns null without WebGL.
+var CUBIT_COLOUR = 'blue', CUBIT_MOODS = ['calm', 'happy', 'curious'];
+function cubitFit(rip, el) {
+  // Smaller than the hole's own scale, so his whole head fits under the top rim; set low, so the bottom rim hides his base.
+  var W = rip.clientWidth, H = rip.clientHeight, s = W / 1320 * 0.74, top = Math.round(H * 1.02 - 945 * s), left = Math.round(W * 0.6 - 790 * s);
+  el.style.width = Math.round(1320 * s) + 'px'; el.style.height = Math.round(1200 * s) + 'px'; el.style.left = left + 'px'; el.style.top = top + 'px';
+  var pos = (-left) + 'px ' + (-top) + 'px, 0px 0px', size = W + 'px ' + H + 'px, 0px 0px';
+  el.style.webkitMaskPosition = pos; el.style.maskPosition = pos; el.style.webkitMaskSize = size; el.style.maskSize = size;
+}
+// His thought cloud, grown around a w x h box the way the app grows it (cube/native.py cloud_lobes): big circles on
+// a superellipse core a little bigger than the box, a fixed big/small rhythm, bulging out modestly, and two dots trailing
+// are drawn by the caller, from the cloud down to him. Returns the SVG and how far it reaches past the box.
+function cubitCloud(w0, h0) {
+  // Room around the words, then lobes as big as the app's (30 to 70 px), so a short line gets a few big round lobes.
+  var small = innerWidth < 600, w = w0 + (small ? 36 : 64), h = h0 + (small ? 60 : 84);
+  var PATTERN = [1.0, 0.72, 0.9, 0.68, 1.06, 0.78, 0.94, 0.7], N = 2.2, BULGE = 0.45, STEP = 1.3;
+  var r0 = Math.max(40, Math.min(small ? 58 : 72, 0.75 * Math.min(w, h))), a = w / 2 + r0 * 0.2, b = h / 2 + r0 * 0.2;
+  var pts = [], acc = 0, px = null, py = null, i;
+  for (i = 0; i <= 240; i++) {
+    var t = 2 * Math.PI * i / 240 - Math.PI / 2, c = Math.cos(t), sn = Math.sin(t);
+    var x = a * Math.sign(c) * Math.pow(Math.abs(c), 2 / N), y = b * Math.sign(sn) * Math.pow(Math.abs(sn), 2 / N);
+    if (px !== null) acc += Math.hypot(x - px, y - py);
+    px = x; py = y; pts.push([acc, x, y]);
+  }
+  var total = acc, count = Math.max(6, Math.round(total / (r0 * STEP))), k = 0, lobes = [];
+  for (var j = 0; j < count; j++) {
+    var target = total * j / count;
+    while (k + 1 < pts.length && pts[k + 1][0] < target) k++;
+    var p = pts[k], q = pts[Math.min(k + 1, pts.length - 1)], fr = q[0] > p[0] ? Math.max(0, Math.min(1, (target - p[0]) / (q[0] - p[0]))) : 0;
+    var lx = p[1] + (q[1] - p[1]) * fr, ly = p[2] + (q[2] - p[2]) * fr;
+    var r = r0 * PATTERN[j % PATTERN.length] * (1 - 0.14 * Math.max(0, ly / b)) * (1 + 0.05 * Math.sin(j * 1.7));
+    var nx = lx / (a * a), ny = ly / (b * b), ln = Math.hypot(nx, ny) || 1;
+    lobes.push([lx - nx / ln * (1 - BULGE) * r, ly - ny / ln * (1 - BULGE) * r, r]);
+  }
+  var dots = [];
+  var L = a, U = b, R = a, D = b;
+  lobes.concat(dots).forEach(function (o) { L = Math.max(L, -o[0] + o[2]); U = Math.max(U, -o[1] + o[2]); R = Math.max(R, o[0] + o[2]); D = Math.max(D, o[1] + o[2]); });
+  var W = L + R, H = U + D, core = '';
+  for (i = 0; i < pts.length; i += 4) core += (i ? 'L' : 'M') + (pts[i][1] + L).toFixed(1) + ' ' + (pts[i][2] + U).toFixed(1);
+  var circles = lobes.concat(dots).map(function (o) { return '<circle cx="' + (o[0] + L).toFixed(1) + '" cy="' + (o[1] + U).toFixed(1) + '" r="' + o[2].toFixed(1) + '"/>'; }).join('');
+  return { svg: '<svg class="ep-cloud" width="' + Math.ceil(W) + '" height="' + Math.ceil(H) + '" viewBox="0 0 ' + W.toFixed(1) + ' ' + H.toFixed(1) + '" aria-hidden="true"><g fill="#dfe3eb"><path d="' + core + 'Z"/>' + circles + '</g></svg>',
+    left: L - w0 / 2, up: U - h0 / 2, w: W, h: H };
+}
+function cubitIn(rip, cvs) {
+  if (rip) { cubitFit(rip, cvs); addEventListener('resize', function () { cubitFit(rip, cvs); }); }
+  var gl = cvs.getContext('webgl', { premultipliedAlpha: true, alpha: true }); if (!gl) return null;
+  function sh(t, src) { var o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; }
+  var prog = gl.createProgram();
+  gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 p;varying vec2 u;void main(){u=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}'));
+  gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, 'precision mediump float;uniform sampler2D t;varying vec2 u;void main(){vec3 c=texture2D(t,vec2(u.x,u.y*.5)).rgb;float a=texture2D(t,vec2(u.x,.5+u.y*.5)).r;gl_FragColor=vec4(c*a,a);}'));
+  gl.linkProgram(prog); gl.useProgram(prog);
+  var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  var tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+  [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(function (k) { gl.texParameteri(gl.TEXTURE_2D, k, gl.CLAMP_TO_EDGE); });
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+  var vids = {}, cur = null, raf = 0, after = null;
+  function draw(v) {
+    var dpr = Math.min(2, devicePixelRatio || 1), w = Math.round(cvs.clientWidth * dpr), h = Math.round(cvs.clientHeight * dpr);
+    if (cvs.width !== w || cvs.height !== h) { cvs.width = w; cvs.height = h; }
+    gl.viewport(0, 0, cvs.width, cvs.height); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+    try { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, v); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); } catch (e) {}
+  }
+  function loop() { if (cur) draw(cur); if (cur && !cur.paused && !cur.ended) raf = requestAnimationFrame(loop); }
+  function finish() { var f = after; after = null; if (f) f(); }
+  function video(name) {
+    if (vids[name]) return vids[name];
+    var v = document.createElement('video'); v.src = /\.mp4$/.test(name) ? name : 'assets/cubit/hole-peek-' + name + '-' + CUBIT_COLOUR + '-packed.mp4'; v.muted = true; v.playsInline = true; v.preload = 'auto';
+    v.addEventListener('ended', function () { draw(v); finish(); });
+    return (vids[name] = v);
+  }
+  return {
+    load: video,
+    // Plays one peek from the start; done runs when he has sunk back (or right away if the browser refuses to play).
+    play: function (name, done) {
+      cur = video(name); after = done || null; cur.currentTime = 0;
+      cur.play().then(function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); }).catch(finish);
+    },
+    stop: function () { after = null; if (cur) cur.pause(); cancelAnimationFrame(raf); }
+  };
+}
+
+// The Cubit section: the rip tears open the first time it scrolls into view, then Cubit peeks, a different mood each
+// time, coming back every few seconds while the section is on screen. With reduced motion the rip is open and he is a
+// still picture.
+(function () {
+  var cvs = document.getElementById('rip-peek'); if (!cvs) return;
+  var rip = cvs.parentNode;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    cubitFit(rip, cvs); cvs.outerHTML = '<img class="rip-peek" style="' + cvs.getAttribute('style') + '" src="assets/cubit/hole-peek-calm-' + CUBIT_COLOUR + '-still.png" alt="">'; return;
+  }
+  var cubit = cubitIn(rip, cvs); if (!cubit) return;
+  rip.classList.add('shut');
+  var mood = Math.floor(Math.random() * 3), seen = false, open = false, again = 0, playing = false;
+  function next() {
+    clearTimeout(again); playing = true;
+    cubit.play(CUBIT_MOODS[mood], function () { playing = false; if (seen) again = setTimeout(next, 3500); });
+    mood = (mood + 1) % CUBIT_MOODS.length; cubit.load(CUBIT_MOODS[mood]);
+  }
+  cubit.load(CUBIT_MOODS[mood]);
+  new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      seen = e.isIntersecting;
+      if (!seen) { clearTimeout(again); return; }
+      if (!open) { open = true; rip.classList.remove('shut'); rip.classList.add('tear'); again = setTimeout(next, 750); }
+      else if (!playing) next();
+    });
+  }, { threshold: 0.35 }).observe(rip);
+})();
+
+// Cubit at the edge of the screen: 10 seconds in, and again about 30 seconds after each visit, wherever you are on the page,
+// he leans in from the left or right edge at a random height (the trailer's peek), asks to be taken home and leans back
+// out when the clip ends, about 12 seconds later. A click on him or his cloud goes to the Cubit section.
+// He waits while the rip in the Cubit section is on screen, stops coming once you have seen it or clicked him, and
+// skips the visits with reduced motion.
+(function () {
+  var box = document.getElementById('edge-peek'); if (!box) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // Once you have seen the rip or clicked him, this browser remembers and he stays home.
+  try { if (localStorage.getItem('cubit-home')) return; } catch (e) {}
+  function home_() { stopped = true; try { localStorage.setItem('cubit-home', '1'); } catch (e) {} }
+  var SRC = 'assets/cubit/side-peek-blue-packed.mp4';
+  var cvs = box.querySelector('canvas'), due = false, stopped = false, showing = false, cubit = null, inView = [], timers = [];
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { var i = inView.indexOf(e.target); if (e.isIntersecting) { if (i < 0) inView.push(e.target); } else if (i >= 0) inView.splice(i, 1); });
+    if (inView.length) { home_(); close(); } else go();
+  });
+  // Only one Cubit at a time: he stays away while the rip is on screen.
+  ['#cubit .rip'].forEach(function (q) { var el = document.querySelector(q); if (el) io.observe(el); });
+  timers.push(setTimeout(function () { due = true; go(); }, 10000));
+  function go() {
+    if (!due || stopped || showing || inView.length) return;
+    due = false;
+    var bub = box.querySelector('.ep-bubble');
+    bub.querySelectorAll('.ep-cloud,.ep-dot').forEach(function (el) { el.remove(); });
+    box.classList.remove('right', 'gone', 'talk');
+    if (Math.random() < 0.5) box.classList.add('right');
+    // Below the Cubit section he points the other way.
+    if (document.getElementById('cubit').getBoundingClientRect().bottom < 0) box.querySelector('b').textContent = "Pssst, I'm further up!";
+    box.hidden = false;
+    cubit = cubit || cubitIn(null, cvs); if (!cubit) { box.hidden = true; stopped = true; return; }
+    var cl = cubitCloud(bub.offsetWidth, bub.offsetHeight);
+    // The cloud sits above him, so his head has to be low enough to leave it room: pick where his frame's top
+    // goes, then move the box until it is there.
+    var hh = cvs.offsetHeight, hi = innerHeight - hh - 8, lo = Math.min(hi, cl.h + 54 - hh * 0.09);
+    var want = lo + Math.random() * Math.max(0, hi - lo);
+    box.style.top = '50%'; box.style.top = (innerHeight / 2 + want - cvs.getBoundingClientRect().top).toFixed(0) + 'px';
+    bub.insertAdjacentHTML('afterbegin', cl.svg);
+    bub.firstChild.style.left = -cl.left + 'px'; bub.firstChild.style.top = -cl.up + 'px';
+    // The top of his head in the clip is about 27% across the frame from the edge and 9% down.
+    var right = box.classList.contains('right'), cr = cvs.getBoundingClientRect(), br = box.getBoundingClientRect(), m = 8;
+    var ax = right ? cr.right - cr.width * 0.27 : cr.left + cr.width * 0.27, ay = cr.top + cr.height * 0.09;
+    // The cloud floats above him, leaning a little into the page, kept on screen.
+    var cx = Math.max(m, Math.min(innerWidth - m - cl.w, ax + (right ? -0.7 : -0.3) * cl.w));
+    var cy = Math.max(m, ay - 46 - cl.h);
+    bub.style.left = (cx + cl.left - br.left).toFixed(0) + 'px'; bub.style.right = 'auto';
+    bub.style.top = (cy + cl.up - br.top).toFixed(0) + 'px';
+    // Two dots trail from the cloud's underside down onto his head.
+    var px = Math.max(cx + cl.w * 0.25, Math.min(cx + cl.w * 0.75, ax)), py = cy + cl.h - 14;
+    [[0.42, 10], [0.8, 6.5]].forEach(function (d) {
+      var dot = document.createElement('i'); dot.className = 'ep-dot';
+      dot.style.width = dot.style.height = d[1] * 2 + 'px';
+      dot.style.left = (px + (ax - px) * d[0] - d[1] - cx - cl.left).toFixed(0) + 'px';
+      dot.style.top = (py + (ay - py) * d[0] - d[1] - cy - cl.up).toFixed(0) + 'px';
+      bub.appendChild(dot);
+    });
+    bub.style.transformOrigin = (ax - cx - cl.left).toFixed(0) + 'px ' + (ay - cy - cl.up).toFixed(0) + 'px';
+    showing = true;
+    cubit.play(SRC, close);
+    // He is in by about a second; the bubble goes before he leans back out.
+    timers.push(setTimeout(function () { if (showing) box.classList.add('talk'); }, 1000));
+    timers.push(setTimeout(function () { box.classList.remove('talk'); }, 10600));
+  }
+  function close() {
+    if (!showing) return; showing = false;
+    timers.forEach(clearTimeout); box.classList.remove('talk'); box.classList.add('gone');
+    setTimeout(function () { if (cubit) cubit.stop(); box.hidden = true; }, 300);
+    if (!stopped) timers.push(setTimeout(function () { due = true; go(); }, 30000));
+  }
+  function home(e) { e.preventDefault(); home_(); close(); document.getElementById('cubit').scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+  box.querySelector('.ep-go').addEventListener('click', home);
+  box.querySelector('.ep-bubble').addEventListener('click', home);
+})();
+
+// The Working pane's step line moves on, as the plugin's does.
+var STEPS = ['Read settings page', 'Searched for theme colours', 'Edited theme.ts', 'Edited settings page', 'Added Appearance switch', 'Ran the tests'];
+var si = 0;
+var PANE_STEPS = [STEPS, ['Read session.ts', 'Searched for setTimeout', 'Edited login.test.tsx', 'Ran npm test -- login'], ['Read useReports.ts', 'Created toCsv.ts', 'Edited reports/page.tsx', 'Created toCsv.test.ts', 'Ran npm test']];
+if (!reduce) setInterval(function () {
+  si++;
+  document.querySelectorAll('.after .step[data-n]').forEach(function (el) { var list = PANE_STEPS[+el.dataset.n] || STEPS; el.textContent = list[(si + +el.dataset.n) % list.length]; });
+}, 1600);
+
+// The big power switch: on shows all four panes with textless, off shows them without.
+var on = true;
+document.querySelectorAll('[data-power]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    on = !on;
+    goTo(on ? 0 : 100);
+    document.getElementById('strip').dataset.on = String(on);
+    b.setAttribute('aria-pressed', String(on));
+  });
+});
+
+// Scenes: a tap puts the scene in the Working pane and says so under the marquee.
+var cardsEls = document.querySelectorAll('.scene-card');
+function choose(i, quiet) {
+  cardsEls.forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.scene === i)); });
+  var s = SCENES[i], img = document.getElementById('scene');
+  img.src = s.src; img.alt = 'Clawd: ' + s.name + ', while Claude works';
+  if (!quiet) document.getElementById('picked').innerHTML = s.name + ' is in the Working pane. <a href="#compare">See it</a>';
+}
+cardsEls.forEach(function (b) { b.addEventListener('click', function () { choose(+b.dataset.scene); }); });
+// Until someone picks a scene, the Working pane shows a few in turn, opening on the WORKING status card.
+// The buttons under the comparison switch which set the Working pane tours, live; the WORKING animations by default.
+var ORDER = ['Working', 'Clawd', 'Scenery', 'Paintings', 'Abstract'];
+var setNames = ORDER.filter(function (n) { return SCENES.some(function (s) { return s.set === n; }); });
+var setsEl = document.getElementById('sets'), tour = [], at = 0, tourTimer = 0;
+function fill() {
+  choose(tour[at], true);
+  document.querySelectorAll('.after img.scene').forEach(function (img) {
+    var n = +img.dataset.n; if (!n) return;
+    var s = SCENES[tour[(at + n * 3) % tour.length]]; img.src = s.src; img.alt = s.name + ', while Claude works';
+  });
+}
+function tourSet(name) {
+  tour = SCENES.map(function (s, i) { return s.set === name && !/working-text/.test(s.src) ? i : -1; }).filter(function (i) { return i > -1; });
+  if (!tour.length) tour = [0];
+  at = 0; fill();
+  setsEl.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === name)); });
+  moveBar();
+  clearInterval(tourTimer);
+  if (!reduce && tour.length > 1) tourTimer = setInterval(function () { at = (at + 1) % tour.length; fill(); }, 4500);
+}
+setNames.forEach(function (n) {
+  var b = document.createElement('button'); b.type = 'button'; b.dataset.set = n; b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', 'Show the ' + n + ' set');
+  var LOOK = { Working: 'status/working-campfire', Clawd: 'scenes/painter', Scenery: 'scenery/campfire', Paintings: 'autumn', Abstract: 'abstract/plasma.svg' };
+  var first = SCENES.find(function (s) { return s.set === n && LOOK[n] && s.src.indexOf(LOOK[n]) > -1; }) || SCENES.find(function (s) { return s.set === n && !/working-text/.test(s.src); });
+  b.innerHTML = '<img src="' + first.src + '" alt="">'; b.title = n;
+  b.addEventListener('click', function () { tourSet(n); });
+  setsEl.appendChild(b);
+});
+function moveBar() {
+  var on = setsEl.querySelector('[aria-pressed="true"]'), bar = setsEl.querySelector('.bar');
+  if (!on) { bar.style.opacity = '0'; return; }
+  bar.style.opacity = '1'; bar.textContent = on.dataset.set;
+  bar.style.transform = 'translateX(' + (on.offsetLeft + on.offsetWidth / 2 - bar.offsetWidth / 2) + 'px)';
+}
+addEventListener('resize', moveBar);
+tourSet(setNames[0] || 'Clawd');
+cardsEls.forEach(function (b) { b.addEventListener('click', function () { clearInterval(tourTimer); setsEl.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); }); moveBar(); }); });
+
+// Copy buttons: say Copied for a moment, or show the text to copy by hand if the clipboard is blocked.
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('[data-copy]'); if (!b) return;
+  var s = b.querySelector('span'); if (!s.dataset.label) s.dataset.label = s.textContent;
+  document.querySelectorAll('[data-copy]').forEach(function (o) { if (o === b) return; clearTimeout(o.t); o.classList.remove('ok'); var os = o.querySelector('span'); if (os.dataset.label) os.textContent = os.dataset.label; });
+  function say(text, ok) { b.classList.toggle('ok', ok); s.textContent = text; clearTimeout(b.t); b.t = setTimeout(function () { b.classList.remove('ok'); s.textContent = s.dataset.label; }, ok ? 1400 : 3000); }
+  (navigator.clipboard ? navigator.clipboard.writeText(b.dataset.copy) : Promise.reject()).then(function () { say('Copied', true); }, function () { window.prompt('Copy this:', b.dataset.copy); });
+});
+</script>
+<canvas id="px-bg" aria-hidden="true"></canvas>
+<script>
+(function () {
+  var c = document.getElementById('px-bg'), x = c.getContext('2d');
+  var CELL = 14, SQ = 8, dpr = 1, W = 0, H = 0, edge = [], trail = [], raf = 0, last = 0;
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Edge pixels: thick near the screen's sides, thinning inward, each with its own slow flicker.
+  function layout() {
+    dpr = Math.min(2, window.devicePixelRatio || 1); W = innerWidth; H = innerHeight;
+    c.width = W * dpr; c.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    edge = [];
+    var cols = Math.ceil(W / CELL), rows = Math.ceil(H / CELL), band = Math.min(9, Math.floor(cols / 8));
+    for (var gy = 0; gy < rows; gy++) for (var gx = 0; gx < cols; gx++) {
+      var d = Math.min(gx, cols - 1 - gx); if (d >= band) continue;
+      if (Math.random() > Math.pow(1 - d / band, 2.2) * 0.42) continue;
+      edge.push({ x: gx * CELL, y: gy * CELL, a: 0.05 + Math.random() * 0.13 * (1 - d / band), p: Math.random() * 6.28, s: 0.4 + Math.random() * 1.2 });
+    }
+  }
+  function draw(now) {
+    raf = 0;
+    var dt = Math.min(64, now - (last || now)); last = now;
+    x.clearRect(0, 0, W, H);
+    for (var i = 0; i < edge.length; i++) {
+      var e = edge[i], k = still ? 1 : 0.55 + 0.45 * Math.sin(now / 1000 * e.s + e.p);
+      // Opacity in steps, so the flicker reads as pixels switching rather than a smooth glow.
+      x.fillStyle = 'rgba(217,119,87,' + (Math.round(e.a * k * 20) / 20) + ')';
+      x.fillRect(e.x + 3, e.y + 3, SQ, SQ);
+    }
+    for (var j = trail.length - 1; j >= 0; j--) {
+      var t = trail[j]; t.life -= dt;
+      if (t.life <= 0) { trail.splice(j, 1); continue; }
+      var f = t.life / t.max;
+      x.fillStyle = 'rgba(217,119,87,' + (Math.ceil(f * 4) / 4 * t.a) + ')';
+      x.fillRect(t.x + 3, t.y + 3, SQ, SQ);
+    }
+    if (!still || trail.length) raf = requestAnimationFrame(draw);
+  }
+  function kick() { if (!raf && !document.hidden) raf = requestAnimationFrame(draw); }
+  addEventListener('resize', function () { layout(); kick(); });
+  document.addEventListener('visibilitychange', function () { if (document.hidden) { cancelAnimationFrame(raf); raf = 0; } else kick(); });
+  layout(); kick();
+})();
+</script>
+</body>
+</html>

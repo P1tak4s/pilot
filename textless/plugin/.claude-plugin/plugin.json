@@ -1,0 +1,5 @@
+{
+  "name": "textless",
+  "version": "0.15.16",
+  "description": "While Claude works, the chat shows one tall pixel-art card of Clawd instead of every step. Its buttons sit on the card, which minimizes to one line, and under the newest answer; /textless toggles it too."
+}

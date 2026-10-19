@@ -1,0 +1,90 @@
+{
+ "zoom": 1.5774409656148782,
+ "width": 768,
+ "params": {
+  "percent": 12,
+  "cacheMinutes": 59,
+  "effort": "low",
+  "reason": "a one-line rename",
+  "judged": true,
+  "judging": false,
+  "working": false,
+  "auto": true,
+  "bodyColumns": 100,
+  "press": [],
+  "command": "",
+  "trace": 0,
+  "options": {}
+ },
+ "glow": false,
+ "renderer": "c95e4d2cf-oXAujp09.js",
+ "band": {
+  "x": 0,
+  "y": 0,
+  "w": 752,
+  "h": 37
+ },
+ "site": {
+  "x": -8,
+  "y": -10.5,
+  "w": 768,
+  "h": 58
+ },
+ "button:dash-auto": {
+  "x": 549.8,
+  "y": 8.5,
+  "w": 73.36,
+  "h": 20
+ },
+ "button:dash-handoff": {
+  "x": 645.84,
+  "y": 8.5,
+  "w": 47.8,
+  "h": 20
+ },
+ "button:dash-settings": {
+  "x": 718.34,
+  "y": 8.5,
+  "w": 19.67,
+  "h": 20
+ },
+ "img:effortless": {
+  "x": 8.91,
+  "y": 9.5,
+  "w": 18,
+  "h": 18
+ },
+ "img:12% of context": {
+  "x": 76.27,
+  "y": 10.5,
+  "w": 16,
+  "h": 16
+ },
+ "img:cache 59:00": {
+  "x": 141.17,
+  "y": 10,
+  "w": 84,
+  "h": 17
+ },
+ "img:Auto on": {
+  "x": 554.66,
+  "y": 11,
+  "w": 26,
+  "h": 15
+ },
+ "img:Handoff box": {
+  "x": -24,
+  "y": -26.5,
+  "w": 0,
+  "h": 0
+ },
+ "img:Settings": {
+  "x": 721.19,
+  "y": 11.5,
+  "w": 14,
+  "h": 14
+ },
+ "buttonFont": "400 12px/17px anthropic-sans, system-ui, \"Segoe UI\", Roboto, Helvetica, Arial, \"PingFang SC\", \"PingFang TC\", \"Hiragino Sans\", \"Apple SD Gothic Neo\", \"Kohinoor Devanagari\", \"Kohinoor Bangla\", \"Kohinoor Telugu\", \"Tamil Sangam MN\", \"Kohinoor Gujarati\", \"Malayalam Sangam MN\", \"Nirmala UI\", \"Noto Sans Devanagari UI\", \"Noto Sans Devanagari\", \"Noto Sans Bengali UI\", \"Noto Sans Bengali\", \"Noto Sans Telugu UI\", \"Noto Sans Telugu\", \"Noto Sans Tamil UI\", \"Noto Sans Tamil\", \"Noto Sans Gujarati UI\", \"Noto Sans Gujarati\", \"Noto Sans Kannada UI\", \"Noto Sans Kannada\", \"Noto Sans Malayalam UI\", \"Noto Sans Malayalam\", Thonburi, \"Leelawadee UI\", \"Noto Sans Thai UI\", \"Noto Sans Thai\", Kefa, Ebrima, \"Noto Sans Ethiopic\", \"Abyssinica SIL\", sans-serif, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, \"PingFang SC\", \"PingFang TC\", \"Hiragino Sans\", \"Apple SD Gothic Neo\", sans-serif",
+ "bandBorder": "1px 10px",
+ "devicePixelRatio": 1.5774409770965576
+}

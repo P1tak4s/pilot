@@ -1,0 +1,10 @@
+.claude-plugin/types/
+node_modules/
+*.log
+.jev-runs/
+
+# report worker local secrets for wrangler dev
+report-worker/.dev.vars
+report-worker/.wrangler/
+.jev-runs/
+data/

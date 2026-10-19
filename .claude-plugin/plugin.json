@@ -1,0 +1,186 @@
+{
+  "name": "pilot",
+  "version": "2.0.0",
+  "description": "Auto effort per prompt, a limit guard, Haiku for the legwork, and one quiet line above the prompt.",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "judge": {
+      "type": "string",
+      "title": "Judge",
+      "description": "Haiku (your own Claude login, no key) always judges handoffs and, unless Jev answers, the effort. auto: Jev as well when a TypeSafe key is set. haiku: Haiku only. jev: Jev as well, and its key may also come from ~/.config/jev/.env.",
+      "default": "jev",
+      "options": [
+        "auto",
+        "haiku",
+        "jev"
+      ]
+    },
+    "typesafeKey": {
+      "type": "string",
+      "title": "TypeSafe API key (optional, only for jev)",
+      "description": "For the jev judge. Stored as a secret by Claude Code. Left empty, TYPESAFE_API_KEY is used, and with judge set to jev also ~/.config/jev/.env.",
+      "sensitive": true,
+      "default": ""
+    },
+    "handoffSkill": {
+      "type": "string",
+      "title": "Handoff skill (optional)",
+      "description": "A skill or slash command that writes the Full handoff, e.g. session-handoff. Empty: effortless writes it itself (checks git, saves HANDOFF.md). Quick is always a fast fork with the built-in prompt.",
+      "default": ""
+    },
+    "handoffAfter": {
+      "type": "string",
+      "title": "After a handoff (first choice)",
+      "description": "What the handoff bar starts on; it then remembers your last choice. continue: clear and carry on. confirm: clear, the new chat says where things stand and waits. copy: keep the chat and copy the handoff.",
+      "default": "continue",
+      "options": [
+        "continue",
+        "confirm",
+        "copy"
+      ]
+    },
+    "effortBias": {
+      "type": "string",
+      "title": "Effort slider",
+      "description": "-2 cheaper to 2 smarter. Tips the judge's close calls that way; sure calls stay. 0: as the judge says.",
+      "default": "0",
+      "options": [
+        "-2",
+        "-1",
+        "0",
+        "1",
+        "2"
+      ]
+    },
+    "effortFloor": {
+      "type": "string",
+      "title": "Never below",
+      "description": "Auto never picks a lower effort than this.",
+      "default": "low",
+      "options": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    },
+    "effortCeiling": {
+      "type": "string",
+      "title": "Never above",
+      "description": "Auto never picks a higher effort than this.",
+      "default": "max",
+      "options": [
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ]
+    },
+    "hide": {
+      "type": "string",
+      "title": "Switched off",
+      "description": "Comma-separated: handoff (the footer button), timer (the cache countdown), reason (the judge's line), swamp (the context alert), hot (the running-low alert), cold (the cold-cache alert). Empty shows everything. The judge's line is off unless switched on.",
+      "default": "reason"
+    },
+    "modelAuto": {
+      "type": "string",
+      "title": "Cheaper model when it can (experimental)",
+      "description": "on: a prompt the judge calls simple may run on a cheaper model (Haiku 5.5 or Sonnet), never above the chat's own, when the switch pays. It rarely does in a chat that is in use: the other model rereads the whole chat. off (default): every prompt runs on the chat's model.",
+      "default": "off",
+      "options": [
+        "on",
+        "off"
+      ]
+    },
+    "helpers": {
+      "type": "string",
+      "title": "Effort for helpers",
+      "description": "on: every subagent (helper) the chat sends off gets an effort picked by the judge before it starts, so a quick search runs at low instead of the chat's effort. off (default): helpers run at the chat's effort.",
+      "default": "on",
+      "options": [
+        "on",
+        "off"
+      ]
+    },
+    "handoffButton": {
+      "type": "string",
+      "title": "Handoff button",
+      "description": "advised: the button is Compact, and turns into a glowing Handoff when Haiku says a fresh chat would pay off. always: the button is always Handoff.",
+      "default": "advised",
+      "options": [
+        "advised",
+        "always"
+      ]
+    },
+    "compactWith": {
+      "type": "string",
+      "title": "Compact with",
+      "description": "haiku: Haiku 5.5 writes the summary when the chat is compacted (far cheaper). session: the chat's own model, as Claude Code does it.",
+      "default": "haiku",
+      "options": [
+        "haiku",
+        "session"
+      ]
+    },
+    "swampAt": {
+      "type": "string",
+      "title": "Swamped at",
+      "description": "The swamp band shows once the context fills this percent of the window.",
+      "default": "70",
+      "options": [
+        "10",
+        "20",
+        "30",
+        "40",
+        "50",
+        "60",
+        "70",
+        "80"
+      ]
+    },
+    "appearance": {
+      "type": "string",
+      "title": "Appearance",
+      "description": "auto: light panels when Claude Code's theme is light, dark otherwise. dark and light fix it.",
+      "default": "auto",
+      "options": [
+        "auto",
+        "dark",
+        "light"
+      ]
+    },
+    "theme": {
+      "type": "string",
+      "title": "Theme",
+      "description": "The accent colour of everything effortless draws. violet: the brand colour. orange: Claude Code orange. rose: cherry-blossom pink, with falling petals.",
+      "default": "violet",
+      "options": [
+        "violet",
+        "orange",
+        "rose"
+      ]
+    },
+    "layout": {
+      "type": "string",
+      "title": "Look",
+      "description": "default: a dashboard band above the prompt (effort, Auto, cache, context, handoff). minimal: small buttons in the footer, no band.",
+      "default": "default",
+      "options": [
+        "default",
+        "minimal"
+      ]
+    },
+    "guide": {
+      "type": "string",
+      "title": "Working guide",
+      "description": "on: Claude sends reading, searching and mechanical edits to Haiku subagents and writes the shortest code that works (ponytail rules). off: no guide.",
+      "default": "on",
+      "options": [
+        "on",
+        "off"
+      ]
+    }
+  }
+}

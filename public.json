@@ -1,0 +1,254 @@
+[
+  {
+    "version": "1.71.0",
+    "date": "2026-10-11",
+    "note": "Works properly in the terminal, and updates without the CLI on PATH",
+    "detail": [
+      "Settings in the terminal: cards show their text, the header wraps in a narrow window, short choices are one-press buttons",
+      "The terminal bar has Auto on/off, and the effort word flashes on a change like on desktop",
+      "Update finds Claude Code in ~/.local/bin when the app cannot see it; with no CLI it says what to install and copies the command",
+      "Typing an effort level by name (low, high, max) skips the judge; subagents follow the turn's effort"
+    ],
+    "public": true
+  },
+  {
+    "version": "1.70.0",
+    "date": "2026-10-10",
+    "note": "Alerts that stay closed, cheaper handoffs",
+    "detail": [
+      "Close the running-low alert and it stays closed until your limit resets, in new chats too. It comes back once at 95%.",
+      "Switch the context, running-low and cold-cache alerts on or off in Settings, under Handoff & alerts.",
+      "A quick handoff on a cold cache is now written by Haiku from the chat, instead of rereading the whole chat at full price.",
+      "The compact alert waits until 70% of the context by default.",
+      "No more warning card under replies: the band above the prompt says it.",
+      "New, off by default: Helpers. The judge picks the effort for each subagent too, never below medium.",
+      "Compact with moved to the Model card, and cheaper models are marked experimental.",
+      "Settings fixes: buttons and cards take clicks edge to edge, Helpers has its own row."
+    ],
+    "public": true
+  },
+  {
+    "version": "1.69.0",
+    "date": "2026-10-09",
+    "note": "Model switching off by default, 21% cheaper than Opus medium",
+    "detail": [
+      "Model switching is off by default. effortless sets the effort and leaves your model alone, because switching models mid-chat costs more than it saves: every model keeps its own cache. You can turn it back on in Settings → Model.",
+      "Measured on 96 real coding tasks: 21% cheaper than Opus at medium, 29% cheaper than high and 42% cheaper than xhigh. Every answer was still correct.",
+      "Light mode: a new Appearance setting (match Claude Code, dark or light) covers every panel and band.",
+      "Fixed: with Auto off, a stale effort was still sent. Now the effort you pick in the app is the one that goes out, and the bar says when your own pick turns Auto off.",
+      "/effortless debug shows the model and effort each request ran on."
+    ],
+    "public": true
+  },
+  {
+    "version": "1.68.0",
+    "date": "2026-10-09",
+    "note": "Model card, cherry blossom theme, quality benchmark",
+    "detail": [
+      "New Model card in Settings: keep every prompt on your chat's model, or allow a cheaper one for simple prompts.",
+      "New Cherry blossom theme: violets turn pink and the sparkles become falling petals.",
+      "The judge benchmark and the answer-quality benchmark are in the repo (bench/RESULTS.md)."
+    ],
+    "public": true
+  },
+  {
+    "version": "1.67.0",
+    "date": "2026-10-09",
+    "note": "Haiku compaction keeps your latest work",
+    "detail": [
+      "Haiku compaction keeps your latest messages almost whole, so the most recent work is not summarised away.",
+      "The README says where your keys are kept: pasted keys in a plain file, `/plugin configure` in secure storage."
+    ],
+    "public": true
+  },
+  {
+    "version": "1.66.0",
+    "date": "2026-10-09",
+    "note": "The bar shows the model too",
+    "detail": [
+      "The bar shows the model next to the effort, for example High · Opus.",
+      "The site and README lead with the model and the effort."
+    ],
+    "public": true
+  },
+  {
+    "version": "1.65.0",
+    "date": "2026-10-09",
+    "note": "Compact button stays visible in a narrow pane",
+    "public": true
+  },
+  {
+    "version": "1.64.0",
+    "date": "2026-10-08",
+    "note": "No restarting animations when a chat opens",
+    "public": true
+  },
+  {
+    "version": "1.63.0",
+    "date": "2026-10-08",
+    "note": "Update card never sticks on Loading",
+    "public": true
+  },
+  {
+    "version": "1.62.0",
+    "date": "2026-10-08",
+    "note": "Compact stays beside Handoff",
+    "public": true
+  },
+  {
+    "version": "1.61.0",
+    "date": "2026-10-08",
+    "note": "No stuck Cold after a reload",
+    "public": true
+  },
+  {
+    "version": "1.60.0",
+    "date": "2026-10-08",
+    "note": "Update loads into the chat you press it in",
+    "public": true
+  },
+  {
+    "version": "1.59.0",
+    "date": "2026-10-08",
+    "note": "Update reloads the new version in the same chat",
+    "public": true
+  },
+  {
+    "version": "1.58.0",
+    "date": "2026-10-08",
+    "note": "Update card tells the truth",
+    "public": true
+  },
+  {
+    "version": "1.57.0",
+    "date": "2026-10-08",
+    "note": "One Compact/Handoff button, Haiku decides handoffs",
+    "public": true
+  },
+  {
+    "version": "1.56.0",
+    "date": "2026-10-08",
+    "note": "Fix stacked dots on Settings cards",
+    "public": true
+  },
+  {
+    "version": "1.55.0",
+    "date": "2026-10-08",
+    "note": "Fix false Cold countdown",
+    "public": true
+  },
+  {
+    "version": "1.54.0",
+    "date": "2026-10-08",
+    "note": "Updated card polish: textured green, Share icon, dividers",
+    "public": true
+  },
+  {
+    "version": "1.53.0",
+    "date": "2026-10-08",
+    "note": "Updated card redesign: green mark, near-black card",
+    "public": true
+  },
+  {
+    "version": "1.52.0",
+    "date": "2026-10-08",
+    "note": "Logo on the update, handoff and compact cards; no stale Cold after a plugin switch",
+    "public": true
+  },
+  {
+    "version": "1.51.0",
+    "date": "2026-10-08",
+    "note": "Maintenance release, no behaviour changes",
+    "public": true
+  },
+  {
+    "version": "1.50.0",
+    "date": "2026-10-08",
+    "note": "Maintenance release, no behaviour changes",
+    "public": true
+  },
+  {
+    "version": "1.49.0",
+    "date": "2026-10-08",
+    "note": "Handoff suggestion from the Haiku judge, Compact button on the bar, Share link on the Updated card",
+    "public": true
+  },
+  {
+    "version": "1.48.0",
+    "date": "2026-10-08",
+    "note": "Black GitHub panel on the Updated card, new card order",
+    "public": true
+  },
+  {
+    "version": "1.47.0",
+    "date": "2026-10-08",
+    "note": "Star on GitHub is a link with the GitHub mark",
+    "public": true
+  },
+  {
+    "version": "1.46.0",
+    "date": "2026-10-08",
+    "note": "Customize card, neutral greys, calmer Settings",
+    "public": true
+  },
+  {
+    "version": "1.45.0",
+    "date": "2026-10-08",
+    "note": "Update check reads the release list with git",
+    "public": true
+  },
+  {
+    "version": "1.44.0",
+    "date": "2026-10-08",
+    "note": "Star on GitHub as a white pill with the GitHub mark",
+    "public": true
+  },
+  {
+    "version": "1.43.0",
+    "date": "2026-10-08",
+    "note": "Star link leaves Settings",
+    "public": true
+  },
+  {
+    "version": "1.42.0",
+    "date": "2026-10-08",
+    "note": "Star link next to the name in Settings",
+    "public": true
+  },
+  {
+    "version": "1.41.0",
+    "date": "2026-10-08",
+    "note": "Star on GitHub in Appearance and the Updated card",
+    "public": true
+  },
+  {
+    "version": "1.40.0",
+    "date": "2026-10-08",
+    "note": "Settings offers only newer versions",
+    "public": true
+  },
+  {
+    "version": "1.39.0",
+    "date": "2026-10-08",
+    "note": "Updates work without a GitHub SSH key",
+    "public": true
+  },
+  {
+    "version": "1.38.0",
+    "date": "2026-10-08",
+    "note": "Theme setting: violet or Claude orange, plus Check for updates in Settings",
+    "public": true
+  },
+  {
+    "version": "1.37.0",
+    "date": "2026-10-07",
+    "note": "Smooth deciding glow, Settings saved card, version in Settings",
+    "public": true
+  },
+  {
+    "version": "1.36.0",
+    "date": "2026-10-07",
+    "note": "Haiku 5.5 picks the model and writes compactions",
+    "public": true
+  }
+]

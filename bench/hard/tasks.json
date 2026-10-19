@@ -1,0 +1,123 @@
+[
+  {
+    "id": "b1",
+    "difficulty": "easy",
+    "file": "hooks/register.tsx",
+    "find": "saving && EFFORTS.indexOf(effort) > EFFORTS.indexOf('medium') ? 'medium' : effort",
+    "replace": "saving && EFFORTS.indexOf(effort) < EFFORTS.indexOf('medium') ? 'medium' : effort",
+    "report": "Save mode does the opposite of what it says. With it on, prompts still run at high and xhigh effort, and quick questions that used to run at low now get bumped up to medium. With save mode off everything looks normal.",
+    "fails": [
+      "running hot and judge down > save mode caps at medium, and reset times read short"
+    ]
+  },
+  {
+    "id": "b2",
+    "difficulty": "easy",
+    "file": "hooks/register.tsx",
+    "find": "if ((pa[i] ?? 0) !== (pb[i] ?? 0)) return (pa[i] ?? 0) > (pb[i] ?? 0)",
+    "replace": "if ((pa[i] ?? 0) !== (pb[i] ?? 0)) return (pa[i] ?? 0) < (pb[i] ?? 0)",
+    "report": "The update check is backwards. When a newer version is out, Check for updates says I'm up to date and no update card shows up. But when the published version is older than the one I have installed, it offers me that older one as an update.",
+    "fails": [
+      "updates > versions compare by number and releases.json gives its newest entry",
+      "updates > Check for updates in Settings looks now, past a Later, and offers the install in the same place",
+      "updates > a version found earlier is not offered once the installed one is as new",
+      "updates > Check for updates trusts git over a web answer that lags behind",
+      "updates > Check for updates looks again while an earlier Updated card is still up",
+      "updates > a newer version is offered; ✕ puts it away for a day, then it is offered again",
+      "updates > Update runs the two claude plugin commands, reloads, and the new version says Updated with a link",
+      "updates > a failed update says why and offers to try again",
+      "updates > the update reaches GitHub over HTTPS, so users without an SSH key there can update"
+    ]
+  },
+  {
+    "id": "b3",
+    "difficulty": "easy",
+    "file": "hooks/register.tsx",
+    "find": "if (!closed || closed.window !== hotWindow(heat)) return true",
+    "replace": "if (!closed || closed.window === hotWindow(heat)) return true",
+    "report": "The \"running hot\" warning won't stay closed. I close it with the cross and it comes right back in the same usage window. Then when a new usage window starts and I'm over the limit again, the warning doesn't show at all.",
+    "fails": [
+      "handoff > hotVisible: closed, the band stays away for its window and comes back once at 95%",
+      "dashboard > an alert takes the dashboard's place, and the dashboard comes back after it"
+    ]
+  },
+  {
+    "id": "b4",
+    "difficulty": "medium",
+    "file": "hooks/register.tsx",
+    "find": "(Math.abs(bias) === 1 ? 0.65 : 0.85)",
+    "replace": "(Math.abs(bias) === 1 ? 0.85 : 0.65)",
+    "report": "The effort slider's notches feel swapped. One notch toward smarter already moves picks the judge was fairly sure about, and the outer notch moves fewer picks than the first one does. I'd expect the outer notch to tip more close calls, not fewer.",
+    "fails": [
+      "settings panel > the slider tips only close calls; floor and ceiling clamp; the key line is set in place"
+    ]
+  },
+  {
+    "id": "b5",
+    "difficulty": "medium",
+    "file": "hooks/register.tsx",
+    "find": "t.split(/\\s+/).length <= 2",
+    "replace": "t.split(/\\s+/).length < 2",
+    "report": "Short go-aheads between two steps only keep the effort when they are one word. \"go\" or \"continue\" keep the current effort like they should, but \"ok go\" or \"yes please\" get sent to the judge and the effort sometimes changes.",
+    "fails": [
+      "follow-ups > isFollowUp: short go-aheads yes, real requests no"
+    ]
+  },
+  {
+    "id": "b6",
+    "difficulty": "medium",
+    "file": "hooks/register.tsx",
+    "find": "const shown = minutesLeft - 1",
+    "replace": "const shown = minutesLeft",
+    "report": "The cache countdown in the footer changes colour a minute late. It should turn yellow when it shows 20m and red when it shows 5m, but it is still grey at 20m and still yellow at 5m. Each colour only appears one minute later.",
+    "fails": [
+      "cache countdown > cacheTtlOf and cacheLabel"
+    ]
+  },
+  {
+    "id": "b7",
+    "difficulty": "medium",
+    "file": "hooks/register.tsx",
+    "find": "(?! +(problem|worries|thanks|thank|need|rush|hurry))",
+    "replace": "(?! +(worries|thanks|thank|need|rush|hurry))",
+    "report": "When I reply \"no problem\" (say after Claude apologizes), effortless treats it as if I said the last answer was wrong: with model Auto on, the next few prompts stay on the bigger model as for a redo, and stats count it as redone. \"no worries\" and \"no thanks\" don't do this.",
+    "fails": [
+      "dashboard > looksLikeRedo: a correction after a cheaper answer, not a thank-you or a new task",
+      "dashboard > a thank-you after a cheaper answer is not a redo"
+    ]
+  },
+  {
+    "id": "b8",
+    "difficulty": "hard",
+    "file": "hooks/register.tsx",
+    "find": "const i = Math.min(Math.max(EFFORTS.indexOf(floor), EFFORTS.indexOf('medium')), EFFORTS.indexOf(ceiling))",
+    "replace": "const i = Math.max(Math.min(EFFORTS.indexOf(floor), EFFORTS.indexOf(ceiling)), EFFORTS.indexOf('medium'))",
+    "report": "I set Max effort to low. The main chat respects it, but with Helpers on, subagents still run at medium. Nothing should go above my Max.",
+    "fails": [
+      "agent panel > helperFloor: medium, the person's Min when higher, never above their Max"
+    ]
+  },
+  {
+    "id": "b9",
+    "difficulty": "hard",
+    "file": "hooks/register.tsx",
+    "find": "const stay = contextTokens * MODEL_PRICE[inUse] * (warm.inUse ? WEIGHT.read : write)",
+    "replace": "const stay = contextTokens * MODEL_PRICE[inUse] * (warm.to ? WEIGHT.read : write)",
+    "report": "With model Auto on, effortless moves prompts to a cheaper model even when that model's prompt cache is cold and the chat is big, while my main model's cache is still warm. That writes the whole chat into the cold cache and costs more than staying would. It should only switch when the switch comes out cheaper.",
+    "fails": [
+      "auto > routeWorth: a switch to a cold model pays only when it still comes out cheaper",
+      "dashboard > cache-aware routing, live through the hooks: a cold Sonnet is skipped on a big warm Opus chat, Haiku moves, a cold chat moves, and a routed reply leaves the countdown alone"
+    ]
+  },
+  {
+    "id": "b10",
+    "difficulty": "hard",
+    "file": "hooks/register.tsx",
+    "find": "const reply = context.split('\\nassistant: ').pop() ?? ''",
+    "replace": "const reply = context.split('\\nassistant: ')[0] ?? ''",
+    "report": "When Claude's reply ends with a question like \"Should I archive it?\" and I answer \"yes\", effortless just keeps the previous effort instead of judging the work my answer starts. And the other way round: if my own previous message had a question mark in it, a plain \"go\" between two steps gets judged even though Claude didn't ask anything.",
+    "fails": [
+      "short answers to a question > a short reply after a question goes to the judge; between two steps it keeps the effort"
+    ]
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "effortless-dev",
+  "description": "effortless as it is on main: every release, before it is published. For development only.",
+  "owner": {
+    "name": "HeyCubit",
+    "url": "https://github.com/HeyCubit"
+  },
+  "plugins": [
+    {
+      "name": "effortless",
+      "description": "effortless from main (dev channel).",
+      "source": { "source": "github", "repo": "HeyCubit/effortless", "ref": "main" },
+      "category": "productivity"
+    }
+  ]
+}

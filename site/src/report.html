@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Report a bug · effortless</title>
+<meta name="description" content="Tell us what went wrong in effortless, or ask for a feature. No account needed.">
+<link rel="canonical" href="https://heycubit.github.io/effortless/report/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="effortless">
+<meta property="og:title" content="Report a bug in effortless">
+<meta property="og:description" content="Tell us what went wrong, or ask for a feature. No account needed.">
+<meta property="og:url" content="https://heycubit.github.io/effortless/report/">
+<meta property="og:image" content="https://heycubit.github.io/effortless/og.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="effortless: picks the reasoning effort for every prompt in Claude Code">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Report a bug in effortless">
+<meta name="twitter:description" content="Tell us what went wrong, or ask for a feature. No account needed.">
+<meta name="twitter:image" content="https://heycubit.github.io/effortless/og.png">
+<meta name="theme-color" content="#121214">
+<link rel="icon" href="__ICON__">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500&display=swap" rel="stylesheet">
+<style>
+
+/* Report a bug: a short form that posts to the report worker (report-worker/), which files the GitHub issue.
+   If the worker cannot be reached, the page falls back to a prefilled GitHub issue the visitor submits. */
+:root{--page:#121214;--text:#ececef;--muted:#9a9aa4;--dim:#82828c;--accent:#a79cf7;--sans:Inter,"Segoe UI",system-ui,-apple-system,sans-serif;--display:Outfit,Inter,"Segoe UI",system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--text);font:15px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.top{max-width:760px;margin:0 auto;padding:22px 24px 0;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.name{display:inline-flex;align-items:center;gap:10px;font:500 23px var(--display);letter-spacing:-.01em;text-decoration:none}
+.name .spark{width:44px;height:44px;margin:-8px -3px -8px -8px}
+.back{color:var(--muted);text-decoration:none;font-size:15.5px}
+.back:hover{color:var(--text)}
+main{max-width:760px;margin:0 auto;padding:72px 24px 96px}
+h1{margin:0;font:500 clamp(30px,4vw,42px)/1.1 var(--display);letter-spacing:-.02em;color:#f4f2ff}
+form{margin-top:32px;display:grid;gap:18px}
+label{display:grid;gap:8px;color:#d4d4d8;font-weight:500;font-size:14.5px}
+label small{color:var(--dim);font-weight:400}
+input,textarea{width:100%;padding:12px 14px;border:1px solid transparent;border-radius:10px;background:#1b1a21;color:var(--text);font:15px/1.5 var(--sans)}
+textarea{min-height:180px;resize:vertical}
+input::placeholder,textarea::placeholder{color:#6e6d78}
+input:focus,textarea:focus{outline:none;border-color:#a79cf780;background:#1f1e26}
+.opt{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px}
+.go{justify-self:start;display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;border:0;border-radius:10px;background:#f4f3f8;color:#141218;font:600 15px var(--sans);cursor:pointer}
+.go:hover{background:#fff}
+.go svg{width:18px;height:18px}
+.note{margin:-6px 0 0;color:var(--dim);font-size:13.5px}
+.kind{display:inline-flex;gap:4px;margin-top:28px;padding:4px;border-radius:11px;background:#1b1a21}
+.kind[hidden]{display:none}
+.kind button{padding:8px 14px;border:0;border-radius:8px;background:none;color:var(--muted);font:500 14px var(--sans);cursor:pointer}
+.kind button:hover{color:var(--text)}
+.kind button[aria-pressed="true"]{background:#2e2d36;color:var(--text)}
+a:focus-visible,.go:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:10px}
+.trap{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.go[disabled]{opacity:.6;cursor:default}
+.status{margin:0;font-size:14.5px;color:var(--muted)}
+.status a{color:var(--accent)}
+.status.err{color:#f0a0a0}
+.done{margin-top:32px;padding:22px 24px;border-radius:12px;background:#1b1a21}
+.done h2{margin:0 0 6px;font:500 22px var(--display);color:#f4f2ff}
+.done p{margin:0;color:var(--muted)}
+.done a{color:var(--accent)}
+@media (max-width:560px){.top{padding:16px 16px 0}main{padding:48px 16px 72px}.opt{grid-template-columns:1fr}}
+/* Touch screens: links and buttons are at least 44 px to hit. */
+@media (pointer:coarse){.back{display:inline-flex;align-items:center;min-height:44px}.name{min-height:44px}.kind button{min-height:44px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="name" href="../">__SPARK__effortless</a>
+  <a class="back" href="../">Back to the site</a>
+</header>
+<main>
+  <h1 id="h">Report a bug</h1>
+  <div class="kind" role="group" aria-label="What do you want to send?">
+    <button type="button" data-kind="bug" aria-pressed="true">Report a bug</button>
+    <button type="button" data-kind="feature" aria-pressed="false">Request a feature</button>
+  </div>
+  <form id="report">
+    <label id="lt">What went wrong<input name="title" required maxlength="140" placeholder="The bar stays on Deciding after a prompt"></label>
+    <label id="lb">What happened<textarea name="body" required placeholder="What you did, what you expected, and what you saw instead."></textarea></label>
+    <div class="opt">
+      <label><span>effortless version <small>optional</small></span><input name="effortless" placeholder="__LATEST__" autocomplete="off"></label>
+      <label><span>Claude Code version <small>optional</small></span><input name="cc" placeholder="claude --version" autocomplete="off"></label>
+    </div>
+    <label class="trap" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+    <button class="go" type="submit"><span id="gl">Send the report</span></button>
+    <p class="note">No account needed. It becomes a public issue on GitHub, so leave out anything private.</p>
+    <p class="status" id="st" role="status" aria-live="polite"></p>
+  </form>
+</main>
+<script>
+// Two modes on one page. ?kind=feature (or the second button) switches to the feature request; the mod's Settings
+// link can also pass ?effortless=1.36.0&cc=2.1.300 to fill the optional fields.
+var f=document.getElementById('report'),q=new URLSearchParams(location.search),kind='bug';
+var M={
+  bug:{h:'Report a bug',t:'What went wrong',tp:'The bar stays on Deciding after a prompt',b:'What happened',bp:'What you did, what you expected, and what you saw instead.',g:'Send the report',label:'bug'},
+  feature:{h:'Request a feature',t:'The feature in a few words',tp:'Show the cache clock in the Settings bar',b:'What it would do',bp:'What you want to be able to do, and why it would help.',g:'Send the request',label:'enhancement'}
+};
+function setKind(k){kind=M[k]?k:'bug';var m=M[kind];
+  document.title=m.h+' · effortless';document.getElementById('h').textContent=m.h;
+  document.querySelectorAll('[data-kind]').forEach(function(x){x.setAttribute('aria-pressed',String(x.dataset.kind===kind))});
+  document.getElementById('lt').firstChild.nodeValue=m.t+' ';f.elements.title.placeholder=m.tp;
+  document.getElementById('lb').firstChild.nodeValue=m.b+' ';f.elements.body.placeholder=m.bp;
+  document.getElementById('gl').textContent=m.g;}
+document.querySelectorAll('[data-kind]').forEach(function(x){x.addEventListener('click',function(){setKind(x.dataset.kind)})});
+setKind(q.get('kind'));
+['effortless','cc'].forEach(function(k){if(q.get(k))f.elements[k].value=q.get(k).slice(0,40)});
+// The form posts to the report worker, which files the issue as HeyCubit. The local preview talks to `wrangler dev`.
+var API=/^(127\.0\.0\.1|localhost)$/.test(location.hostname)?'http://127.0.0.1:8787/report':'https://effortless-report.isac-ehrstedt.workers.dev/report';
+var opened=Date.now(),st=document.getElementById('st'),go=f.querySelector('.go');
+function v(k){return f.elements[k].value.trim()}
+// Fallback: the old way, a prefilled issue the visitor submits on GitHub themselves.
+function ghLink(){var body=v('body'),ver=[];
+  if(v('effortless'))ver.push('- effortless: '+v('effortless'));
+  if(v('cc'))ver.push('- Claude Code: '+v('cc'));
+  if(ver.length)body+='\n\n### Versions\n'+ver.join('\n');
+  return 'https://github.com/HeyCubit/effortless/issues/new?title='+encodeURIComponent(v('title'))+'&body='+encodeURIComponent(body)+'&labels='+M[kind].label;}
+function say(text,err){st.className='status'+(err?' err':'');st.textContent=text;}
+var WHY={title:'The title needs 3 to 140 characters.',body:'Say a bit more: at least 10 characters.',version:'A version can be at most 40 characters.','slow-down':'That was a lot at once. Wait a minute and send again.',busy:'Lots of reports right now. Wait a minute and send again.'};
+f.addEventListener('submit',function(e){e.preventDefault();
+  go.disabled=true;say('Sending...');
+  fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:kind,title:v('title'),body:v('body'),effortless:v('effortless'),cc:v('cc'),website:f.elements.website.value,ms:Date.now()-opened})})
+    .then(function(r){return r.json().catch(function(){return {}}).then(function(d){return {status:r.status,d:d}})})
+    .then(function(x){
+      if(x.d.ok){var done=document.createElement('div');done.className='done';done.setAttribute('role','status');
+        var h=document.createElement('h2');h.textContent=kind==='feature'?'Thanks, the request is in.':'Thanks, the report is in.';
+        var p=document.createElement('p');if(x.d.url){p.append('You can follow it on GitHub: ');var a=document.createElement('a');a.href=x.d.url;a.textContent='issue #'+x.d.number;a.rel='noopener';p.append(a,'.')}else p.textContent='It went through.';
+        done.append(h,p);f.replaceWith(done);document.querySelector('.kind').hidden=true;return;}
+      if(x.status===400&&WHY[x.d.error]||x.status===429){go.disabled=false;say(WHY[x.d.error]||WHY.busy,true);return;}
+      throw 0;})
+    .catch(function(){go.disabled=false;st.className='status err';st.textContent='It could not be sent from here. ';
+      var a=document.createElement('a');a.href=ghLink();a.target='_blank';a.rel='noopener';a.textContent='Open it on GitHub instead';st.append(a,' (needs a GitHub account).');});
+});
+</script>
+</body>
+</html>

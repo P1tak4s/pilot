@@ -1,0 +1,150 @@
+{
+ "zoom": 1.5774409656148782,
+ "width": 400,
+ "params": {
+  "percent": 19,
+  "cacheMinutes": 59,
+  "effort": "medium",
+  "reason": "a small fix in one file",
+  "judged": true,
+  "judging": false,
+  "working": false,
+  "auto": true,
+  "bodyColumns": 100,
+  "press": [],
+  "command": "",
+  "trace": 0,
+  "options": {}
+ },
+ "glow": false,
+ "renderer": "c95e4d2cf-oXAujp09.js",
+ "band": {
+  "x": 0,
+  "y": 0,
+  "w": 384,
+  "h": 641
+ },
+ "site": {
+  "x": -8,
+  "y": -10.5,
+  "w": 400,
+  "h": 662
+ },
+ "button:open-1": {
+  "x": 1,
+  "y": 169,
+  "w": 12,
+  "h": 20
+ },
+ "button:open-2": {
+  "x": 1,
+  "y": 272.5,
+  "w": 12,
+  "h": 20
+ },
+ "button:open-3": {
+  "x": 1,
+  "y": 376,
+  "w": 12,
+  "h": 20
+ },
+ "button:open-4": {
+  "x": 1,
+  "y": 451,
+  "w": 12,
+  "h": 20
+ },
+ "button:open-5": {
+  "x": 1,
+  "y": 497.5,
+  "w": 12,
+  "h": 20
+ },
+ "button:auto-agents": {
+  "x": 7.91,
+  "y": 612,
+  "w": 93.8,
+  "h": 20
+ },
+ "button:clear-done": {
+  "x": 109.61,
+  "y": 612,
+  "w": 73.19,
+  "h": 20
+ },
+ "img:effortless": {
+  "x": 8.91,
+  "y": 408.5,
+  "w": 12,
+  "h": 12
+ },
+ "img:38% of context": {
+  "x": 8.91,
+  "y": 67.5,
+  "w": 16,
+  "h": 16
+ },
+ "img:waiting on agents": {
+  "x": 284.36,
+  "y": 68.5,
+  "w": 22,
+  "h": 14
+ },
+ "img:running": {
+  "x": 8.91,
+  "y": 143.5,
+  "w": 14,
+  "h": 14
+ },
+ "img:1:42 running": {
+  "x": 335.09,
+  "y": 142,
+  "w": 40,
+  "h": 17
+ },
+ "img:": {
+  "x": 7.91,
+  "y": 535.5,
+  "w": 368,
+  "h": 1
+ },
+ "img:waiting": {
+  "x": 8.91,
+  "y": 247,
+  "w": 14,
+  "h": 14
+ },
+ "img:4:10 running": {
+  "x": 335.09,
+  "y": 245.5,
+  "w": 40,
+  "h": 17
+ },
+ "img:done": {
+  "x": 8.91,
+  "y": 350.5,
+  "w": 14,
+  "h": 14
+ },
+ "img:queued": {
+  "x": 8.91,
+  "y": 454,
+  "w": 14,
+  "h": 14
+ },
+ "img:picking": {
+  "x": 301.28,
+  "y": 454,
+  "w": 22,
+  "h": 14
+ },
+ "img:failed": {
+  "x": 8.91,
+  "y": 500.5,
+  "w": 14,
+  "h": 14
+ },
+ "buttonFont": "400 12px/17px anthropic-sans, system-ui, \"Segoe UI\", Roboto, Helvetica, Arial, \"PingFang SC\", \"PingFang TC\", \"Hiragino Sans\", \"Apple SD Gothic Neo\", \"Kohinoor Devanagari\", \"Kohinoor Bangla\", \"Kohinoor Telugu\", \"Tamil Sangam MN\", \"Kohinoor Gujarati\", \"Malayalam Sangam MN\", \"Nirmala UI\", \"Noto Sans Devanagari UI\", \"Noto Sans Devanagari\", \"Noto Sans Bengali UI\", \"Noto Sans Bengali\", \"Noto Sans Telugu UI\", \"Noto Sans Telugu\", \"Noto Sans Tamil UI\", \"Noto Sans Tamil\", \"Noto Sans Gujarati UI\", \"Noto Sans Gujarati\", \"Noto Sans Kannada UI\", \"Noto Sans Kannada\", \"Noto Sans Malayalam UI\", \"Noto Sans Malayalam\", Thonburi, \"Leelawadee UI\", \"Noto Sans Thai UI\", \"Noto Sans Thai\", Kefa, Ebrima, \"Noto Sans Ethiopic\", \"Abyssinica SIL\", sans-serif, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, \"PingFang SC\", \"PingFang TC\", \"Hiragino Sans\", \"Apple SD Gothic Neo\", sans-serif",
+ "bandBorder": "0px 0px",
+ "devicePixelRatio": 1.5774409770965576
+}

@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benchmarks · effortless</title>
+<meta name="description" content="How much effortless saves on real coding tasks: 21% against Opus medium, 29% against high, 42% against xhigh, with every answer still right. Small runs, limits included.">
+<link rel="canonical" href="https://heycubit.github.io/effortless/bench/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="effortless">
+<meta property="og:title" content="effortless benchmarks">
+<meta property="og:description" content="effortless on and off on real coding tasks: 21% cheaper than Opus medium, 29% than high, 42% than xhigh, every answer still right.">
+<meta property="og:url" content="https://heycubit.github.io/effortless/bench/">
+<meta property="og:image" content="https://heycubit.github.io/effortless/og.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="effortless benchmarks">
+<meta name="twitter:description" content="effortless on and off on real coding tasks: 21% cheaper than Opus medium, 29% than high, 42% than xhigh, every answer still right.">
+<meta name="twitter:image" content="https://heycubit.github.io/effortless/og.png">
+<meta name="theme-color" content="#121214">
+<link rel="icon" href="__ICON__">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Benchmarks, laid out like a results sheet: square edges, 1 px rules, bordered grid tables, and the column that
+   matters outlined. Numbers come from bench/RESULTS.md. Chart colours are validated for this dark page: violet is
+   "against Opus high", aqua is "against Opus medium". */
+:root{--page:#121214;--rule:#2e2e35;--rule2:#3b3b44;--text:#ececef;--body:#cfcbdc;--muted:#9a9aa4;--dim:#82828c;--accent:#a79cf7;--hi:#9085e9;--md:#199e70;--hl:#9085e91a;--hlb:#9085e9;--sans:Inter,"Segoe UI",system-ui,-apple-system,sans-serif;--display:Outfit,Inter,"Segoe UI",system-ui,sans-serif;--mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--text);font:15.5px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.top{max-width:1040px;margin:0 auto;padding:22px 24px 0;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.name{display:inline-flex;align-items:center;gap:10px;font:500 23px var(--display);letter-spacing:-.01em;text-decoration:none}
+.name .spark{width:44px;height:44px;margin:-8px -3px -8px -8px}
+.back{color:var(--muted);text-decoration:none;font-size:15.5px}
+.back:hover{color:var(--text)}
+main{max-width:1040px;margin:0 auto;padding:64px 24px 96px}
+.label{font:500 12.5px/1.4 var(--mono);color:var(--muted);letter-spacing:.01em}
+h1{margin:12px 0 0;font:500 clamp(36px,5vw,56px)/1.05 var(--display);letter-spacing:-.025em;color:#f4f2ff}
+.intro{margin:18px 0 0;max-width:36em;color:var(--body);font-size:18px;line-height:1.55}
+.meta{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:22px}
+h2{margin:8px 0 0;font:500 clamp(26px,3.2vw,34px)/1.15 var(--display);letter-spacing:-.02em;color:#f4f2ff}
+.sec{margin-top:88px}
+.sec>p{margin:12px 0 0;max-width:42em;color:var(--body)}
+code{font:13.5px/1.4 var(--mono);padding:1px 6px;background:#222128;color:var(--text)}
+
+/* The short answer: a ruled strip, one number per cell. */
+.answer{margin-top:44px;border-top:1px solid var(--rule2);border-bottom:1px solid var(--rule)}
+.answer .q{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:24px;padding:22px 0;border-bottom:1px solid var(--rule)}
+.answer .q h3{margin:0;font:500 20px/1.3 var(--display);color:#f4f2ff}
+.answer .q p{margin:0;color:var(--body)}
+.answer .q p b{color:#f4f2ff;font-weight:600}
+.cells{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.cell{padding:22px 22px 24px;border-left:1px solid var(--rule)}
+.cell:first-child{border-left:0;padding-left:0}
+.cell b{display:block;margin-top:10px;font:500 40px/1 var(--display);letter-spacing:-.02em;color:#f4f2ff;font-variant-numeric:tabular-nums}
+.cell span{display:block;margin-top:10px;color:var(--muted);font-size:14px;line-height:1.45}
+
+/* Why it works / what needs improving: two ruled columns of short claims. */
+.split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:28px;border-top:1px solid var(--rule2)}
+.split>div{padding:22px 28px 6px 0}
+.split>div+div{padding-left:28px;border-left:1px solid var(--rule)}
+.split h3{display:flex;align-items:center;gap:10px;margin:0 0 6px;font:500 20px var(--display);color:#f4f2ff}
+.split h3 i{width:10px;height:10px}
+.split .ok h3 i{background:var(--md)}
+.split .no h3 i{background:#d95926}
+.item{padding:16px 0;border-top:1px solid var(--rule)}
+.split h3+.item{border-top:0}
+.item b{display:block;color:#f4f2ff;font-weight:600;font-size:16px}
+.item span{display:block;margin-top:4px;color:var(--body);font-size:14.5px}
+.item em{font-style:normal;color:#f4f2ff;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* Grid tables. The highlighted column gets a tint and a 1 px outline. */
+.tbl{margin-top:26px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:14px 16px;border:1px solid var(--rule);text-align:left;vertical-align:top}
+thead th{font-weight:600;font-size:14.5px;color:#f4f2ff}
+thead th small,tbody th small{display:block;margin-top:3px;font-weight:400;font-size:13px;color:var(--muted)}
+tbody th{font-weight:600;font-size:14.5px;color:#e6e3f0}
+td{font-size:17px;color:var(--body)}
+td small{display:block;margin-top:2px;font-size:12.5px;font-weight:400;color:var(--dim)}
+td.hl,th.hl{background:var(--hl);box-shadow:inset 1px 0 0 var(--hlb),inset -1px 0 0 var(--hlb)}
+thead tr:first-child th.hl{box-shadow:inset 1px 0 0 var(--hlb),inset -1px 0 0 var(--hlb),inset 0 1px 0 var(--hlb)}
+tbody tr:last-child td.hl{box-shadow:inset 1px 0 0 var(--hlb),inset -1px 0 0 var(--hlb),inset 0 -1px 0 var(--hlb)}
+td.hl{color:#f4f2ff;font-weight:600}
+th.grp{text-align:center;font:500 13px var(--mono);color:var(--muted)}
+.judge table{min-width:620px}
+.neg{color:#f0a07a}
+.pos{color:#5fd3a5}
+/* Benchmark 2: one plain comparison. The result column carries the colour, the total row gets a heavier rule. */
+table.plain td b{font-weight:600;color:#f4f2ff}
+table.plain td b.pos{color:#5fd3a5}
+table.plain td b.neg{color:#f0a07a}
+table.plain td:nth-child(2){font-size:15px}
+table.plain tr.total th,table.plain tr.total td{border-top:2px solid var(--rule2);background:#18181c}
+table.plain tr.total td b{font-size:19px}
+@media (max-width:600px){table.plain thead{display:none}table.plain,table.plain tbody{display:block}
+  table.plain tr{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.8fr) minmax(0,1.2fr);border:1px solid var(--rule);border-top:0}
+  table.plain tr:first-child{border-top:1px solid var(--rule)}
+  table.plain th,table.plain td{border:0;padding:10px 12px}
+  table.plain th{grid-column:1/-1;padding-bottom:0}table.plain th small{display:inline;margin-left:6px}
+  table.plain td::before{content:attr(data-l);display:block;margin-bottom:3px;font:500 11.5px/1.3 var(--mono);color:var(--muted)}
+  table.plain td:empty{display:none}table.plain tr.total td:nth-of-type(2){grid-column:2}
+  table.plain tr.total th,table.plain tr.total td{border-top:0}table.plain tr.total{border-top:2px solid var(--rule2);background:#18181c}table.plain tr.total th,table.plain tr.total td{background:none}table.plain td b{font-size:16.5px}table.plain tr.total td b{font-size:18px}}
+.read{margin-top:18px;padding-left:18px;border-left:2px solid var(--hlb);max-width:44em;color:var(--body)}
+.read b{color:#f4f2ff}
+
+
+/* Notes, the fix and the limits: a mono label over a rule. */
+.note{margin-top:16px;color:var(--dim);font-size:14px;max-width:46em}
+.ruled{margin-top:26px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 36px}
+.ruled>div{padding-left:18px;border-left:1px solid var(--rule2)}
+.ruled p{margin:10px 0 0;color:var(--body);font-size:15px}
+.ruled p b{color:#f4f2ff}
+.fix{margin-top:32px;padding-left:18px;border-left:2px solid var(--hlb);max-width:46em}
+.fix p{margin:8px 0 0;color:var(--body)}
+.run{margin-top:26px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--rule)}
+.run>div{padding:20px 22px}
+.run>div+div{border-left:1px solid var(--rule)}
+.run p{margin:10px 0 0;color:var(--body);font-size:15px}
+.run code{display:inline-block;margin-top:10px;max-width:100%;overflow-wrap:anywhere}
+details{margin-top:18px;border-top:1px solid var(--rule)}
+summary{padding:12px 0;cursor:pointer;color:var(--muted);font-size:14.5px}
+summary:hover{color:var(--text)}
+details .tbl{margin-top:8px}
+details table{min-width:560px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (max-width:860px){.cells{grid-template-columns:repeat(2,minmax(0,1fr))}.cell:nth-child(3){border-left:0;padding-left:0}.cell:nth-child(n+3){border-top:1px solid var(--rule)}.answer .q{grid-template-columns:minmax(0,1fr);gap:8px}}
+@media (max-width:760px){.split,.ruled,.run{grid-template-columns:minmax(0,1fr)}.split>div+div{padding-left:0;border-left:0;border-top:1px solid var(--rule2);margin-top:12px}.run>div+div{border-left:0;border-top:1px solid var(--rule)}}
+@media (max-width:560px){.top{padding:16px 16px 0}main{padding:44px 16px 72px}.sec{margin-top:68px}.cell{padding:18px 14px 20px}.cell b{font-size:32px}th,td{padding:12px}}
+@media (max-width:360px){.cells{grid-template-columns:minmax(0,1fr)}.cell,.cell:nth-child(3){border-left:0;padding-left:0}.cell+.cell{border-top:1px solid var(--rule)}}
+@media (pointer:coarse){.back{display:inline-flex;align-items:center;min-height:44px}.name{min-height:44px}summary{padding:13px 0}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="name" href="../">__SPARK__effortless</a>
+  <a class="back" href="../">Back to the site</a>
+</header>
+<main>
+  <div class="label">Benchmarks</div>
+  <h1>How much does it save?</h1>
+  <p class="intro">Real coding tasks, each run with effortless on and with it off, on Opus and on Sonnet, through Anthropic's API. Every answer was checked, not just priced.</p>
+  <div class="meta"><span class="label">96 runs, 2026-10-10</span><span class="label">4 tasks, 3 runs each</span><span class="label">Every answer checked</span></div>
+
+  <section class="answer" aria-labelledby="a-h">
+    <div class="q">
+      <h3 id="a-h">Does it save money against Opus at medium effort?</h3>
+      <p><b>Yes, about a fifth, with the same answers.</b> Medium is what Anthropic recommends. Against high and xhigh, where many people sit, it saves more.</p>
+    </div>
+    <div class="cells">
+      <div class="cell"><div class="label">Vs Opus medium</div><b>21%</b><span>cheaper per task</span></div>
+      <div class="cell"><div class="label">Vs Opus high</div><b>29%</b><span>cheaper per task</span></div>
+      <div class="cell"><div class="label">Vs Opus xhigh</div><b>42%</b><span>cheaper per task</span></div>
+      <div class="cell"><div class="label">Correct</div><b>12 of 12</b><span>in every setup, with and without it</span></div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="w-h">
+    <h2 id="w-h">What works, and what does not</h2>
+    <div class="split">
+      <div class="ok">
+        <h3><i></i>What works</h3>
+        <div class="item"><b>Opus costs less at every setting.</b><span><em>21%</em> less than medium, <em>29%</em> less than high, <em>42%</em> less than xhigh, and every answer still right.</span></div>
+        <div class="item"><b>Fewer steps, not just less thinking.</b><span><em>5.8</em> requests per task against <em>7.3</em> on medium. Every request rereads the whole chat, so fewer requests is where the saving comes from.</span></div>
+        <div class="item"><b>Faster too.</b><span><em>20 s</em> per task against <em>24 s</em> on medium and <em>44 s</em> on xhigh.</span></div>
+        <div class="item"><b>The judge is usually right.</b><span>On 73 hand-labelled prompts, Haiku picks an acceptable effort <em>93%</em> of the time, Jev <em>99%</em>. A fixed effort manages 44 to 51%.</span></div>
+      </div>
+      <div class="no">
+        <h3><i></i>What does not</h3>
+        <div class="item"><b>Sonnet at medium is already lean.</b><span>Against it, effortless came out even (<em>4%</em> more, inside the noise). It still saved <em>10%</em> against high and <em>35%</em> against xhigh.</span></div>
+        <div class="item"><b>Switching models per prompt does not pay.</b><span>Each model keeps its own cache, so moving one prompt to a cheaper model makes it reread the whole chat. In a chat that is in use that costs more than it saves, so this is now off by default (see Benchmark 3).</span></div>
+        <div class="item"><b>Mostly easy tasks.</b><span>effortless saves most by going low on simple work. On hard work it picks more effort, and saves less.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec qual" aria-labelledby="s-h">
+    <div class="label">Benchmark 1</div>
+    <h2 id="s-h">effortless on and off, same tasks</h2>
+    <p>Four tasks in a fresh copy of the effortless repo: find and explain a setting, add doc comments without touching code, write and run a small script, and trace a flow through several files. Each ran three times per setup. Without effortless the app sat at medium, high or xhigh; with it, the app started on medium and effortless picked the effort for each prompt.</p>
+    <div class="label">Opus 5.5</div>
+    <div class="tbl"><table class="plain" id="opus">
+      <thead><tr><th scope="col">Opus 5.5</th><th scope="col">Correct</th><th scope="col">Cost per task</th><th scope="col">Requests</th><th scope="col">Time</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Medium<small>recommended, no effortless</small></th><td data-l="Correct">12 of 12</td><td data-l="Cost">$0.190</td><td data-l="Requests">7.3</td><td data-l="Time">24 s</td></tr>
+        <tr><th scope="row">High<small>no effortless</small></th><td data-l="Correct">12 of 12</td><td data-l="Cost">$0.209</td><td data-l="Requests">8.0</td><td data-l="Time">27 s</td></tr>
+        <tr><th scope="row">Xhigh<small>no effortless</small></th><td data-l="Correct">12 of 12</td><td data-l="Cost">$0.257</td><td data-l="Requests">9.9</td><td data-l="Time">44 s</td></tr>
+        <tr class="total"><th scope="row">effortless on</th><td data-l="Correct">12 of 12</td><td data-l="Cost"><b class="pos">$0.149</b></td><td data-l="Requests">5.8</td><td data-l="Time">20 s</td></tr>
+      </tbody>
+    </table></div>
+    <div class="label">Sonnet 5.5</div>
+    <div class="tbl"><table class="plain" id="sonnet">
+      <thead><tr><th scope="col">Sonnet 5.5</th><th scope="col">Correct</th><th scope="col">Cost per task</th><th scope="col">Requests</th><th scope="col">Time</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Medium<small>no effortless</small></th><td data-l="Correct">12 of 12</td><td data-l="Cost">$0.092</td><td data-l="Requests">6.4</td><td data-l="Time">15 s</td></tr>
+        <tr><th scope="row">High<small>no effortless</small></th><td data-l="Correct">12 of 12</td><td data-l="Cost">$0.107</td><td data-l="Requests">8.8</td><td data-l="Time">20 s</td></tr>
+        <tr><th scope="row">Xhigh<small>no effortless</small></th><td data-l="Correct">12 of 12</td><td data-l="Cost">$0.146</td><td data-l="Requests">11.4</td><td data-l="Time">31 s</td></tr>
+        <tr class="total"><th scope="row">effortless on</th><td data-l="Correct">12 of 12</td><td data-l="Cost"><b>$0.096</b></td><td data-l="Requests">7.5</td><td data-l="Time">18 s</td></tr>
+      </tbody>
+    </table></div>
+    <p class="read"><b>How to read it.</b> effortless picked low effort on the simple tasks and kept medium or high for the rest (on Opus: low 9 times, medium 3). The answers stayed right, and the cost fell because the model took fewer steps.</p>
+    <p class="note">Cost is the CLI's list-price dollars, billed to an API key. The judge (Haiku) adds about $0.001 to $0.002 per prompt, under 1% of these tasks, and is not in the figures above.</p>
+  </section>
+
+  <section class="sec judge" aria-labelledby="j-h">
+    <div class="label">Benchmark 2</div>
+    <h2 id="j-h">Is the judge right?</h2>
+    <p>73 prompts, each labelled by hand with the efforts a careful person would accept. 20 were held out and never used to tune the judge.</p>
+    <div class="tbl"><table>
+      <thead><tr><th scope="col">Prompts with an acceptable effort</th><th scope="col">Always medium<small>no judge</small></th><th scope="col">Always high<small>no judge</small></th><th scope="col" class="hl">Haiku<small>the default judge</small></th><th scope="col">Jev<small>with a TypeSafe key</small></th></tr></thead>
+      <tbody>
+        <tr><th scope="row">All 73 prompts</th><td>44%</td><td>51%</td><td class="hl">93%</td><td>99%</td></tr>
+        <tr><th scope="row">20 held-out prompts</th><td>40%</td><td>50%</td><td class="hl">95%</td><td>100%</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Prompts and labels: <code>bench/judge-cases.json</code>. Judge version 1.5.1.</p>
+  </section>
+
+  <section class="sec" aria-labelledby="m-h">
+    <div class="label">Benchmark 3</div>
+    <h2 id="m-h">Why model switching is off</h2>
+    <p>An earlier version also moved simple prompts to Haiku or Sonnet. Measured on single prompts, the cheaper answers were good enough in 27 of 30 and cost 60 to 77% less. But those prompts started with no chat history. In a real chat the context sits in the chat model's cache, and each model keeps its own: a prompt moved to Haiku has to write the whole chat into Haiku's cache first, at twice the input price. From a warm Opus chat that costs about 5 times what staying on Opus does (10 times for Sonnet).</p>
+    <p class="read"><b>So:</b> "Cheaper model when it can" is now off by default and marked experimental. The saving that holds up in real chats is effort, Benchmark 1.</p>
+    <details id="more">
+      <summary>The single-prompt numbers</summary>
+      <div class="tbl"><table class="plain">
+        <thead><tr><th scope="col">Kind of prompt</th><th scope="col">Sent to</th><th scope="col">Still did the job</th><th scope="col">Cost next to Opus medium</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Easy<small>12 prompts</small></th><td data-l="Sent to">Haiku, low effort</td><td data-l="Did the job">9 of 12</td><td data-l="Cost">77% cheaper</td></tr>
+          <tr><th scope="row">Normal<small>12 prompts</small></th><td data-l="Sent to">Sonnet, medium effort</td><td data-l="Did the job">12 of 12</td><td data-l="Cost">60% cheaper</td></tr>
+          <tr><th scope="row">Hard<small>6 prompts</small></th><td data-l="Sent to">Opus, high effort</td><td data-l="Did the job">6 of 6</td><td data-l="Cost">26% more</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Blind grader (Opus, high effort), one run, 2026-10-09. Single prompts with no chat history, so the cache cost of switching is not in these figures.</p>
+    </details>
+  </section>
+
+  <section class="sec" aria-labelledby="l-h">
+    <div class="label">Read before quoting</div>
+    <h2 id="l-h">Limits</h2>
+    <div class="ruled">
+      <div><div class="label">Small set</div><p><b>Four tasks, three runs each.</b> The percentages could move a few points on a rerun.</p></div>
+      <div><div class="label">Mostly easy work</div><p>effortless saves most on simple tasks, where it goes low. On hard tasks it picks more effort and saves less; that was not measured here.</p></div>
+      <div><div class="label">Checks, not taste</div><p>Each answer was checked for the right fact, file or number. Not for how well it was written.</p></div>
+      <div><div class="label">API, fresh chats</div><p>Run through Anthropic's API in fresh chats. Long chats in the app, and plan usage, were not measured.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="r-h">
+    <h2 id="r-h">Run it yourself</h2>
+    <div class="run">
+      <div><div class="label">Benchmark 1</div><p>From the effortless repo, with an API key in <code>~/.config/effortless-bench.env</code>:</p><code>bash bench/agentic/run.sh</code></div>
+      <div><div class="label">Benchmark 2</div><p>In Claude Code, with effortless installed:</p><code>/effortless bench</code></div>
+    </div>
+    <p class="note">Every number on this page comes from <code>bench/RESULTS.md</code>, with every run in <code>bench/results/</code>.</p>
+  </section>
+</main>
+</body>
+</html>

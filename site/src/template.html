@@ -1,0 +1,1213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>effortless</title>
+<meta name="description" content="A Claude Code plugin that picks the reasoning effort for every prompt: 21% cheaper than Opus at medium on real coding tasks, with the same answers. It also counts down how long the prompt cache stays warm.">
+<meta name="theme-color" content="#121214">
+<link rel="canonical" href="https://heycubit.github.io/effortless/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="effortless">
+<meta property="og:title" content="effortless">
+<meta property="og:description" content="A Claude Code plugin that picks the reasoning effort for every prompt: 21% cheaper than Opus at medium on real coding tasks, with the same answers. It also counts down how long the prompt cache stays warm.">
+<meta property="og:url" content="https://heycubit.github.io/effortless/">
+<meta property="og:image" content="https://heycubit.github.io/effortless/og.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="effortless: picks the reasoning effort for every prompt in Claude Code">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="effortless">
+<meta name="twitter:description" content="A Claude Code plugin that picks the reasoning effort for every prompt: 21% cheaper than Opus at medium on real coding tasks, with the same answers. It also counts down how long the prompt cache stays warm.">
+<meta name="twitter:image" content="https://heycubit.github.io/effortless/og.png">
+<link rel="icon" href="__ICON__">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600&family=Pixelify+Sans:wght@500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');if(location.hash==='#whats-new')location.replace('whats-new/')</script>
+<style>
+/* The band art below is the plugin's own SVG, copied unchanged from hooks/register.tsx. */
+:root{
+  --page:#121214;--surface:#18181b;--line:#26262b;--text:#ececef;--muted:#9a9aa4;--dim:#82828c;
+  --hover:#2b2b2f;--btn2:#2e2e34;--key:#3a3a42;
+  --accent:#a79cf7;--brand-bg:#15121f;--brand-edge:#4a3f80;
+  --ice:#7cc4ff;--ice-bg:#0e1820;--ice-edge:#2f5c80;
+  --bog:#a7c98f;--bog-bg:#111710;--bog-edge:#3e5a33;
+  --ember:#f08a3c;--ember-bg:#1a110c;--ember-edge:#6a3418;
+  --slate:#b4b8c4;--slate-bg:#12141b;--slate-edge:#39415a;
+  --yellow:#e0a33a;--red:#e5534b;
+  --art-brand:url("__ART_BRAND__");
+  --art-frost:url("__ART_FROST__");
+  --art-swamp:url("__ART_SWAMP__");
+  --art-ember:url("__ART_EMBER__");
+  --art-down:url("__ART_DOWN__");
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --sans:Inter,"Segoe UI",system-ui,-apple-system,sans-serif;
+  --display:Outfit,Inter,"Segoe UI",system-ui,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+  /* One frame for the whole page: the story's width. The top bar, the opening, the story, the install section and the
+     footer all start and end on it. It grows to 75% of the window on big screens. */
+  --frame:max(32px,calc((100vw - max(1536px,75vw))/2));
+  /* The top bar's type size. The bar is 4.6 of these tall, and the story starts below it. */
+  --bar:clamp(15px,1.05vw,26px);
+}
+@media (max-width:960px){:root{--frame:16px}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--text);font:15px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+.wrap{max-width:920px;margin:0 auto;padding:0 24px}
+
+/* ---------- Stage: the full-screen opening ---------- */
+.stage{--hz:1;--gut:calc(var(--frame) / var(--hz));zoom:var(--hz);position:relative;min-height:min(calc(100vh / var(--hz)),920px);min-height:min(calc(100svh / var(--hz)),920px);display:flex;flex-direction:column;overflow:hidden;isolation:isolate}
+/* The opening is laid out for a 1280 wide window. Bigger windows zoom it as a whole, in steps; the frame is divided by
+   the zoom so its left edge still lines up with the rest of the page. */
+@media (min-width:1800px){.stage{--hz:1.15}}
+@media (min-width:2200px){.stage{--hz:1.35}}
+@media (min-width:2500px){.stage{--hz:1.5}}
+.stage{background:radial-gradient(55% 75% at 88% 52%,#1d1934 0%,#16141f 45%,transparent 75%),var(--page)}
+/* Grain over the stripes, so they read as soft light rather than flat shapes. */
+/* Behind the words: the dot grid with one soft violet light drifting slowly across it. */
+@property --x{syntax:"<percentage>";inherits:false;initial-value:20%}
+@property --y{syntax:"<percentage>";inherits:false;initial-value:50%}
+.dots{position:absolute;inset:0;z-index:-2;pointer-events:none;background-image:radial-gradient(#2a2733 1.1px,transparent 1.5px);background-size:22px 22px;-webkit-mask-image:radial-gradient(64% 76% at 22% 50%,#000,transparent);mask-image:radial-gradient(64% 76% at 22% 50%,#000,transparent)}
+.dots .lit{position:absolute;inset:0;background-image:radial-gradient(#a79cf7 1.3px,transparent 1.8px);background-size:22px 22px;opacity:.85;-webkit-mask-image:radial-gradient(circle 360px at var(--x) var(--y),#000,transparent);mask-image:radial-gradient(circle 360px at var(--x) var(--y),#000,transparent);animation:sweep 16s ease-in-out infinite alternate}
+@keyframes sweep{from{--x:6%;--y:28%}to{--x:44%;--y:74%}}
+.stage-grain{position:absolute;inset:0;z-index:-2;pointer-events:none;background-image:var(--grain);background-size:180px;opacity:.05;mix-blend-mode:overlay;-webkit-mask-image:linear-gradient(90deg,#000,transparent 45%);mask-image:linear-gradient(90deg,#000,transparent 45%)}
+.demo{margin-top:48px;width:min(440px,100%)}
+.demo-box{position:relative;border-radius:16px;background:#1d1c22;border:1px solid #2d2b34;padding:14px 48px 14px 16px;min-height:78px}
+.demo-in{position:relative;color:var(--text);font-size:15px;min-height:24px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.demo-ph{position:absolute;left:0;top:0;color:#6f6c7a}
+.demo-in .caret{height:16px}
+.demo-send{position:absolute;right:12px;bottom:10px;width:26px;height:26px;display:grid;place-items:center;color:#6f6c7a;transition:color .2s}
+.demo-send.on{color:#f4f3f7}
+.demo-send svg{width:16px;height:16px}
+/* The footer under the box, as Claude Code draws it: attach, voice and mode on the left; the model and the context ring
+   on the right. The dashboard look leaves this footer to the app. */
+.demo-foot .judge{margin-right:14px;color:var(--dim)}
+@media (max-width:560px){.demo-foot .judge{display:none}}
+.demo-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 4px 0;font-size:13.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.demo-foot .fl,.demo-foot .fr{display:flex;align-items:center;gap:6px}
+.demo-foot .fl{gap:13px;color:#b4b1bf;font-size:15px}
+.demo-foot .fl svg{width:14px;height:14px;display:block}
+.demo-foot .fl .mode{font-size:13.5px}
+.demo-foot .k{display:grid;place-items:center;width:22px;height:20px;border-radius:5px;background:#27262c;color:#8d8a99;font-size:11px;transition:box-shadow .2s}
+.demo-foot .lvl{margin-left:6px;padding:1px 3px;border-radius:5px;color:var(--accent);font-weight:700;transition:box-shadow .2s}
+.demo-foot .m{margin-left:8px;color:#ebe9f1}
+.demo-foot .ring{width:15px;height:15px;margin-left:8px;border-radius:50%;background:conic-gradient(#5e8fe6 0 22%,#34333b 0);-webkit-mask:radial-gradient(closest-side,transparent 64%,#000 68%);mask:radial-gradient(closest-side,transparent 64%,#000 68%)}
+.demo .demo-foot .opt{display:none}
+.stage:after{content:"";position:absolute;left:0;right:0;bottom:0;height:22%;z-index:-1;background:linear-gradient(transparent,var(--page));pointer-events:none}
+
+.stage-inner{flex:1;width:100%;padding:56px 0 96px var(--gut);display:grid;grid-template-columns:minmax(0,500px);align-items:center}
+.intro{position:relative;z-index:2}
+.kind{display:flex;align-items:center;gap:.42em;margin:18px 0 0;font:400 clamp(20px,2vw,26px)/1.2 var(--display);color:#bdb6d6;letter-spacing:-.005em}
+.kind img{width:.95em;height:.95em;flex-shrink:0}
+.eyebrow{margin:0 0 22px;color:#b6b0cc;font-size:13px;font-weight:500;letter-spacing:.04em;display:inline-flex;align-items:center;gap:10px}
+.eyebrow:before{content:"";width:22px;height:1px;background:#6f64b8}
+.intro>*{animation:up 1.1s var(--ease) both}
+.intro>:nth-child(2){animation-delay:.1s}.intro>:nth-child(3){animation-delay:.18s}.intro>:nth-child(4){animation-delay:.26s}
+@keyframes up{from{opacity:0;transform:translateY(22px)}}
+
+h1{margin:0;display:flex;align-items:center;gap:.2em;font:500 clamp(52px,6.6vw,100px)/1 var(--display);letter-spacing:-.025em;color:#f4f2ff}
+h1 .spark{width:1.2em;height:1.2em;margin:-.1em -.06em -.1em -.12em;flex-shrink:0;}
+/* The word goes soft at its bottom right: a crisp copy fades out there and a grainy blurred copy takes over. */
+.word{position:relative;display:inline-block;padding:0 .08em .12em 0}
+.word .crisp{-webkit-mask-image:radial-gradient(46% 80% at 100% 100%,transparent 15%,#000 85%);mask-image:radial-gradient(46% 80% at 100% 100%,transparent 15%,#000 85%)}
+.word .soft{position:absolute;left:0;top:0;padding:0 .3em .3em 0;color:#f4f2ff;filter:url(#grainy);-webkit-mask-image:radial-gradient(40% 72% at 86% 82%,#000 30%,transparent 100%);mask-image:radial-gradient(40% 72% at 86% 82%,#000 30%,transparent 100%);pointer-events:none;user-select:none}
+.lede{margin:24px 0 0;max-width:25em;text-wrap:balance;font-size:18px;line-height:1.55;color:#cfcae2}
+.cta{margin-top:32px;display:flex;flex-wrap:wrap;gap:12px}
+.gh,.ghost{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px;transition:background .2s,border-color .2s}
+.gh{background:#f4f3f8;color:#141218;padding-left:16px}
+.gh svg{width:20px;height:20px}
+.gh:hover{background:#fff}
+.stars{margin-left:2px;padding:3px 8px;border-radius:6px;background:#e3e1ea;font-size:13px;font-variant-numeric:tabular-nums}
+.ghost{color:#e6e4ee;border:1px solid #34313f;font-weight:500}
+.ghost svg{width:14px;height:14px;color:#9a96aa}
+.ghost:hover{background:#1c1b22;border-color:#45414f}
+.gh:focus-visible,.ghost:focus-visible,.cue:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* The bands on the right: big, nearly flush, stepping right as they go down and running off the edge.
+   Each drifts sideways by its own depth as the pointer moves. */
+.stack{position:absolute;top:0;bottom:0;right:0;left:calc(var(--gut) + 600px)}
+.stack-in{--k:1.5;position:absolute;left:0;top:50%;width:calc(100% / var(--k) + 90px);display:flex;flex-direction:column;gap:10px;transform:translateY(-50%) scale(var(--k));transform-origin:0 50%}
+.chip{display:block;color:inherit;text-decoration:none;margin-left:calc(var(--i)*40px);animation:chip-in 1.1s var(--ease) both;animation-delay:calc(.25s + var(--i)*.08s)}
+@keyframes chip-in{from{opacity:0;translate:60px 0}}
+.chip .band{min-height:64px;padding:0 104px 0 18px;gap:10px;border-radius:12px;font-size:14px;box-shadow:0 18px 40px -26px #000}
+.chip .band:before{top:-8px;bottom:-8px;left:0;width:auto;max-width:none}
+.chip .handoff:before{top:-12px;bottom:-12px;width:auto}
+.chip .t{font-weight:700}
+.chip .band{filter:grayscale(1) brightness(.8);transition:transform .45s var(--ease),border-color .3s,filter .45s,box-shadow .45s var(--ease)}
+.stack .chip:hover .band,.stack .chip:focus-visible .band,.stack .chip.auto .band{filter:none;transform:translateX(-10px);border-color:var(--c);box-shadow:0 18px 40px -26px #000,0 0 0 1px var(--c)}
+.chip:focus-visible{outline:none}
+.chip .btn{transition:background .2s,color .2s}
+.chip .btn:not(.primary):hover{background:var(--hover)}
+.chip .btn.primary:hover{background:#fff}
+.chip .btn{font-size:12.5px;padding:7px 11px;border-radius:7px}
+.chip .what{font-size:12.5px}
+/* The bands fade out over the last 280px before the screen edge. A mask cuts everything outside its box, and a hovered
+   band slides 10px left with a 1px ring, so the box reaches 40px further left and the bands move back in. */
+.stack{left:calc(var(--gut) + 560px);-webkit-mask-image:var(--fade);mask-image:var(--fade);--from:calc(100% - 280px);--fade:linear-gradient(90deg,#000 var(--from),rgba(0,0,0,.45) calc(var(--from) + (100% - var(--from)) * .3),rgba(0,0,0,.15) calc(var(--from) + (100% - var(--from)) * .65),transparent calc(100% - 30px))}
+.stack-in{left:40px;width:calc((100% - 40px) / var(--k) + 90px)}
+.chip .ring img{width:16px;height:16px}
+
+
+/* ---------- A band, as the plugin draws it above the prompt ---------- */
+.band{position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;min-height:46px;padding:9px 12px 9px 14px;border-radius:10px;background:var(--bg);border:1px solid var(--edge);font-size:14px}
+.band:before{content:"";position:absolute;top:-14px;bottom:-14px;right:0;width:440px;max-width:100%;background:var(--art) right center/auto 100% no-repeat;pointer-events:none}
+.band>*{position:relative}
+.t{color:var(--c);font-weight:700;white-space:nowrap}
+.d{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acts{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto}
+.ring{display:inline-flex;align-items:center;gap:6px;color:var(--c);white-space:nowrap}
+.ring img{width:16px;height:16px;display:block}
+.mark{display:inline-flex;align-items:center;gap:7px}
+.mark img{display:block}
+.ice{--c:var(--ice);--bg:var(--ice-bg);--edge:var(--ice-edge);--art:var(--art-frost)}
+.bog{--c:var(--bog);--bg:var(--bog-bg);--edge:var(--bog-edge);--art:var(--art-swamp)}
+.ember{--c:var(--ember);--bg:var(--ember-bg);--edge:var(--ember-edge);--art:var(--art-ember)}
+.slate{--c:var(--slate);--bg:var(--slate-bg);--edge:var(--slate-edge);--art:var(--art-down)}
+.brand{--c:var(--accent);--bg:var(--brand-bg);--edge:var(--brand-edge);--art:var(--art-brand)}
+.btn{display:inline-flex;align-items:center;gap:6px;font:500 13px/1 var(--sans);padding:6px 11px;border-radius:7px;border:0;color:var(--text);background:none;white-space:nowrap}
+.btn.primary{background:#f1f0f4;color:#141218;font-weight:600}
+.btn.secondary{background:var(--btn2)}
+.btn.dim{color:var(--muted)}
+.btn.x{color:var(--muted);padding:6px 6px}
+.k{font-size:11px;line-height:1;padding:2px 4px;border-radius:4px;border:1px solid var(--key);color:var(--muted)}
+.btn.primary .k{border-color:#c9c7d1;color:#55525e}
+.handoff{padding:9px 10px 9px 14px;min-height:58px;scroll-margin:160px 0}
+.handoff:before{top:-30px;bottom:-30px;width:880px}
+.words{display:flex;flex-direction:column;min-width:0;flex:1}
+.words .t{line-height:1.35}
+.what{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.35}
+button.btn{cursor:pointer}
+button.btn:not(.primary):hover{background:var(--hover)}
+button.btn.secondary:hover{background:#38383f}
+button.btn:focus-visible,.sel select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.sel{position:relative;display:inline-flex}
+.sel select{appearance:none;-webkit-appearance:none;font:500 13px/1 var(--sans);color:var(--text);background:var(--brand-bg);border:1px solid var(--key);border-radius:7px;padding:6px 28px 6px 11px;cursor:pointer}
+.sel select:hover{background:var(--hover)}
+.sel:after{content:"";position:absolute;right:11px;top:50%;width:6px;height:6px;margin-top:-5px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);pointer-events:none}
+.sel option{background:#1d1d22;color:var(--text)}
+
+.caret{display:inline-block;width:1.5px;height:17px;background:var(--text);vertical-align:-3px;margin-left:1px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ---------- The install bar: appears once the opening has scrolled away ---------- */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:.9em var(--frame);font-size:var(--bar);background:#121214e0;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transform:translateY(-110%);visibility:hidden;transition:transform .4s var(--ease),visibility 0s .4s}
+.topbar.on{transform:none;visibility:visible;transition:transform .4s var(--ease),visibility 0s}
+.topbar .name{display:inline-flex;align-items:center;gap:10px;color:var(--text);font:500 1.5em var(--display);letter-spacing:-.01em;text-decoration:none}
+.topbar .name svg{width:1.9em;height:1.9em;margin:-.35em -.12em -.35em -.35em}
+.tl,.tr{display:flex;align-items:center;gap:2em}.tnav{display:flex;align-items:center;gap:1.7em}.tnav a{color:var(--muted);font:500 .92em var(--sans);text-decoration:none;white-space:nowrap}.tnav a:hover{color:var(--text)}.tnav a:focus-visible{outline:2px solid var(--accent);outline-offset:4px}.tr{gap:1.8em}
+.inst{display:inline-flex;align-items:center;gap:7px;height:2.3em;padding:0 1em;border-radius:.6em;border:0;background:#f4f3f8;color:#141218;font:600 1em var(--sans);cursor:pointer}
+.inst:hover{background:#fff}
+.inst:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.inst{font-size:.94em}.inst svg{width:9px;height:9px;opacity:.55;transition:transform .25s}
+.inst[aria-expanded="true"] svg{transform:rotate(180deg)}
+.pop{position:absolute;right:var(--frame);top:calc(100% + 8px);width:min(540px,calc(100vw - 32px));padding:18px;border-radius:14px;background:#17161c;box-shadow:0 30px 60px -20px #000;display:none}
+.pop.open{display:block}
+.pop p{margin:0;color:var(--muted);font-size:14px}
+
+/* ---------- The story: one big chat box, one feature at a time ---------- */
+/* ---------- The launch video, right under the hero: a fixed 16:9 box so nothing moves while it loads ---------- */
+.film{padding:24px var(--frame) 0}
+.film video{display:block;width:100%;max-width:1100px;height:auto;aspect-ratio:16/9;margin:0 auto;border-radius:14px;border:1px solid #2a2a2f;background:#141416;box-shadow:0 30px 60px -36px #000}
+@media (max-width:560px){.film{padding-top:8px}.film video{border-radius:10px}}
+.story{position:relative;height:calc(var(--n) * 90vh + 10vh);overflow-y:clip}
+.pin{--sc:var(--accent);position:sticky;isolation:isolate;top:0;height:100vh;display:flex;flex-direction:column;gap:20px;width:100%;margin:0;padding:calc(var(--bar) * 4.6 + 28px) var(--frame) 0;--z:clamp(15px,1.5vw,30px)}
+.pin:before{content:"";position:absolute;top:0;bottom:0;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;pointer-events:none;background:radial-gradient(45% 40% at 50% 86%,color-mix(in srgb,var(--sc) 12%,transparent),transparent 72%),radial-gradient(#2a2733 1.1px,transparent 1.5px) 0 0/22px 22px;-webkit-mask-image:radial-gradient(60% 75% at 50% 60%,#000 35%,transparent);mask-image:radial-gradient(60% 75% at 50% 60%,#000 35%,transparent);transition:background .6s}
+.head{display:flex;flex-direction:column;gap:clamp(16px,2.4vh,28px)}
+.caps{position:relative;min-height:1.2em;font-size:clamp(28px,2.9vw,56px)}
+.say{position:absolute;left:0;right:0;bottom:0;opacity:0;transform:translateX(-32px);transition:opacity .45s var(--ease),transform .8s var(--ease);pointer-events:none}
+.say.on{opacity:1;transform:none;pointer-events:auto}
+/* The first time the story scrolls into view it plays in: the heading slides in from the left, then the step numbers,
+   the bar and the box rise in one after another. */
+.story:not(.in) .say.on{opacity:0;transform:translateX(-64px)}
+.story .go,.story .slot,.story .win .demo-box{transition:opacity .7s var(--ease),transform 1s var(--ease)}
+.story:not(.in) .go{opacity:0}
+.story:not(.in) .slot{opacity:0;transform:translateY(36px)}
+.story:not(.in) .win .demo-box{opacity:0;transform:translateY(56px)}
+.story.in .say.on{transition-duration:.6s,1.1s}
+.story.in .go{transition-delay:.25s}
+.story.in .slot{transition-delay:.4s}
+.story.in .win .demo-box{transition-delay:.55s}
+.say h3{margin:0;font:500 clamp(28px,2.9vw,56px)/1.08 var(--display);letter-spacing:-.02em;color:#f4f2ff;text-wrap:balance}
+.say p{margin:0;color:#c3bfd2;font-size:17px;line-height:1.55;max-width:34em}
+.say kbd{font:inherit;padding:1px 6px;border-radius:5px;background:#2a2930;color:var(--text)}
+/* The steps: one line each that fills as the page scrolls through it, with its name under it, so it is clear there is
+   more to scroll through and where you are. */
+.go{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.go button{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-width:0;padding:6px 0;background:none;border:0;cursor:pointer;color:var(--dim);font:500 clamp(13px,.8vw,17px)/1.2 var(--sans);text-align:left;transition:color .3s}
+.go i{position:relative;display:block;width:100%;height:2px;border-radius:2px;background:#2b2b31;overflow:hidden}
+.go i:after{content:"";position:absolute;inset:0;background:var(--sc);transform-origin:0 50%;transform:scaleX(var(--f,0));transition:background .6s}
+.go span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.go button:hover,.go button[aria-current="step"]{color:var(--text)}
+.go button:focus-visible{outline:2px solid var(--sc);outline-offset:4px;border-radius:4px}
+
+/* The chat takes whatever height is left, so the box and its bar sit just above the bottom edge. */
+.win{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
+.chat{flex:1;min-height:0;overflow:hidden;padding:0 6px 16px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;-webkit-mask-image:linear-gradient(transparent,#000 50%);mask-image:linear-gradient(transparent,#000 50%)}
+.msg{max-width:72%;font-size:calc(var(--z) * 1.02);line-height:1.5;color:#cfccd9;animation:msg-in .45s var(--ease) both}
+.msg.me{align-self:flex-end;background:#232229;border-radius:.8em;padding:.55em .95em;color:var(--text)}
+.msg.sys{align-self:center;color:var(--sc);font-size:calc(var(--z) * .9);font-weight:500}
+.msg.sys:before{content:"✦ "}
+.msg.gone{animation:msg-out .4s var(--ease) both}
+@keyframes msg-in{from{opacity:0;transform:translateY(8px)}}
+@keyframes msg-out{to{opacity:0;transform:translateY(-10px)}}
+.slot{min-height:86px;display:flex;flex-direction:column;justify-content:flex-end}
+.slot .band{margin-bottom:.8em;min-height:3.9em;padding:.75em .9em .75em 1.2em;gap:.8em;border-radius:.8em;font-size:var(--z);box-shadow:0 22px 50px -28px var(--c);animation:msg-in .5s var(--ease) both}
+/* A wide band would show where its art starts; the art fades in from the left instead. */
+.slot .band:before{width:min(640px,70%);-webkit-mask-image:linear-gradient(90deg,transparent,#000 55%);mask-image:linear-gradient(90deg,transparent,#000 55%)}
+.slot .band .btn{font-size:.86em;padding:.45em .85em}
+.slot .qf span{font-size:.8em;padding:.45em .8em;min-width:4.6em}
+.slot .qf svg{width:1em;height:1em}
+.slot .band.gone{animation:msg-out .35s var(--ease) both}
+.win .demo-box{min-height:calc(var(--z) * 9);margin-bottom:calc(var(--z) * -4.5);padding:calc(var(--z) * 1.1) 70px 0 calc(var(--z) * 1.25);border-radius:calc(var(--z) * 1.1);background:#1b1a20;box-shadow:0 50px 100px -50px color-mix(in srgb,var(--sc) 50%,#000);transition:box-shadow .6s}
+/* The box fades out toward its bottom, so it never ends on a hard edge when the story scrolls away. */
+.win .demo-box{-webkit-mask-image:linear-gradient(#000 12%,transparent 50%);mask-image:linear-gradient(#000 12%,transparent 50%)}
+.win .demo-in{font-size:calc(var(--z) * 1.3);min-height:1.5em}
+.win .demo-send,.win .demo-foot{display:none}
+.win .demo-in .caret{height:1.1em;vertical-align:-.2em}
+.win .demo-send{right:22px;bottom:20px;width:32px;height:32px}
+.win .demo-send svg{width:22px;height:22px}
+.win .demo-foot{margin:14px 6px 0;font-size:17px;gap:14px}
+.win .demo-foot .fl{gap:18px;font-size:19px}
+.win .demo-foot .fl svg{width:18px;height:18px}
+.win .demo-foot .fl .mode{font-size:17px}
+.win .demo-foot .fr{gap:8px}
+.win .demo-foot .k{width:28px;height:25px;border-radius:6px;font-size:13px}
+.win .demo-foot .lvl{margin-left:8px}
+.win .demo-foot .m{margin-left:10px}
+.win .demo-foot .ring{width:19px;height:19px;margin-left:10px}
+.press{animation:press .55s var(--ease)}
+@keyframes press{35%{transform:scale(.9);box-shadow:0 0 0 5px #a79cf766}}
+.hl{box-shadow:0 0 0 2px var(--accent)}
+
+@property --p{syntax:"<number>";inherits:true;initial-value:0}
+/* ---------- The dashboard: the one bar above the prompt, rebuilt from the mod's own render (docs/showcase/bar) ---------- */
+.dash{position:relative;overflow:hidden;display:flex;align-items:center;gap:.95em;min-height:2.85em;padding:0 .75em 0 .8em;border-radius:10px;background:#141416;border:1px solid #2a2a2f;color:#d4d4d8;font-size:14px;font-weight:500;line-height:1.3;white-space:nowrap;font-variant-numeric:tabular-nums}
+/* The grey art on the right: a soft wash, grain, faint streaks, fading in from the middle. */
+.dash:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(30% 140% at 89% 50%,#9a9aa21d,transparent),linear-gradient(90deg,transparent 43%,#9a9aa210 62%,#9a9aa223 85%,#9a9aa231),repeating-linear-gradient(110deg,transparent 0 46px,#ffffff09 46px 49px,transparent 49px 88px),radial-gradient(#ffffff12 .5px,transparent .7px) 0 0/4px 4px;-webkit-mask-image:linear-gradient(90deg,transparent 40%,#000 75%);mask-image:linear-gradient(90deg,transparent 40%,#000 75%)}
+.dash>*{position:relative;flex-shrink:0}
+.dash .spark{width:1.3em;height:1.3em;margin:0 -.1em 0 -.15em;transition:opacity .3s}
+.dash.off .spark{opacity:.35}
+.dash .w{font-weight:650;color:#d4d4d8;transition:color .8s ease}
+.dash .w .mdl{font-weight:500;color:#8b8a96}
+.dash .w.flash{color:#9b7bff;transition:none}
+.dash .w.deciding{background:linear-gradient(90deg,#77777f 0%,#e4e4ea 45%,#77777f 90%) 0 0/200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shim 1.3s linear infinite}
+@keyframes shim{to{background-position:-200% 0}}
+.dash .pc{display:inline-flex;align-items:center;gap:.5em;margin-left:.15em}
+.dash .pc i{width:1.05em;height:1.05em;border-radius:50%;background:conic-gradient(#d4d4d8 0 calc(var(--p,0)*1%),#4a4a52 0);-webkit-mask:radial-gradient(closest-side,transparent 60%,#000 64%);mask:radial-gradient(closest-side,transparent 60%,#000 64%);transition:--p .6s}
+/* The cache timer stays in the code for the cold scene but is not shown: the bar reads cleaner without it. */
+.dash .cache{display:none;color:#8b8b93;margin-left:.1em}
+.dash .cache.low{color:#e5534b}
+.dash .why{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;color:#8b8b93;margin-left:.9em}
+.dash .end{margin-left:auto;display:flex;align-items:center;gap:1.15em}
+.dash .auto{display:inline-flex;align-items:center;gap:.55em}
+.dash .sw{position:relative;width:2.5em;height:1.4em;border-radius:1em;background:#9d8df2;transition:background .25s}
+.dash .sw:after{content:"";position:absolute;top:.2em;right:.2em;width:1em;height:1em;border-radius:50%;background:#fff;transition:right .26s cubic-bezier(.3,.7,.2,1)}
+.dash.off .sw{background:#3c3c43}
+.dash.off .sw:after{right:1.3em}
+/* One slot: plain "Compact" under 30%, then a white "Handoff" box (Compact stays beside it as quiet text) with a violet glow that grows and
+   pulses faster every 10% (HANDOFF_LOUD_AT and GLOW_LEVELS in hooks/register.tsx). */
+.dash .co{display:none;padding:.12em .5em;color:#b4b4bc}
+.dash.hoon .co{display:inline}
+.dash .ho{position:relative;padding:.12em .5em;border-radius:6px;color:#b4b4bc}
+.dash .ho:before{content:"";position:absolute;inset:0;border-radius:inherit;background:#9b7bff;opacity:0;inset:calc(var(--ge,0) * -1px);filter:blur(var(--gb,0));pointer-events:none}
+.dash .ho.glow:before{animation:glow var(--gt,3s) ease-in-out infinite}
+@keyframes glow{0%,100%{opacity:var(--gl)}50%{opacity:var(--gp)}}
+.dash .ho:after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--hb,transparent);border:1px solid var(--he,transparent);opacity:var(--ha,0);transition:background .6s,border-color .6s,opacity .6s}
+.dash .ho span{position:relative;z-index:1;color:var(--ht,#b4b4bc);transition:color .6s}
+.dash .gear{width:1.15em;height:1.15em;display:block;color:#c4c4cc}
+/* What a scene is about: that part stays lit while the rest dims, and it swells when it changes. */
+.dash.aim>:not(.lit),.dash.aim .end>:not(.lit){opacity:.72}
+.dash>*,.dash .end>*{transition:opacity .4s,transform .45s var(--ease),font-size .45s var(--ease),filter .4s}
+.dash .lit{z-index:2;transform-origin:50% 60%}
+/* Swell by font size, not transform: the neighbours make room instead of being overlapped. */
+.dash .lit.swell{font-size:1.28em}
+.dash .end.lit{transform:none}
+.dash.gone,.sett.gone{animation:msg-out .35s var(--ease) both}
+
+/* The bar where it sits on the page: in the stack, in the story's slot, under the hero's words. */
+.chip .dash{--fadew:calc(300px / var(--k,1));min-height:64px;padding:0 calc(18px + var(--fadew)) 0 18px;border-radius:12px;font-size:14px;box-shadow:0 18px 40px -26px #000;transition:transform .45s var(--ease),border-color .3s,box-shadow .45s var(--ease)}
+.stack .chip:hover .dash,.stack .chip.auto .dash{transform:translateX(-10px);border-color:#4a4a52;box-shadow:0 18px 40px -26px #000,0 0 0 1px #4a4a52}
+.demo .dash{margin-bottom:10px;font-size:13px}
+/* In the stack the bar runs off the edge like the bands, but keeps its buttons clear of the fade. */
+@media (max-width:1500px){.chip .dash .cache{display:none}}
+@media (max-width:1080px){.chip .dash{--fadew:200px}}
+@media (max-width:720px){.chip .dash{--fadew:110px}.chip .dash .why{display:none}}
+@media (max-width:560px){.demo .dash .cache,.chip .dash .al{display:none}}
+.slot .dash,.slot .sett{margin-bottom:.8em;font-size:var(--z);border-radius:.8em;box-shadow:0 22px 50px -28px #000}
+.slot .dash{min-height:3.6em;padding:0 1.05em 0 1.15em}
+/* The judge's reason only fits when the bar is small, so the story and the hero leave it out and keep the cache. */
+.slot .dash .why,.demo .dash .why,.chip .dash .why{display:none}
+.slot .dash .end,.demo .dash .end,.chip .dash .end{margin-left:auto}
+.slot .away{display:none}
+.slot .back{animation:msg-in .5s var(--ease) both}
+.slot .sett{animation:msg-in .5s var(--ease) both}
+
+/* The settings the gear opens: four cards that light as a whole on hover. */
+.sett{position:relative;overflow:hidden;border-radius:10px;background:#141416;border:1px solid #2a2a2f;color:#d4d4d8;font-size:14px}
+.sett-h{display:flex;align-items:center;gap:.9em;padding:.7em .8em .7em 1em;border-bottom:1px solid #26262b}
+.sett-h b{font:600 1.3em var(--display);letter-spacing:-.01em;color:#f2f2f5}
+.sett-h .sub{color:#8b8b93}
+.sett-h .save{margin-left:auto;padding:.25em .6em;border-radius:6px;background:#2e2e33;color:#d4d4d8;font-size:.95em}
+.sett-h .x{color:#c4c4cc;padding:0 .3em}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.6em;padding:.7em}
+.card{padding:.6em .75em;border-radius:8px;border:1px solid #2a2a2f;transition:background .3s,border-color .3s}
+.card.on,.card:hover{background:#1c1c20;border-color:#3b3b42}
+.card b{display:flex;align-items:center;gap:.45em;font-weight:600;color:#ececf0}
+.card b svg{width:1em;height:1em}
+.card span{display:block;margin-top:.2em;color:#8b8b93;font-size:.93em}
+
+/* The Handoff bar's Quick/Full switch: a dark track, a light knob under the picked word. */
+.qf{position:relative;display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;padding:0;border-radius:7px;background:#00000052;border:1px solid #ffffff1f}
+.qf:before{content:"";position:absolute;top:0;bottom:0;left:0;width:50%;border-radius:5px;background:#ececf0;transition:transform .3s cubic-bezier(.3,.7,.2,1) .07s}
+.qf.full:before{transform:translateX(100%)}
+.qf span{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:68px;padding:6px 10px;font:500 13px/1 var(--sans);color:var(--muted);transition:color .3s .07s}
+.qf svg{width:13px;height:13px}
+.qf:not(.full) span:first-child,.qf.full span:last-child{color:#141416;font-weight:650}
+.btn.pick{border:1px solid #ffffff26;background:#00000030;gap:8px}
+.btn.pick:after{content:"";width:5px;height:5px;margin:-3px 1px 0 2px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg)}
+
+/* ---------- Install ---------- */
+/* Cubit breaks through: a torn hole in square pixels, Cubit's own sky inside, the real Cubit leaning out over its top. */
+.cubit{overflow-x:clip;display:grid;grid-template-columns:max-content minmax(0,1fr);align-items:center;gap:clamp(40px,5vw,96px);padding:100px var(--frame) 20px}
+.cu-kicker{white-space:nowrap;margin:0 0 4px;color:var(--cubit);font:500 clamp(18px,1.4vw,24px)/1.2 "Pixelify Sans",var(--mono,monospace)}
+.cubit h2{white-space:nowrap;margin:10px 0 0;font:500 clamp(28px,3.9vw,64px)/1.08 var(--display);letter-spacing:-.025em;color:#f4f2ff}
+.cubit{--cubit:#b4e8f7}
+.cubit h2 .cu-logo{display:inline-block;height:1.12em;aspect-ratio:1325 / 480;margin-left:.16em;vertical-align:-.2em;background:var(--cubit);-webkit-mask:var(--logo) center/contain no-repeat;mask:var(--logo) center/contain no-repeat}
+.cubit .lead{margin:12px 0 26px}
+.cu-btn{display:inline-flex;align-items:center;height:46px;padding:0 20px;border-radius:10px;background:var(--accent);color:#15121f;font:600 16px var(--sans,system-ui);text-decoration:none}
+.cu-btn:hover{filter:brightness(1.08)}
+.rip{position:relative;width:100%;max-width:820px;justify-self:end;aspect-ratio:44 / 30;--ripmask:url("assets/cubit/rip-hole.svg")}
+.rip-hole,.rip-edge{position:absolute;inset:0}
+.rip-hole{background:url("assets/cubit/sky-flat-1x.webp") left bottom/auto 140% no-repeat,url("assets/cubit/sky-flat-1x.webp") right bottom/auto 140% no-repeat,linear-gradient(180deg,#7fbcd3,rgb(81,150,176));-webkit-mask:var(--ripmask) center/100% 100% no-repeat;mask:var(--ripmask) center/100% 100% no-repeat}
+.rip-edge{background:url("assets/cubit/rip-edge.svg") center/100% 100% no-repeat;filter:drop-shadow(0 0 10px #a79cf766);pointer-events:none}
+.rip-peek{position:absolute;pointer-events:none;-webkit-mask-image:var(--ripmask),linear-gradient(#000,#000);mask-image:var(--ripmask),linear-gradient(#000,#000);-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+@media (max-width:860px){.cubit{grid-template-columns:minmax(0,1fr);text-align:center}.rip{justify-self:center}}
+/* The rip tears open in jagged steps, like something breaking through. Cubit at the screen edge leans in on his own,
+   no rip, the trailer's peek. */
+.rip.shut{transform:scale(0)}
+.rip.tear{animation:rip-tear .7s both;animation-timing-function:steps(2,end)}
+@keyframes rip-tear{0%{transform:scale(.06,.03) rotate(-4deg)}18%{transform:scale(.4,.08) rotate(-4deg)}36%{transform:scale(.42,.45) rotate(2deg)}56%{transform:scale(.85,.6) rotate(-1deg)}76%{transform:scale(1.07,1.05)}100%{transform:scale(1)}}
+.edge-peek{position:fixed;z-index:40;left:0;top:50%;transform:translateY(-50%);--h:min(360px,46vh);--cubit:#b4e8f7;transition:opacity .3s}
+.edge-peek[hidden]{display:none}
+.edge-peek.gone{opacity:0}
+.edge-peek.right{left:auto;right:0}
+.ep-go{display:block;text-decoration:none;color:inherit}
+.ep-cubit{display:block;height:var(--h);width:calc(var(--h) * 220 / 390)}
+.edge-peek.right .ep-cubit{transform:scaleX(-1)}
+.ep-bubble{position:absolute;top:calc(var(--h) * .02);left:calc(var(--h) * .62);display:flex;flex-direction:column;align-items:center;padding:4px 2px;color:#20232a;font:650 18px/1.2 var(--sans,system-ui);white-space:nowrap;opacity:0;transform:translateY(6px) scale(.92);transform-origin:0 100%;transition:opacity .3s,transform .35s cubic-bezier(.2,1.4,.4,1);pointer-events:none}
+.ep-dot{position:absolute;z-index:-1;border-radius:50%;background:#dfe3eb;filter:drop-shadow(0 6px 12px #0006);pointer-events:none}
+.ep-cloud{position:absolute;z-index:-1;overflow:visible;filter:drop-shadow(0 10px 22px #0007);pointer-events:none}
+.edge-peek.right .ep-bubble{left:auto;right:calc(var(--h) * .62);transform-origin:100% 100%}
+.edge-peek.talk .ep-bubble{opacity:1;transform:none;pointer-events:auto;cursor:pointer}
+@media (max-width:860px){.edge-peek{--h:min(240px,34vh)}.ep-bubble{font-size:16px}}
+@media (prefers-reduced-motion:reduce){.rip.shut{transform:none}.rip.tear{animation:none}}
+.inst-sec{padding:120px var(--frame) 40px;scroll-margin-top:40px}
+.inst-sec h2{margin:0;font:500 clamp(30px,3.8vw,46px)/1.1 var(--display);letter-spacing:-.02em;color:#f4f2ff}
+.inst-sec .lead{margin:14px 0 0;max-width:34em;color:var(--muted);font-size:17px;line-height:1.55}
+.inst-sec .fine{margin:22px 0 0;color:var(--dim);font-size:14px}
+.inst-sec .cta{margin-top:28px}
+.inst-sec code.f{font:13.5px ui-monospace,"Cascadia Code",Consolas,monospace;color:#d8d4ee;background:#1c1b22;padding:2px 6px;border-radius:5px}
+/* Powered by Haiku 5.5: one big line with Claude's mark after it. */
+.power{padding:140px var(--frame) 0}
+.power h2{display:flex;align-items:center;flex-wrap:wrap;gap:.3em;margin:0;font:500 clamp(40px,6.4vw,110px)/1.02 var(--display);letter-spacing:-.03em;color:#f4f2ff}
+.power h2 .cm{width:.86em;height:.86em}
+.power h2 .jm{height:.86em;width:auto}
+.power h2 .or{color:var(--muted)}
+.power p{margin:22px 0 0;max-width:30em;color:var(--muted);font-size:18px;line-height:1.55}
+.uses{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;max-width:1080px;margin:52px 0 0;padding:0;list-style:none}
+.uses b{display:block;font:500 22px/1.25 var(--display);color:#f4f2ff}
+.uses span{display:block;margin-top:8px;color:var(--muted);font-size:15.5px;line-height:1.55}
+@media (max-width:820px){.uses{grid-template-columns:minmax(0,1fr);gap:26px}}
+.power+.inst-sec{padding-top:110px}
+@media (max-width:560px){.power{padding-top:100px}.power h2{font-size:30px}}
+/* Beta: a strip at the very top of the page, and a tag beside the name in the top bar. */
+.beta{margin:0;padding:9px var(--frame);background:#a79cf714;color:#cfc7ff;font-size:13.5px;text-align:center}
+.beta b{margin-right:10px;padding:2px 8px;border-radius:6px;background:#a79cf733;color:#ece8ff;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase}
+.topbar .tag{margin-left:.15em;padding:.2em .5em;border-radius:.4em;background:#a79cf733;color:#d8d2ff;font:600 .5em var(--sans);letter-spacing:.06em;text-transform:uppercase}
+/* One chat at a time: said big, in amber, before the two ways in. */
+.solo{display:flex;align-items:flex-start;gap:16px;max-width:1080px;margin:32px 0 0;padding:20px 24px;border-radius:14px;background:#e0a33a1c;color:#dccaa6;font-size:15px;line-height:1.5}
+.solo svg{width:28px;height:28px;flex-shrink:0;color:var(--yellow)}
+.solo b{display:block;margin-bottom:2px;font:500 21px/1.25 var(--display);color:#ffe7bd}
+.solo+.ways{margin-top:16px}
+.pop .solo{margin:0 0 10px;padding:12px 14px;gap:10px;color:#dccaa6;font-size:13px}
+.pop .solo svg{width:20px;height:20px}
+.pop .solo b{font-size:15px}
+/* The two ways in, side by side: Claude's on the left (the one most people want), the terminal on the right. */
+.ways{margin-top:36px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:1080px}
+.way{display:flex;flex-direction:column;min-width:0;padding:26px;border-radius:16px;background:#1b1a21}
+.way-claude{background:radial-gradient(120% 100% at 0% 0%,#d9775724,transparent 62%),#1b1a21}
+.way-k{display:flex;align-items:center;gap:9px;margin:0;font:600 13px var(--sans);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.way-claude .way-k{color:#e8a487}
+.way-k img,.way-k svg{width:20px;height:20px;flex-shrink:0}
+.way-t{margin:10px 0 22px;font:500 24px/1.2 var(--display);letter-spacing:-.01em;color:#f4f2ff}
+.big{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:58px;margin-top:auto;border:0;border-radius:12px;font:600 17px var(--sans);cursor:pointer;transition:background .2s}
+.big img,.big svg{width:20px;height:20px;flex-shrink:0}
+.big.claude{background:#d97757;color:#1f1009}.big.claude:hover{background:#e48a6b}
+.big.term{background:#2e2d36;color:var(--text)}.big.term:hover{background:#393842}
+.big.ok.term{color:var(--bog)}
+.big:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.way-h{margin:12px 0 0;color:var(--dim);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.way-claude .way-h{white-space:normal}
+.way-h code{font:12.5px ui-monospace,"Cascadia Code",Consolas,monospace;color:var(--muted)}
+.then{margin:20px 0 0;color:var(--muted);font-size:14.5px}
+.then code{font:13.5px ui-monospace,"Cascadia Code",Consolas,monospace;color:#d8d4ee;background:#26252d;padding:1px 6px;border-radius:5px}
+.pop .ways{margin-top:0;gap:10px}
+.pop .way{padding:16px}
+.pop .way-t{margin:8px 0 14px;font-size:17px}
+.pop .big{min-height:46px;margin-top:0;font-size:15px}
+.pop .then{margin:12px 0 0}
+@media (max-width:720px){.ways{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- Narrow screens ---------- */
+@media (max-width:960px){
+  .pin{gap:18px;padding:64px 16px 20px}
+  .head{gap:14px}
+  .caps{min-height:66px}
+  .go{gap:6px}
+  .go span{display:none}
+  .go button{padding:8px 0}
+  .say h3{font-size:26px;margin-bottom:8px}
+  .say p{font-size:15px}
+  .chat{gap:9px}
+  .pin{--z:14px}
+  .msg{max-width:84%}
+  .slot{min-height:60px}
+  .slot .band{flex-wrap:wrap}
+  .win .demo-send{right:12px;bottom:12px}
+  .win .demo-foot{font-size:13.5px;gap:8px;margin:10px 2px 0}
+  .win .demo-foot .fl{gap:12px;font-size:15px}
+  .win .demo-foot .k{width:22px;height:20px;font-size:11px}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:700px){
+  .dash .why{display:none}
+  .slot .dash .cache,.slot .dash .al{display:none}
+  .slot .dash{gap:.75em}
+  .slot .dash .lit.swell{font-size:1.12em}
+}
+@media (max-width:560px){
+  .demo-foot .opt{display:none}
+}
+/* ---------- Footer: the name, huge, sinking into a purple haze at the bottom of the page ---------- */
+.site-foot{position:relative;isolation:isolate;overflow:hidden;margin-top:140px;padding-top:28px}
+.site-foot:before{content:"";position:absolute;left:50%;bottom:-30%;width:120%;height:110%;transform:translateX(-50%);z-index:-1;pointer-events:none;background:radial-gradient(50% 55% at 50% 100%,#6d5fd666,#3a2f7a33 45%,transparent 75%)}
+.foot-row{padding:0 var(--frame);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.foot-row .name{display:inline-flex;align-items:center;gap:8px;color:var(--text);font:500 17px var(--display)}
+.foot-row .name svg{width:32px;height:32px;margin:-6px -2px -6px -6px}
+.foot-row .name small{margin-left:6px;color:var(--dim);font:400 14px var(--sans)}
+.foot-row nav{display:flex;align-items:center;gap:24px}
+.foot-row nav a{display:inline-flex;align-items:center;gap:7px;color:var(--muted);text-decoration:none;font-size:14.5px;transition:color .2s}
+.foot-row nav a:hover{color:var(--text)}
+.foot-row nav svg{width:15px;height:15px}
+.foot-right{display:flex;flex-direction:column;align-items:flex-end;gap:18px}
+.foot-cubit{margin:0;display:flex;align-items:center;gap:14px;color:var(--muted);font-size:17px}
+.foot-cubit a{display:inline-flex;transition:opacity .2s}
+.foot-cubit a:hover{opacity:.8}
+.foot-row .foot-right .foot-wait{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;background:#ffffff14;border:1px solid #ffffff1f;color:var(--text);text-decoration:none;font-size:14.5px;transition:background .2s}
+.foot-row .foot-right .foot-wait:hover{background:#ffffff24;opacity:1}
+.foot-wait svg{width:15px;height:15px}
+.foot-cubit img{display:block;height:34px;width:auto}
+@media (max-width:760px){.foot-right{align-items:flex-start}.foot-row nav{flex-wrap:wrap;gap:8px 18px}.foot-row nav a{white-space:nowrap}.foot-cubit{flex-wrap:wrap;gap:8px 12px;font-size:15px}.foot-cubit img{height:28px}}
+.foot-word{position:relative;margin:30px 0 -.2em;text-align:center;font:600 clamp(96px,21vw,340px)/.9 var(--display);letter-spacing:-.055em;white-space:nowrap;user-select:none;pointer-events:none}
+.foot-word span{display:block}
+.foot-word .crisp{background:linear-gradient(180deg,#d9d3ff 0%,#a79cf7 38%,#5f53b8 70%,transparent 96%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.foot-word .soft{position:absolute;inset:0;color:#8e7ff5;opacity:.35;filter:blur(26px) url(#grainy)}
+@media (max-width:560px){.foot-row nav{gap:16px}.foot-row .name small{display:none}}
+
+/* ---------- Narrow screens: the deck stands below the words ---------- */
+@media (max-width:1080px){
+  .stage-inner{grid-template-columns:minmax(0,1fr);gap:56px}
+  .stage-inner{padding:72px 0 40px var(--frame)}
+  .stack{position:relative;left:auto;top:auto;bottom:auto;padding:0 0 88px var(--frame)}
+  .stack-in{position:relative;top:auto;left:0;width:auto;margin-right:-90px;transform:none}
+  .stack{--from:calc(100% - 200px)}
+  .chip{margin-left:calc(var(--i)*24px)}
+  .intro{padding-right:var(--frame)}
+}
+@media (max-width:720px){
+  .wrap{padding:0 16px}
+  .stage-inner{padding:56px 0 32px var(--frame)}
+  .stack{padding:0 0 72px var(--frame)}
+  .intro{padding-right:var(--frame)}
+  .demo{margin-top:32px}
+  .chip{margin-left:calc(var(--i)*14px)}
+  .stack{--from:calc(100% - 110px)}
+  .chip .band{min-height:56px;padding:0 104px 0 16px;font-size:15px;flex-wrap:nowrap}
+  .chip .band .d,.chip .band .acts>:not(:last-child),.chip .what{display:none}
+  .chip .band .acts{flex-basis:auto;flex-wrap:nowrap}
+  .chip .bog .acts{display:none}
+  .chip .handoff:before{top:-6px;bottom:-6px}
+  .chip .band:before{top:-10px;bottom:-10px}
+  .lede{font-size:16px;margin-top:20px}
+  .cta{margin-top:26px}
+  .band{flex-wrap:wrap;row-gap:8px;column-gap:8px;padding:9px 9px 9px 12px}
+  .band:before{top:0;bottom:0}
+  .band .acts{flex-basis:100%;justify-content:flex-end;flex-wrap:wrap;gap:4px}
+  .btn{padding:6px 9px}
+  .k{display:none}
+  .sel select{padding:6px 24px 6px 9px}
+  .sel:after{right:9px}
+  .btn.x{padding:6px 4px}
+  .handoff:before{top:-10px;bottom:-10px}
+  .handoff .words{flex-basis:100%}
+  }
+/* ---------- Phones: kept together at the end so they win over the earlier narrow-screen rules ---------- */
+/* Phones: the story is one block, caption, steps, chat and bar, centred in the screen. The chat keeps a fixed height instead
+   of stretching, so there is no empty gap between the caption and the bar, and the box is never cut off at the bottom. svh is
+   the screen with the browser bars showing; vh would hide the box behind them. Fewer screens of scrolling per step. */
+@media (max-width:960px){
+  .story{height:calc(var(--n) * 60vh + 40vh);height:calc(var(--n) * 60svh + 40svh)}
+  .pin{height:100vh;height:100svh;justify-content:flex-start;gap:16px;padding-top:80px;padding-bottom:max(12px,min(15svh,calc(100svh - 580px)))}
+  .pin .head{margin-top:auto}
+  .pin .win{margin-bottom:auto}
+  .win{flex:none}
+  .chat{flex:none;height:min(17svh,130px);padding-bottom:10px}
+  .go{gap:8px}
+  .go button{padding:21px 0}
+  .story{margin-top:-110px}
+  .pin{--z:17px}
+  .pin .say h3{font-size:32px}
+  .pin .say p{font-size:17px}
+  .chat{height:min(24svh,210px)}
+  .slot .dash{font-size:17px;min-height:3.1em}
+  .slot .dash .ho,.slot .dash .co{display:none}
+  .win .demo-box{min-height:112px}
+}
+@media (max-height:560px) and (orientation:landscape){.chat{display:none}.pin{padding-top:76px;gap:8px}.go button{padding:8px 0}.pin .head{gap:8px}.say h3{font-size:22px;margin-bottom:0}}
+/* The bar has to fit the screen width: tighter spacing and a smaller size on narrow phones, so the gear is not cut off. */
+/* Phones: the hero chips stay inside the screen. No bleed off the right edge and no fade, so nothing is cut mid-word, and the
+   buttons drop under the text when they do not fit. */
+/* Phones: one bar in focus. The demo bar under the buttons is the whole hero; the pile of band cards is left to the story below,
+   which walks through every state as you scroll. */
+@media (max-width:720px){
+  .stage{min-height:0}
+  .stage-inner{align-items:start;padding:48px 0 24px var(--frame);gap:24px}
+  .beta{padding:12px var(--frame);font-size:14px}
+  .topbar{padding:14px var(--frame)}
+  .topbar .inst{height:44px}
+  .stack{display:none}
+  /* The landing, made for a phone: the bar is the star, big, with the box under it and the buttons under that. */
+  .intro{display:flex;flex-direction:column}
+  .intro .demo{order:4;width:100%;margin-top:26px}
+  .intro .cta{order:5;margin-top:22px}
+  .lede{font-size:20px;margin-top:18px}
+  .demo .dash{font-size:19px;min-height:3.3em;margin-bottom:12px;border-radius:14px}
+  .demo .dash .auto .al,.slot .dash .auto .al{display:none}
+  .demo .dash .ho,.demo .dash .co{display:none}
+  .demo .demo-box{min-height:120px;padding:18px 56px 18px 18px;border-radius:18px}
+  .demo .demo-in{font-size:18px}
+  .demo .demo-send{width:32px;height:32px;right:14px;bottom:14px}
+  .demo .demo-send svg{width:20px;height:20px}
+  .demo-foot{font-size:15px;margin-top:12px}
+  /* The video repeats the bar demo right above it and its text is too small to read on a phone, so there it comes after the
+     story as a recap instead. */
+  main{display:flex;flex-direction:column}
+  main>*{flex:none;width:100%}
+  .story{order:1}
+  .film{order:2;padding-top:56px}
+  .power{order:3}
+  .inst-sec{order:4}
+  .cubit{order:5}
+}
+}
+@media (max-width:430px){.demo .dash .al{display:none}}
+@media (max-width:430px){.slot .dash,.demo .dash{gap:.55em;padding:0 .6em 0 .6em;font-size:13px}.slot .dash .end,.demo .dash .end{gap:.7em}.slot .dash .pc{margin-left:0}}
+@media (max-width:380px){.demo .dash{font-size:12px}}
+@media (max-width:340px){.slot .dash,.demo .dash{font-size:11.5px;gap:.45em}.slot .dash .pc i,.demo .dash .pc i{display:none}.slot .dash .end,.demo .dash .end{gap:.5em}.slot .dash .auto,.demo .dash .auto{display:none}}
+@media (max-width:560px){
+  .topbar{padding:8px var(--frame)}
+  .inst-sec{padding:88px var(--frame) 24px}
+
+}
+
+/* Touch screens: every link and button is at least 44 px to hit. */
+@media (pointer:coarse){
+  .topbar .name{min-height:44px}
+  .foot-row .name{min-height:44px}
+  .foot-row nav a{min-height:44px;min-width:44px;justify-content:center}
+  .foot-cubit a{min-height:44px;align-items:center}
+  .foot-row .foot-right .foot-wait{min-height:44px;padding:0 18px}
+}
+
+/* Short phones (about 568 px tall): the story gives some size back so the box is never cut off. */
+@media (max-width:720px) and (max-height:640px){
+  .chat{height:min(12svh,80px)}
+  .pin .say h3{font-size:26px}
+  .pin .say p{display:none}
+  .win .demo-box{min-height:84px}
+  .pin{gap:12px;padding-top:78px}
+  .go button{padding:21px 0}
+}
+/* Phones: the bars are as big as the screen allows. Size follows the width; the bar still fits at 320 px. */
+@media (max-width:720px){
+  .topbar{padding:14px var(--frame)}
+  .topbar .inst{height:44px}
+  .demo .dash{font-size:clamp(15px,4.9vw,19px);gap:.6em;padding:0 .7em}
+  .slot .dash{font-size:clamp(14.5px,4.4vw,17px);gap:.6em;padding:0 .7em}
+  .demo .dash .end,.slot .dash .end{gap:.6em}
+}
+
+@media (max-width:1000px){.tr .tnav{display:none}}
+@media (max-width:820px){.tl .tnav{display:none}}
+@media (prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation:none!important;transition:none!important}
+  .dots .lit{display:none}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="grainy" x="-20%" y="-20%" width="140%" height="160%">
+    <feTurbulence type="fractalNoise" baseFrequency="1.7" numOctaves="1" seed="7" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="G" result="moved"/>
+    <feGaussianBlur in="moved" stdDeviation="1" result="soft"/>
+    <feComponentTransfer in="noise" result="dots"><feFuncA type="discrete" tableValues="0 0 1 1 1"/></feComponentTransfer>
+    <feComposite in="soft" in2="dots" operator="in"/>
+  </filter>
+</svg>
+
+<p class="beta"><b>Beta</b>Expect rough edges.</p>
+<section class="stage" id="top">
+  __WAVES__
+  <div class="stage-grain" aria-hidden="true"></div>
+  <div class="stage-inner">
+    <div class="intro">
+      <h1>__SPARK__<span class="word" aria-label="effortless"><span class="crisp" aria-hidden="true">effortless</span><span class="soft" aria-hidden="true">effortless</span></span></h1>
+      <p class="kind"><img src="__CLAUDE__" alt="" width="22" height="22">A Claude Code mod</p>
+      <p class="lede">One bar that picks the effort for every prompt. 21% cheaper than Opus at medium, same answers.</p>
+      <div class="cta">
+        <a class="gh" href="https://github.com/HeyCubit/effortless">__GITHUB__<span>Star on GitHub</span>__STARS_BADGE__</a>
+        <a class="ghost" href="#install">Install<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+      <div class="demo" aria-hidden="true">
+        <div class="dash-host" id="demo-dash"></div>
+        <div class="demo-box">
+          <div class="demo-in"><span id="demo-text"></span><span class="caret"></span><span class="demo-ph" id="demo-ph">Reply to Claude</span></div>
+          <span class="demo-send" id="demo-send"><svg viewBox="0 0 16 16"><path d="M13 3.5v4.5a2 2 0 01-2 2H3.5M6.5 7L3.5 10l3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+        <div class="demo-foot"><span class="fl"><span>+</span><span class="opt"><svg viewBox="0 0 16 16"><rect x="5.5" y="1.5" width="5" height="8.5" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 7.5a5 5 0 0010 0M8 12.5v2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="opt"><svg viewBox="0 0 16 16"><path d="M4.5 6.5L8 10l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="mode opt">Auto</span></span><span class="fr"><span class="judge">Judged by Haiku 5.5</span><span class="m">Opus 5.5</span><span class="ring"></span></span></div>
+      </div>
+    </div>
+
+    <div class="stack" id="stack" aria-label="The bar effortless shows above the prompt, and what it turns into"><div class="stack-in" id="stack-in">
+      <div class="chip" style="--i:0;--d:.7"><div class="dash-host" data-dash="stack"></div></div>
+      <div class="chip" style="--i:1;--d:.6"><div class="band ice"><span class="t">✦ Chat went cold</span><span class="d">Compact first.</span><span class="acts"><span class="btn">Not now</span><span class="btn primary">Compact</span></span></div></div>
+      <div class="chip" style="--i:2;--d:1"><div class="band bog"><span class="t">✦ Chat is getting swamped</span><span class="ring"><img src="__RING__" alt="">82%</span><span class="acts"><span class="btn primary">Compact</span></span></div></div>
+      <div class="chip" style="--i:3;--d:.45"><div class="band ember"><span class="t">✦ Running hot</span><span class="d">84% of 5h limit</span><span class="acts"><span class="btn primary">Save mode</span></span></div></div>
+      <div class="chip" style="--i:4;--d:.55"><div class="band brand handoff"><span class="words"><span class="t">⇥ Handoff</span><span class="what">Done in seconds.</span></span><span class="acts"><span class="qf"><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9 1.5L3.5 9H8l-1 5.5L12.5 7H8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Quick</span><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5l3 3L6 13l-3.5.5L3 10z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Full</span></span><span class="btn primary">Go</span></span></div></div>
+    </div></div>
+  </div>
+</section>
+
+<template id="dash-tpl"><div class="dash">__SPARK__<span class="w">Medium<span class="mdl"> · Opus</span></span><span class="pc"><i></i><b>22%</b></span><span class="cache">cache 59:00</span><span class="why">Haiku 5.5: a small fix in one file</span><span class="end"><span class="auto"><span class="sw"></span><span class="al">Auto</span></span><span class="co">Compact</span><span class="ho"><span>Compact</span></span><svg class="gear" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" d="M12.91 6.63L14.44 6.56 14.44 9.44 12.91 9.37 12.44 10.5 13.57 11.54 11.54 13.57 10.5 12.44 9.37 12.91 9.44 14.44 6.56 14.44 6.63 12.91 5.5 12.44 4.46 13.57 2.43 11.54 3.56 10.5 3.09 9.37 1.56 9.44 1.56 6.56 3.09 6.63 3.56 5.5 2.43 4.46 4.46 2.43 5.5 3.56 6.63 3.09 6.56 1.56 9.44 1.56 9.37 3.09 10.5 3.56 11.54 2.43 13.57 4.46 12.44 5.5Z"/><circle cx="8" cy="8" r="2.1" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></span></div></template>
+
+<header class="topbar" id="topbar">
+  <div class="tl"><a class="name" href="#top">__SPARK__effortless<span class="tag">Beta</span></a><nav class="tnav" aria-label="Site"><a href="#how">How it works</a><a href="whats-new/">What's new</a><a href="bench/">Benchmarks</a><a href="textless/">textless</a></nav></div>
+  <div class="tr"><nav class="tnav" aria-label="Project"><a href="report/">Report a bug</a><a href="https://github.com/HeyCubit/effortless">GitHub</a></nav>  <button type="button" class="inst" id="inst" aria-label="Show install commands" aria-expanded="false" aria-controls="pop">Install<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+  <div class="pop" id="pop" role="dialog" aria-label="Install effortless">
+    __INSTALL__
+  </div>
+</header>
+
+<main>
+  <section class="film" aria-label="effortless in 50 seconds">
+    <video id="film" src="assets/effortless-short.mp4" poster="assets/effortless-short-poster.jpg" width="1280" height="720" autoplay muted loop playsinline preload="auto" aria-label="A 50 second video: the bar picks the model and effort for each prompt, warns when the cache goes cold or the chat gets heavy, and offers a handoff."></video>
+  </section>
+  <section class="story" id="how" style="--n:6" aria-label="What effortless does">
+    <div class="pin">
+      <div class="head">
+        <div class="go" aria-label="Steps"><button type="button" data-go="0" aria-label="Effort"><i></i><span>Effort</span></button><button type="button" data-go="1" aria-label="Handoff"><i></i><span>Handoff</span></button><button type="button" data-go="2" aria-label="Cold cache"><i></i><span>Cold cache</span></button><button type="button" data-go="3" aria-label="Swamped"><i></i><span>Heavy chat</span></button><button type="button" data-go="4" aria-label="Running hot"><i></i><span>Near the limit</span></button><button type="button" data-go="5" aria-label="Settings"><i></i><span>Settings</span></button></div>
+        <div class="caps">
+          <div class="say" data-i="0"><h3>One bar. Every prompt gets the effort it needs.</h3></div>
+          <div class="say" data-i="1"><h3>Haiku tells you when a fresh chat pays off.</h3></div>
+          <div class="say" data-i="2"><h3>It tells you when the cache goes cold.</h3></div>
+          <div class="say" data-i="3"><h3>And when the chat gets heavy.</h3></div>
+          <div class="say" data-i="4"><h3>It eases off before you hit the limit.</h3></div>
+          <div class="say" data-i="5"><h3>Everything else sits behind the gear.</h3></div>
+        </div>
+      </div>
+      <div class="win" aria-hidden="true">
+        <div class="chat" id="w-chat"></div>
+        <div class="slot" id="w-slot"><div class="dash-host" id="w-dash"></div></div>
+        <div class="demo-box">
+          <div class="demo-in"><span id="w-text"></span><span class="caret"></span><span class="demo-ph" id="w-ph">Reply to Claude</span></div>
+          <span class="demo-send" id="w-send"><svg viewBox="0 0 16 16"><path d="M13 3.5v4.5a2 2 0 01-2 2H3.5M6.5 7L3.5 10l3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </div>
+        <div class="demo-foot"><span class="fl"><span>+</span><span class="opt"><svg viewBox="0 0 16 16"><rect x="5.5" y="1.5" width="5" height="8.5" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 7.5a5 5 0 0010 0M8 12.5v2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="opt"><svg viewBox="0 0 16 16"><path d="M4.5 6.5L8 10l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="mode opt">Auto</span></span><span class="fr"><span class="judge">Judged by Haiku 5.5</span><span class="m">Opus 5.5</span><span class="ring"></span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="power" aria-label="Powered by Haiku 5.5">
+    <h2>Powered by Haiku&nbsp;5.5<img class="cm" src="__CLAUDE_ORANGE__" alt="Claude" width="96" height="96"><span class="or">or Jev</span><img class="jm" src="__TYPESAFE_VIOLET__" alt="Jev" width="64" height="96"></h2>
+    <p>Haiku 5.5 is about 75% cheaper than Haiku 4.5 and does two jobs. Jev, with a TypeSafe key, judges about 4x faster.</p>
+    <ul class="uses">
+      <li><b>Judges every prompt</b><span>Picks the effort, and lights up Handoff when a fresh chat would pay off. On your own Claude login.</span></li>
+      <li><b>Writes your compactions</b><span>Every compact, by hand or automatic, is summarized by Haiku 5.5.</span></li>
+    </ul>
+  </section>
+
+  <section class="inst-sec" id="install">
+    <h2>Two ways in.</h2>
+    <p class="lead">Runs on your own Claude login. No API key needed.</p>
+    __INSTALL__
+    <div class="cta"><a class="gh" href="https://github.com/HeyCubit/effortless">__GITHUB__<span>Star on GitHub</span></a></div>
+  </section>
+
+  <section class="cubit" id="cubit" aria-labelledby="cu-h">
+    <div class="cu-text">
+      <p class="cu-kicker">Meanwhile, in another dimension</p>
+      <h2 id="cu-h">Also building <span class="cu-logo" role="img" aria-label="Cubit" style="--logo:url(assets/cubit-logo-white.svg)"></span></h2>
+      <p class="lead">Send anything to anyone, anywhere.</p>
+      <a class="cu-btn" href="https://heycubit.com" rel="noopener">Join the waitlist</a>
+    </div>
+    <div class="rip" aria-hidden="true">
+      <div class="rip-hole"></div>
+      <div class="rip-edge"></div>
+      <canvas class="rip-peek" id="rip-peek" width="900" height="900"></canvas>
+    </div>
+  </section>
+
+</main>
+
+<div class="edge-peek" id="edge-peek" hidden>
+  <a class="ep-go" href="#cubit" tabindex="-1" aria-hidden="true"><canvas class="ep-cubit" width="220" height="390"></canvas></a>
+  <div class="ep-bubble" role="group" aria-label="Cubit">
+    <b>Pssst, I'm further down!</b>
+  </div>
+</div>
+
+<footer class="site-foot">
+  <div class="foot-row">
+    <span class="name">__SPARK__effortless<small>A Claude Code mod</small></span>
+    <div class="foot-right">
+      <p class="foot-cubit">Also from us: <a href="textless/">textless</a>, one picture instead of the wall of steps. And <a href="https://heycubit.com" aria-label="Cubit" class="cubit-logo"><img src="assets/cubit-logo-white.svg" alt="Cubit"></a><span>send anything to anyone, anywhere.</span></p><a class="foot-wait" href="https://heycubit.com/waitlist/">Join the waitlist<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9m-3.5-3.5L12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <nav><a href="#how">How it works</a><a href="#install">Install</a><a href="whats-new/">What's new</a><a href="bench/">Benchmarks</a><a href="report/">Report a bug</a><a href="report/?kind=feature">Request a feature</a><a href="https://github.com/HeyCubit/effortless">__GITHUB__GitHub</a><a href="https://x.com/heycubit" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X</a></nav>
+    </div>
+  </div>
+  <div class="foot-word" aria-hidden="true"><span class="soft">effortless</span><span class="crisp">effortless</span></div>
+</footer>
+
+<script>
+// The copy buttons put their command on the clipboard and say so for a moment. Where the browser refuses the clipboard,
+// the command is selected and copied the old way, or left selected with a hint to press Ctrl+C.
+// Every copy button remembers its own label, so a reset puts back "Copy for Claude", not "Copy".
+document.querySelectorAll('[data-copy] span').forEach(function(s){s.dataset.label=s.textContent});
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-copy]');if(!b)return;
+  var s=b.querySelector('span'),code=b.parentNode.querySelector('code');if(!s.dataset.label)s.dataset.label=s.textContent;
+  // Only one button says Copied at a time.
+  document.querySelectorAll('[data-copy]').forEach(function(o){if(o!==b){clearTimeout(o.t);o.classList.remove('ok');var os=o.querySelector('span');os.textContent=os.dataset.label||'Copy';}});
+  function say(t,ok){b.classList.toggle('ok',ok);s.textContent=t;clearTimeout(b.t);b.t=setTimeout(function(){b.classList.remove('ok');s.textContent=s.dataset.label},ok?1400:3000);}
+  function fallback(){
+    // Claude's button has no visible text to select, so it copies through a hidden text box.
+    var done=false,t;
+    if(code){var r=document.createRange();r.selectNodeContents(code);var sel=getSelection();sel.removeAllRanges();sel.addRange(r);}
+    else{t=document.createElement('textarea');t.value=b.dataset.copy;t.setAttribute('readonly','');t.style.cssText='position:fixed;opacity:0';document.body.appendChild(t);t.select();}
+    try{done=document.execCommand('copy')}catch(err){}
+    if(t)t.remove();
+    say(done?'Copied':'Press Ctrl+C',done);
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(b.dataset.copy).then(function(){say('Copied',true)},fallback);
+  else fallback();
+});
+
+// The install bar slides in once the opening has scrolled away; its button opens the two commands.
+(function(){
+  var bar=document.getElementById('topbar'),btn=document.getElementById('inst'),pop=document.getElementById('pop'),stage=document.getElementById('top');
+  function open(o){if(o===pop.classList.contains('open'))return;pop.classList.toggle('open',o);btn.setAttribute('aria-expanded',String(o));dispatchEvent(new CustomEvent('install-panel',{detail:o}));}
+  function check(){var on=stage.getBoundingClientRect().bottom<60;bar.classList.toggle('on',on);if(!on)open(false);}
+  btn.addEventListener('click',function(){open(!pop.classList.contains('open'))});
+  document.addEventListener('click',function(e){if(!bar.contains(e.target))open(false)});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')open(false)});
+  addEventListener('scroll',check,{passive:true});check();
+})();
+
+// The dashboard bar, cloned from its template. Each copy renames its mark's mask ids, so no two copies share one.
+var Dash=(function(){
+  var tpl=document.getElementById('dash-tpl'),made=0,all=[];
+  // GLOW_LEVELS from hooks/register.tsx: spread, blur, peak, low, period.
+  var GLOW=[null,[1.5,1.2,.55,.2,3.4],[2,1.5,.65,.25,2.8],[2.5,1.8,.75,.3,2.3],[3,2.1,.85,.35,1.9],[3.5,2.4,.95,.4,1.5]];
+  function draw(d){var c=d.cache;c.hidden=d.left==null;if(d.left==null)return;
+    c.textContent=d.left<=0?'Cold':'cache '+Math.floor(d.left/60)+':'+('0'+d.left%60).slice(-2);c.classList.toggle('low',d.left<300);}
+  function make(host){
+    var el=tpl.content.firstElementChild.cloneNode(true),mk=el.querySelector('svg.spark'),k='d'+(made++);
+    mk.innerHTML=mk.innerHTML.replace(/id="([^"]+)"/g,'id="$1'+k+'"').replace(/url\(#([^)]+)\)/g,'url(#$1'+k+')');
+    host.appendChild(el);
+    var q=function(s){return el.querySelector(s)},w=q('.w'),ring=q('.pc i'),num=q('.pc b'),ho=q('.ho'),ft=0;
+    var d={el:el,w:w,pc:q('.pc'),cache:q('.cache'),why:q('.why'),ho:ho,gear:q('.gear'),auto:q('.auto'),end:q('.end'),left:null,p:0,
+      // A new verdict turns the word violet, holds it a second, then fades it back to white.
+      word:function(v,flash){w.classList.remove('deciding');clearTimeout(ft);
+        if(w.textContent!==v&&flash){w.classList.add('flash');ft=setTimeout(function(){w.classList.remove('flash')},1000);}else w.classList.remove('flash');
+        // "Low · Opus": the effort word, then the model the chat runs on, dimmed.
+        var at=v.indexOf(' · ');w.textContent=at<0?v:v.slice(0,at);
+        if(at>=0){var m=document.createElement('span');m.className='mdl';m.textContent=v.slice(at);w.appendChild(m);}},
+      deciding:function(){clearTimeout(ft);w.classList.remove('flash');w.textContent='Deciding';w.classList.add('deciding');},
+      reason:function(t){d.why.textContent=t;},
+      secs:function(s){d.left=s;draw(d);},
+      auto:function(on){el.classList.toggle('off',!on);},
+      // One slot: plain Compact under 30%, a white Handoff box from 30%, then a glow a step every 10%.
+      pct:function(p){d.p=p;ring.style.setProperty('--p',p);num.textContent=Math.round(p)+'%';
+        var white=p>=30,a=white?1:0,st=white?Math.min(5,Math.floor((p-30)/10)+1):0,S=ho.style;
+        S.setProperty('--ha',a);S.setProperty('--hb',white?'#ececf0':'#2b2b2f');S.setProperty('--he',white?'#f5f5f8':'#3c3c42');
+        S.setProperty('--ht',white?'#141416':'#b4b4bc');ho.firstChild.textContent=white?'Handoff':'Compact';el.classList.toggle('hoon',white);ho.classList.toggle('glow',st>0);
+        if(st){var g=GLOW[st];S.setProperty('--ge',g[0]);S.setProperty('--gb',g[1]+'px');S.setProperty('--gp',g[2]);S.setProperty('--gl',g[3]);S.setProperty('--gt',g[4]+'s');}}
+    };
+    all.push(d);return d;
+  }
+  // The cache countdown ticks by the second, as the mod's does.
+  setInterval(function(){all.forEach(function(d){if(d.left>0){d.left--;draw(d);}})},1000);
+  return make;
+})();
+
+// The bar at the top of the stack: High, a refactor, Handoff already glowing.
+(function(){
+  var host=document.querySelector('[data-dash="stack"]');if(!host)return;
+  var d=Dash(host);d.word('High · Opus');d.pct(38);d.secs(3539);d.reason('Haiku 5.5: a refactor');
+})();
+
+// The story plays in the first time it scrolls into view.
+(function(){
+  var story=document.getElementById('how');if(!story)return;
+  function check(){if(story.getBoundingClientRect().top<innerHeight*.7){story.classList.add('in');removeEventListener('scroll',check);}}
+  addEventListener('scroll',check,{passive:true});check();
+})();
+
+// The headings sit on the bottom of their row; the row is as tall as the tallest of them, so a heading that wraps onto
+// two lines grows down into its own space instead of up under the top bar.
+(function(){
+  var caps=document.querySelector('#how .caps');if(!caps)return;
+  function fit(){var h=0;caps.querySelectorAll('.say').forEach(function(s){h=Math.max(h,s.offsetHeight)});caps.style.minHeight=h+'px';}
+  fit();addEventListener('resize',fit);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+})();
+
+// The story: one window stays put while the page scrolls, and each step plays one feature in it.
+(function(){
+  var story=document.getElementById('how');if(!story)return;
+  var says=story.querySelectorAll('.say'),gos=story.querySelectorAll('[data-go]'),n=says.length;
+  var chat=document.getElementById('w-chat'),slot=document.getElementById('w-slot'),host=document.getElementById('w-dash'),d=Dash(host);
+  var text=document.getElementById('w-text'),ph=document.getElementById('w-ph'),send=document.getElementById('w-send');
+  var still=matchMedia('(prefers-reduced-motion: reduce)').matches,timers=[],cur=-1;
+  function later(ms,f){timers.push(setTimeout(f,still?0:ms));}
+  function stop(){timers.forEach(clearTimeout);timers=[];}
+  function msg(kind,html){var m=document.createElement('div');m.className='msg '+kind;m.innerHTML=html;chat.appendChild(m);while(chat.children.length>2)chat.removeChild(chat.firstChild);return m;}
+  function wipe(){Array.prototype.forEach.call(chat.children,function(m){m.classList.add('gone')});later(380,function(){chat.innerHTML=''});}
+  // The bar steps aside for whatever needs the slot (an alert, the Handoff bar, settings) and comes back after.
+  function band(html){clear();host.classList.add('away');slot.insertAdjacentHTML('beforeend',html);return slot.lastElementChild;}
+  function clear(){Array.prototype.forEach.call(slot.children,function(c){if(c!==host)slot.removeChild(c)});}
+  function unband(done){var b=slot.lastElementChild;if(b===host)return done&&done();b.classList.add('gone');
+    later(330,function(){clear();host.classList.remove('away');d.el.classList.remove('back');void d.el.offsetWidth;d.el.classList.add('back');done&&done();});}
+  function input(s){text.textContent=s;ph.hidden=!!s;send.classList.toggle('on',!!s);}
+  function type(s,done){if(still){input(s);return later(0,done);}var k=0;(function step(){input(s.slice(0,++k));if(k<s.length)later(28+Math.random()*30,step);else later(380,done);})();}
+  function press(el,done){if(!el)return done&&done();el.classList.remove('press');void el.getBoundingClientRect();el.classList.add('press');later(420,done||function(){});}
+  function ask(s,level,why,reply,done){type(s,function(){input('');msg('me',s);d.deciding();
+    later(700,function(){d.word(level,true);d.reason('Haiku 5.5: '+why);d.secs(3599);d.pct(Math.min(d.p+3,99));msg('ai',reply);later(1900,function(){done&&done();});});});}
+  function ramp(to,ms,done){var from=d.p,t0=0,steps=Math.max(1,Math.round(ms/80));
+    (function step(i){d.pct(from+(to-from)*i/steps);if(i<steps)later(80,function(){step(i+1)});else done&&done();})(still?steps:1);}
+  function base(){chat.innerHTML='';clear();host.classList.remove('away');input('');d.auto(true);d.word('Medium · Opus');d.pct(22);d.secs(3540);d.reason('Haiku 5.5: a small fix in one file');}
+  function again(f,ms){if(!still)later(ms||2600,f);}
+
+  // A scene names the parts of the bar it is about; they stay lit while the rest dims, and swell when they change.
+  var aimed=[],swellT=0;
+  function swell(){aimed.forEach(function(e){if(e!==d.end)e.classList.add('swell')});clearTimeout(swellT);swellT=setTimeout(function(){aimed.forEach(function(e){e.classList.remove('swell')})},1300);}
+  function aim(els){aimed.forEach(function(e){e.classList.remove('lit','swell')});aimed=[];
+    (els||[]).forEach(function(e){aimed.push(e);if(e.parentNode===d.end&&aimed.indexOf(d.end)<0)aimed.push(d.end);});
+    d.el.classList.toggle('aim',aimed.length>0);aimed.forEach(function(e){e.classList.add('lit')});if(aimed.length)swell();}
+  new MutationObserver(function(){if(aimed.length)swell();}).observe(d.el,{subtree:true,childList:true,characterData:true});
+
+  var COLD='<div class="band ice"><span class="t">✦ Chat went cold</span><span class="d">Next message costs full price. Compact first.</span><span class="acts"><span class="btn">Not now</span><span class="btn primary">Compact</span></span></div>';
+  var SWAMP='<div class="band bog"><span class="t">✦ Chat is getting swamped</span><span class="ring"><img src="__RING__" alt="">82%</span><span class="d">180k tokens re-read every message.</span><span class="acts"><span class="btn primary">Compact</span><span class="btn">Handoff</span></span></div>';
+  var HOT='<div class="band ember"><span class="t">✦ Running hot</span><span class="d">84% of your 5h limit used · resets 16:20</span><span class="acts"><span class="btn primary">Save mode</span></span></div>';
+  var HANDOFF='<div class="band brand handoff"><span class="words"><span class="t">⇥ Handoff</span><span class="what">Haiku: the work moved on. Clears chat, carries on.</span></span><span class="acts"><span class="qf"><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9 1.5L3.5 9H8l-1 5.5L12.5 7H8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Quick</span><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5l3 3L6 13l-3.5.5L3 10z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Full</span></span><span class="btn pick">Clear &amp; carry on</span><span class="btn primary">Go</span><span class="btn x">✕</span></span></div>';
+  var SETT='<div class="sett"><div class="sett-h"><b>effortless</b><span class="sub">Settings</span><span class="save">Save</span><span class="x">✕</span></div><div class="cards">'+
+    '<div class="card"><b><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 11.5a5.5 5.5 0 1111 0M8 11.5l2.6-3.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Effort</b><span>Balanced · low to max</span></div><div class="card"><b><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h8.5M7.5 5l3 3-3 3M13.5 3.5v9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Handoff</b><span>Built in · swamped at 80%</span></div>'+
+    '<div class="card"><b><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11 2.4 13.6 5 5.6 13 2.4 13.6 3 10.4ZM9.3 4.1 11.9 6.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Customize</b><span>Dashboard look</span></div><div class="card"><b><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v11M4.5 13.5h7M3 4.5h10M3 4.5L1.5 9h3zM13 4.5L11.5 9h3z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Judge</b><span>Auto · Haiku 5.5</span></div></div></div>';
+
+  // Each step swaps the bar for its own band the moment it scrolls in; nothing is typed or pressed first. Only the
+  // effort step plays prompts, since the bar itself is what it shows. Settings walks its cards.
+  function only(html){base();aim([]);return band(html);}
+  var scenes=[
+    function effort(){base();aim([d.w]);
+      later(900,function(){ask('rename this variable to userId','Low · Opus','a rename in one place','Renamed in 4 files.',function(){
+        ask('plan the billing migration, all services','XHigh · Opus','a plan across every service','Here is a plan in five stages, starting with the read path…',function(){
+          ask('add a test for the date parser','Medium · Opus','a small fix in one file','Added 6 cases, including leap days.',function(){again(effort);});});});});},
+    function handoff(){only(HANDOFF);d.pct(48);},
+    function cold(){only(COLD);d.secs(0);},
+    function swamp(){only(SWAMP);d.pct(82);},
+    function hot(){only(HOT);},
+    function settings(){var cards=only(SETT).querySelectorAll('.card'),k=0;
+      (function next(){cards.forEach(function(c,j){c.classList.toggle('on',j===k%4)});k++;if(!still)later(900,next);})();}
+  ];
+
+  function show(i){if(i===cur)return;cur=i;stop();
+    says.forEach(function(s,k){s.classList.toggle('on',k===i)});
+    story.querySelector('.pin').style.setProperty('--sc','var(--'+['accent','accent','ice','bog','ember','accent'][i]+')');
+    gos.forEach(function(b,k){b.setAttribute('aria-current',k===i?'step':'false')});
+    scenes[i]();}
+  function onScroll(){var r=story.getBoundingClientRect(),span=story.offsetHeight-innerHeight,p=span>0?-r.top/span:0;
+    gos.forEach(function(b,k){b.style.setProperty('--f',Math.max(0,Math.min(1,p*n-k)).toFixed(3))});
+    show(Math.max(0,Math.min(n-1,Math.floor(p*n))));}
+  gos.forEach(function(b,k){b.addEventListener('click',function(){var span=story.offsetHeight-innerHeight;
+    scrollTo(0,story.offsetTop+span*(k+.5)/n);});});
+  // The story holds still while the install commands are open, and picks up again when they close.
+  addEventListener('install-panel',function(e){if(e.detail){stop();}else{cur=-1;onScroll();}});
+  addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);onScroll();
+})();
+
+
+// The little prompt box: a prompt is typed, the bar says Deciding, then flashes the effort it picked. The chat fills up
+// prompt by prompt, Handoff's box comes in and starts to glow, and a handoff starts it fresh.
+(function(){
+  var host=document.getElementById('demo-dash');if(!host)return;
+  var d=Dash(host),text=document.getElementById('demo-text'),ph=document.getElementById('demo-ph'),send=document.getElementById('demo-send');
+  var runs=[['rename this variable to userId','Low · Opus','a rename in one place'],['why does the token refresh fail after a deploy?','High · Opus','a bug across services'],['thanks','Low · Opus','a short reply'],['add a test for the date parser','Medium · Opus','a small fix in one file'],['plan the billing migration, all services','XHigh · Opus','a plan across every service']];
+  function fresh(){d.word('Auto');d.pct(3);d.secs(null);d.reason('Auto picks the effort at the next prompt');}
+  function show(s){text.textContent=s;ph.hidden=!!s;send.classList.toggle('on',!!s);}
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){show(runs[1][0]);d.word('High · Opus');d.pct(38);d.secs(3539);d.reason('Haiku 5.5: '+runs[1][2]);return;}
+  fresh();
+  var i=0;
+  function type(s,k,done){show(s.slice(0,k));if(k<s.length)setTimeout(function(){type(s,k+1,done)},32+Math.random()*40);else setTimeout(done,450);}
+  // It only plays while the opening is on screen.
+  var seen=true;if('IntersectionObserver' in window)new IntersectionObserver(function(es){seen=es[0].isIntersecting}).observe(document.getElementById('top'));
+  function run(){
+    if(!seen){setTimeout(run,500);return;}
+    if(d.p>=75){fresh();setTimeout(run,2600);return;}
+    var r=runs[i%runs.length];i++;
+    type(r[0],0,function(){
+      show('');d.deciding();
+      setTimeout(function(){d.word(r[1],true);d.reason('Haiku 5.5: '+r[2]);d.secs(3599);d.pct(d.p+12);setTimeout(run,3600);},700);
+    });
+  }
+  setTimeout(run,1400);
+})();
+
+// With nobody pointing at them, the bands light up one at a time, as if hovered. A hover takes over, and the cycle
+// picks up again from the next band once the pointer leaves.
+(function(){
+  var stack=document.getElementById('stack'),chips=stack?stack.querySelectorAll('.chip'):[];
+  if(!chips.length||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var i=-1,held=false,seen=true,timer=0;
+  function lit(k){chips.forEach(function(c,n){c.classList.toggle('auto',n===k)});}
+  function tick(){if(!held&&seen){i=(i+1)%chips.length;lit(i);}timer=setTimeout(tick,2400);}
+  stack.addEventListener('mouseenter',function(){held=true;lit(-1);});
+  stack.addEventListener('mouseleave',function(){held=false;clearTimeout(timer);timer=setTimeout(tick,900);});
+  if('IntersectionObserver' in window)new IntersectionObserver(function(es){seen=es[0].isIntersecting;if(!seen)lit(-1);}).observe(stack);
+  timer=setTimeout(tick,2200);
+})();
+
+// The stack is scaled so it runs from the top of the opening to the bottom.
+(function(){
+  var stage=document.getElementById('top'),inner=document.getElementById('stack-in');
+  function fit(){
+    if(innerWidth<=1080){inner.style.removeProperty('--k');return;}
+    // As tall as the words on the left, but never so big that a band's words and buttons stop fitting the width.
+    var col=inner.parentNode.clientWidth,intro=document.querySelector('.intro').offsetHeight;
+    var k=Math.max(1,Math.min((intro+40)/inner.offsetHeight,col/470,1.3));
+    inner.style.setProperty('--k',k.toFixed(3));
+  }
+  fit();addEventListener('resize',fit);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+})();
+// The launch video plays muted on a loop while it is on screen and stops when scrolled away. With reduced motion,
+// or where the browser refuses autoplay, it waits on its poster with the normal controls.
+(function(){var v=document.getElementById('film');if(!v)return;
+  function still(){v.pause();v.controls=true;}
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){v.removeAttribute('autoplay');still();return;}
+  function go(){var p=v.play();if(p&&p.catch)p.catch(still);}
+  if('IntersectionObserver' in window)new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){if(!v.controls)go();}else if(!v.controls)v.pause();});},{threshold:.25}).observe(v);
+})();
+// One Cubit in one rip: the packed clips (colour on top, alpha below) drawn to a canvas bigger than the hole, masked to
+// the hole plus a band above it so his head rises over the top edge. The clips are made for this hole: a 1320x1200 frame
+// whose rows 300..1200 are the hole, edge to edge. He rises from behind the bottom rim on the right and never crosses the
+// side rims, so the canvas maps 1:1 onto the rip. Returns null without WebGL.
+var CUBIT_COLOUR = 'blue', CUBIT_MOODS = ['calm', 'happy', 'curious'];
+function cubitFit(rip, el) {
+  // Smaller than the hole's own scale, so his whole head fits under the top rim; set low, so the bottom rim hides his base.
+  var W = rip.clientWidth, H = rip.clientHeight, s = W / 1320 * 0.74, top = Math.round(H * 1.02 - 945 * s), left = Math.round(W * 0.6 - 790 * s);
+  el.style.width = Math.round(1320 * s) + 'px'; el.style.height = Math.round(1200 * s) + 'px'; el.style.left = left + 'px'; el.style.top = top + 'px';
+  var pos = (-left) + 'px ' + (-top) + 'px, 0px 0px', size = W + 'px ' + H + 'px, 0px 0px';
+  el.style.webkitMaskPosition = pos; el.style.maskPosition = pos; el.style.webkitMaskSize = size; el.style.maskSize = size;
+}
+// His thought cloud, grown around a w x h box the way the app grows it (cube/native.py cloud_lobes): big circles on
+// a superellipse core a little bigger than the box, a fixed big/small rhythm, bulging out modestly, and two dots trailing
+// are drawn by the caller, from the cloud down to him. Returns the SVG and how far it reaches past the box.
+function cubitCloud(w0, h0) {
+  // Room around the words, then lobes as big as the app's (30 to 70 px), so a short line gets a few big round lobes.
+  var small = innerWidth < 600, w = w0 + (small ? 36 : 64), h = h0 + (small ? 60 : 84);
+  var PATTERN = [1.0, 0.72, 0.9, 0.68, 1.06, 0.78, 0.94, 0.7], N = 2.2, BULGE = 0.45, STEP = 1.3;
+  var r0 = Math.max(40, Math.min(small ? 58 : 72, 0.75 * Math.min(w, h))), a = w / 2 + r0 * 0.2, b = h / 2 + r0 * 0.2;
+  var pts = [], acc = 0, px = null, py = null, i;
+  for (i = 0; i <= 240; i++) {
+    var t = 2 * Math.PI * i / 240 - Math.PI / 2, c = Math.cos(t), sn = Math.sin(t);
+    var x = a * Math.sign(c) * Math.pow(Math.abs(c), 2 / N), y = b * Math.sign(sn) * Math.pow(Math.abs(sn), 2 / N);
+    if (px !== null) acc += Math.hypot(x - px, y - py);
+    px = x; py = y; pts.push([acc, x, y]);
+  }
+  var total = acc, count = Math.max(6, Math.round(total / (r0 * STEP))), k = 0, lobes = [];
+  for (var j = 0; j < count; j++) {
+    var target = total * j / count;
+    while (k + 1 < pts.length && pts[k + 1][0] < target) k++;
+    var p = pts[k], q = pts[Math.min(k + 1, pts.length - 1)], fr = q[0] > p[0] ? Math.max(0, Math.min(1, (target - p[0]) / (q[0] - p[0]))) : 0;
+    var lx = p[1] + (q[1] - p[1]) * fr, ly = p[2] + (q[2] - p[2]) * fr;
+    var r = r0 * PATTERN[j % PATTERN.length] * (1 - 0.14 * Math.max(0, ly / b)) * (1 + 0.05 * Math.sin(j * 1.7));
+    var nx = lx / (a * a), ny = ly / (b * b), ln = Math.hypot(nx, ny) || 1;
+    lobes.push([lx - nx / ln * (1 - BULGE) * r, ly - ny / ln * (1 - BULGE) * r, r]);
+  }
+  var dots = [];
+  var L = a, U = b, R = a, D = b;
+  lobes.concat(dots).forEach(function (o) { L = Math.max(L, -o[0] + o[2]); U = Math.max(U, -o[1] + o[2]); R = Math.max(R, o[0] + o[2]); D = Math.max(D, o[1] + o[2]); });
+  var W = L + R, H = U + D, core = '';
+  for (i = 0; i < pts.length; i += 4) core += (i ? 'L' : 'M') + (pts[i][1] + L).toFixed(1) + ' ' + (pts[i][2] + U).toFixed(1);
+  var circles = lobes.concat(dots).map(function (o) { return '<circle cx="' + (o[0] + L).toFixed(1) + '" cy="' + (o[1] + U).toFixed(1) + '" r="' + o[2].toFixed(1) + '"/>'; }).join('');
+  return { svg: '<svg class="ep-cloud" width="' + Math.ceil(W) + '" height="' + Math.ceil(H) + '" viewBox="0 0 ' + W.toFixed(1) + ' ' + H.toFixed(1) + '" aria-hidden="true"><g fill="#dfe3eb"><path d="' + core + 'Z"/>' + circles + '</g></svg>',
+    left: L - w0 / 2, up: U - h0 / 2, w: W, h: H };
+}
+function cubitIn(rip, cvs) {
+  if (rip) { cubitFit(rip, cvs); addEventListener('resize', function () { cubitFit(rip, cvs); }); }
+  var gl = cvs.getContext('webgl', { premultipliedAlpha: true, alpha: true }); if (!gl) return null;
+  function sh(t, src) { var o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; }
+  var prog = gl.createProgram();
+  gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 p;varying vec2 u;void main(){u=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}'));
+  gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, 'precision mediump float;uniform sampler2D t;varying vec2 u;void main(){vec3 c=texture2D(t,vec2(u.x,u.y*.5)).rgb;float a=texture2D(t,vec2(u.x,.5+u.y*.5)).r;gl_FragColor=vec4(c*a,a);}'));
+  gl.linkProgram(prog); gl.useProgram(prog);
+  var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  var tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+  [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(function (k) { gl.texParameteri(gl.TEXTURE_2D, k, gl.CLAMP_TO_EDGE); });
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+  var vids = {}, cur = null, raf = 0, after = null;
+  function draw(v) {
+    var dpr = Math.min(2, devicePixelRatio || 1), w = Math.round(cvs.clientWidth * dpr), h = Math.round(cvs.clientHeight * dpr);
+    if (cvs.width !== w || cvs.height !== h) { cvs.width = w; cvs.height = h; }
+    gl.viewport(0, 0, cvs.width, cvs.height); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+    try { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, v); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); } catch (e) {}
+  }
+  function loop() { if (cur) draw(cur); if (cur && !cur.paused && !cur.ended) raf = requestAnimationFrame(loop); }
+  function finish() { var f = after; after = null; if (f) f(); }
+  function video(name) {
+    if (vids[name]) return vids[name];
+    var v = document.createElement('video'); v.src = /\.mp4$/.test(name) ? name : 'assets/cubit/hole-peek-' + name + '-' + CUBIT_COLOUR + '-packed.mp4'; v.muted = true; v.playsInline = true; v.preload = 'auto';
+    v.addEventListener('ended', function () { draw(v); finish(); });
+    return (vids[name] = v);
+  }
+  return {
+    load: video,
+    // Plays one peek from the start; done runs when he has sunk back (or right away if the browser refuses to play).
+    play: function (name, done) {
+      cur = video(name); after = done || null; cur.currentTime = 0;
+      cur.play().then(function () { cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); }).catch(finish);
+    },
+    stop: function () { after = null; if (cur) cur.pause(); cancelAnimationFrame(raf); }
+  };
+}
+
+// The Cubit section: the rip tears open the first time it scrolls into view, then Cubit peeks, a different mood each
+// time, coming back every few seconds while the section is on screen. With reduced motion the rip is open and he is a
+// still picture.
+(function () {
+  var cvs = document.getElementById('rip-peek'); if (!cvs) return;
+  var rip = cvs.parentNode;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    cubitFit(rip, cvs); cvs.outerHTML = '<img class="rip-peek" style="' + cvs.getAttribute('style') + '" src="assets/cubit/hole-peek-calm-' + CUBIT_COLOUR + '-still.png" alt="">'; return;
+  }
+  var cubit = cubitIn(rip, cvs); if (!cubit) return;
+  rip.classList.add('shut');
+  var mood = Math.floor(Math.random() * 3), seen = false, open = false, again = 0, playing = false;
+  function next() {
+    clearTimeout(again); playing = true;
+    cubit.play(CUBIT_MOODS[mood], function () { playing = false; if (seen) again = setTimeout(next, 3500); });
+    mood = (mood + 1) % CUBIT_MOODS.length; cubit.load(CUBIT_MOODS[mood]);
+  }
+  cubit.load(CUBIT_MOODS[mood]);
+  new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      seen = e.isIntersecting;
+      if (!seen) { clearTimeout(again); return; }
+      if (!open) { open = true; rip.classList.remove('shut'); rip.classList.add('tear'); again = setTimeout(next, 750); }
+      else if (!playing) next();
+    });
+  }, { threshold: 0.35 }).observe(rip);
+})();
+
+// Cubit at the edge of the screen: at a random moment 4 to 10 seconds in, and again about 30 seconds after each visit, wherever you are on the page,
+// he leans in from the left or right edge at a random height (the trailer's peek), asks to be taken home and leans back
+// out when the clip ends, about 12 seconds later. A click on him or his cloud goes to the Cubit section.
+// He waits while the rip in the Cubit section is on screen, stops coming once you have seen it or clicked him, and
+// skips the visits with reduced motion.
+(function () {
+  var box = document.getElementById('edge-peek'); if (!box) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // Once you have seen the rip or clicked him, this browser remembers and he stays home.
+  try { if (localStorage.getItem('cubit-home')) return; } catch (e) {}
+  function home_() { stopped = true; try { localStorage.setItem('cubit-home', '1'); } catch (e) {} }
+  var SRC = 'assets/cubit/side-peek-blue-packed.mp4';
+  var cvs = box.querySelector('canvas'), due = false, stopped = false, showing = false, cubit = null, inView = [], timers = [];
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { var i = inView.indexOf(e.target); if (e.isIntersecting) { if (i < 0) inView.push(e.target); } else if (i >= 0) inView.splice(i, 1); });
+    if (inView.length) { home_(); close(); } else go();
+  });
+  // Only one Cubit at a time: he stays away while the rip is on screen.
+  ['#cubit .rip'].forEach(function (q) { var el = document.querySelector(q); if (el) io.observe(el); });
+  timers.push(setTimeout(function () { due = true; go(); }, 4000 + Math.random() * 6000));
+  function go() {
+    if (!due || stopped || showing || inView.length) return;
+    due = false;
+    var bub = box.querySelector('.ep-bubble');
+    bub.querySelectorAll('.ep-cloud,.ep-dot').forEach(function (el) { el.remove(); });
+    box.classList.remove('right', 'gone', 'talk');
+    if (Math.random() < 0.5) box.classList.add('right');
+    // Below the Cubit section he points the other way.
+    if (document.getElementById('cubit').getBoundingClientRect().bottom < 0) box.querySelector('b').textContent = "Pssst, I'm further up!";
+    box.hidden = false;
+    cubit = cubit || cubitIn(null, cvs); if (!cubit) { box.hidden = true; stopped = true; return; }
+    var cl = cubitCloud(bub.offsetWidth, bub.offsetHeight);
+    // The cloud sits above him, so his head has to be low enough to leave it room: pick where his frame's top
+    // goes, then move the box until it is there.
+    var hh = cvs.offsetHeight, hi = innerHeight - hh - 8, lo = Math.min(hi, cl.h + 54 - hh * 0.09);
+    var want = lo + Math.random() * Math.max(0, hi - lo);
+    box.style.top = '50%'; box.style.top = (innerHeight / 2 + want - cvs.getBoundingClientRect().top).toFixed(0) + 'px';
+    bub.insertAdjacentHTML('afterbegin', cl.svg);
+    bub.firstChild.style.left = -cl.left + 'px'; bub.firstChild.style.top = -cl.up + 'px';
+    // The top of his head in the clip is about 27% across the frame from the edge and 9% down.
+    var right = box.classList.contains('right'), cr = cvs.getBoundingClientRect(), br = box.getBoundingClientRect(), m = 8;
+    var ax = right ? cr.right - cr.width * 0.27 : cr.left + cr.width * 0.27, ay = cr.top + cr.height * 0.09;
+    // The cloud floats above him, leaning a little into the page, kept on screen.
+    var cx = Math.max(m, Math.min(innerWidth - m - cl.w, ax + (right ? -0.7 : -0.3) * cl.w));
+    var cy = Math.max(m, ay - 46 - cl.h);
+    bub.style.left = (cx + cl.left - br.left).toFixed(0) + 'px'; bub.style.right = 'auto';
+    bub.style.top = (cy + cl.up - br.top).toFixed(0) + 'px';
+    // Two dots trail from the cloud's underside down onto his head.
+    var px = Math.max(cx + cl.w * 0.25, Math.min(cx + cl.w * 0.75, ax)), py = cy + cl.h - 14;
+    [[0.42, 10], [0.8, 6.5]].forEach(function (d) {
+      var dot = document.createElement('i'); dot.className = 'ep-dot';
+      dot.style.width = dot.style.height = d[1] * 2 + 'px';
+      dot.style.left = (px + (ax - px) * d[0] - d[1] - cx - cl.left).toFixed(0) + 'px';
+      dot.style.top = (py + (ay - py) * d[0] - d[1] - cy - cl.up).toFixed(0) + 'px';
+      bub.appendChild(dot);
+    });
+    bub.style.transformOrigin = (ax - cx - cl.left).toFixed(0) + 'px ' + (ay - cy - cl.up).toFixed(0) + 'px';
+    showing = true;
+    cubit.play(SRC, close);
+    // He is in by about a second; the bubble goes before he leans back out.
+    timers.push(setTimeout(function () { if (showing) box.classList.add('talk'); }, 1000));
+    timers.push(setTimeout(function () { box.classList.remove('talk'); }, 10600));
+  }
+  function close() {
+    if (!showing) return; showing = false;
+    timers.forEach(clearTimeout); box.classList.remove('talk'); box.classList.add('gone');
+    setTimeout(function () { if (cubit) cubit.stop(); box.hidden = true; }, 300);
+    if (!stopped) timers.push(setTimeout(function () { due = true; go(); }, 30000));
+  }
+  function home(e) { e.preventDefault(); home_(); close(); document.getElementById('cubit').scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+  box.querySelector('.ep-go').addEventListener('click', home);
+  box.querySelector('.ep-bubble').addEventListener('click', home);
+})();
+
+</script>
+</body>
+</html>

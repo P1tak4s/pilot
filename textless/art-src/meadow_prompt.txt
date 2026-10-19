@@ -1,0 +1,4 @@
+Beautiful 16-bit pixel art landscape, wide panoramic, in the style of a calm anime film background (Makoto Shinkai / Ghibli mood) rendered as crisp pixel art with clean hard pixel edges and a limited palette.
+Scene: a gentle grassy hill meadow in early afternoon. The lower 30% is lush green grass with visible blade clusters, a few tiny white and yellow wildflowers. Above it a deep saturated blue sky with huge soft towering cumulus clouds, bright white tops and lavender-blue shaded undersides, lit from the upper left.
+The centre of the grass area is open and flat (a character will be placed lying there later). No characters, no animals, no people, no buildings, no text, no logo, no border, no frame.
+Pixel art: visible square pixels, dithering in the sky gradient, no blur, no photographic detail, no anti-aliased soft edges.

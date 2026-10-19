@@ -1,0 +1,25 @@
+name = "effortless-report"
+main = "worker.js"
+compatibility_date = "2024-09-23"
+workers_dev = true
+
+[vars]
+REPO = "HeyCubit/effortless"
+# Only the site. `wrangler dev` adds the local preview server (http://127.0.0.1:4317) through .dev.vars.
+ALLOWED_ORIGINS = "https://heycubit.github.io"
+
+# GITHUB_TOKEN is a secret, never written here: a fine-grained token for HeyCubit with
+# Issues: Read and write on HeyCubit/effortless only. Set it with
+#   npx wrangler secret put GITHUB_TOKEN
+# For `wrangler dev`, put GITHUB_TOKEN (and GITHUB_API to point at a mock) in .dev.vars, which is ignored.
+
+# Rate limits. namespace_id is an account-unique number this file picks; Cubit's relay uses 1101-1103.
+[[ratelimits]]
+name = "PER_IP"
+namespace_id = "1201"
+simple = { limit = 3, period = 60 }
+
+[[ratelimits]]
+name = "ALL"
+namespace_id = "1202"
+simple = { limit = 20, period = 60 }

@@ -1,0 +1,261 @@
+[
+ {
+  "tag": "hb-opus-high-s1-off-1",
+  "model": "opus",
+  "eff": "high",
+  "task": "s1",
+  "cond": "off",
+  "rep": "1",
+  "ok": true,
+  "why": "",
+  "helpers": [],
+  "cost": 0.29938719999999996,
+  "turns": 1,
+  "ms": 7028,
+  "sub": "opus-5-5 $0.299"
+ },
+ {
+  "tag": "hb-opus-high-s1-off-2",
+  "model": "opus",
+  "eff": "high",
+  "task": "s1",
+  "cond": "off",
+  "rep": "2",
+  "ok": true,
+  "why": "",
+  "helpers": [],
+  "cost": 0.2453312,
+  "turns": 3,
+  "ms": 23734,
+  "sub": "opus-5-5 $0.245"
+ },
+ {
+  "tag": "hb-opus-high-s1-on-1",
+  "model": "opus",
+  "eff": "high",
+  "task": "s1",
+  "cond": "on",
+  "rep": "1",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "low",
+   "low"
+  ],
+  "cost": 0.18971760000000001,
+  "turns": 3,
+  "ms": 47169,
+  "sub": "opus-5-5 $0.190"
+ },
+ {
+  "tag": "hb-opus-high-s1-on-2",
+  "model": "opus",
+  "eff": "high",
+  "task": "s1",
+  "cond": "on",
+  "rep": "2",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "low"
+  ],
+  "cost": 0.21444960000000002,
+  "turns": 4,
+  "ms": 29105,
+  "sub": "opus-5-5 $0.214"
+ },
+ {
+  "tag": "hb-opus-high-s2-off-1",
+  "model": "opus",
+  "eff": "high",
+  "task": "s2",
+  "cond": "off",
+  "rep": "1",
+  "ok": true,
+  "why": "",
+  "helpers": [],
+  "cost": 0.28167240000000004,
+  "turns": 2,
+  "ms": 27008,
+  "sub": "opus-5-5 $0.282"
+ },
+ {
+  "tag": "hb-opus-high-s2-off-2",
+  "model": "opus",
+  "eff": "high",
+  "task": "s2",
+  "cond": "off",
+  "rep": "2",
+  "ok": true,
+  "why": "",
+  "helpers": [],
+  "cost": 0.1664258,
+  "turns": 2,
+  "ms": 23488,
+  "sub": "opus-5-5 $0.166"
+ },
+ {
+  "tag": "hb-opus-high-s2-on-1",
+  "model": "opus",
+  "eff": "high",
+  "task": "s2",
+  "cond": "on",
+  "rep": "1",
+  "ok": false,
+  "why": "truth 185",
+  "helpers": [
+   "low"
+  ],
+  "cost": 0.157514,
+  "turns": 2,
+  "ms": 14742,
+  "sub": "opus-5-5 $0.158"
+ },
+ {
+  "tag": "hb-opus-high-s2-on-2",
+  "model": "opus",
+  "eff": "high",
+  "task": "s2",
+  "cond": "on",
+  "rep": "2",
+  "ok": false,
+  "why": "truth 185",
+  "helpers": [
+   "low"
+  ],
+  "cost": 0.1633222,
+  "turns": 2,
+  "ms": 17487,
+  "sub": "opus-5-5 $0.163"
+ },
+ {
+  "tag": "hb-opus-high-s3-off-1",
+  "model": "opus",
+  "eff": "high",
+  "task": "s3",
+  "cond": "off",
+  "rep": "1",
+  "ok": true,
+  "why": "",
+  "helpers": [],
+  "cost": 1.8026099999999998,
+  "turns": 2,
+  "ms": 28197,
+  "sub": "opus-5-5 $1.803"
+ },
+ {
+  "tag": "hb-opus-high-s3-off-2",
+  "model": "opus",
+  "eff": "high",
+  "task": "s3",
+  "cond": "off",
+  "rep": "2",
+  "ok": true,
+  "why": "",
+  "helpers": [],
+  "cost": 1.3961638,
+  "turns": 1,
+  "ms": 25446,
+  "sub": "opus-5-5 $1.396"
+ },
+ {
+  "tag": "hb-opus-high-s3-on-1",
+  "model": "opus",
+  "eff": "high",
+  "task": "s3",
+  "cond": "on",
+  "rep": "1",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "high",
+   "high"
+  ],
+  "cost": 1.3411179999999996,
+  "turns": 1,
+  "ms": 29762,
+  "sub": "opus-5-5 $1.341"
+ },
+ {
+  "tag": "hb-opus-high-s3-on-2",
+  "model": "opus",
+  "eff": "high",
+  "task": "s3",
+  "cond": "on",
+  "rep": "2",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "high",
+   "high"
+  ],
+  "cost": 1.6997394000000006,
+  "turns": 2,
+  "ms": 26130,
+  "sub": "opus-5-5 $1.700"
+ },
+ {
+  "tag": "hb-opus-high-s4-off-1",
+  "model": "opus",
+  "eff": "high",
+  "task": "s4",
+  "cond": "off",
+  "rep": "1",
+  "ok": true,
+  "why": "",
+  "helpers": [],
+  "cost": 0.1714428,
+  "turns": 2,
+  "ms": 22907,
+  "sub": "opus-5-5 $0.171"
+ },
+ {
+  "tag": "hb-opus-high-s4-off-2",
+  "model": "opus",
+  "eff": "high",
+  "task": "s4",
+  "cond": "off",
+  "rep": "2",
+  "ok": true,
+  "why": "",
+  "helpers": [],
+  "cost": 0.1749716,
+  "turns": 2,
+  "ms": 29065,
+  "sub": "opus-5-5 $0.175"
+ },
+ {
+  "tag": "hb-opus-high-s4-on-1",
+  "model": "opus",
+  "eff": "high",
+  "task": "s4",
+  "cond": "on",
+  "rep": "1",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "low"
+  ],
+  "cost": 0.15139699999999998,
+  "turns": 2,
+  "ms": 15049,
+  "sub": "opus-5-5 $0.151"
+ },
+ {
+  "tag": "hb-opus-high-s4-on-2",
+  "model": "opus",
+  "eff": "high",
+  "task": "s4",
+  "cond": "on",
+  "rep": "2",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "low"
+  ],
+  "cost": 0.17754919999999996,
+  "turns": 2,
+  "ms": 20764,
+  "sub": "opus-5-5 $0.178"
+ }
+]

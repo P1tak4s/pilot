@@ -1,0 +1,53 @@
+# textless marketplace Worker. Nothing is deployed until Isac says so; `npm run dev` runs it all locally.
+name = "textless-market"
+main = "src/index.mjs"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+[vars]
+# This deployment is the public marketplace; /admin lives on textless-market-admin (wrangler.admin.toml).
+ROLE = "public"
+# The site. `wrangler dev` adds the local preview (http://127.0.0.1:4318) through .dev.vars.
+ALLOWED_ORIGINS = "https://heycubit.github.io,https://textless-preview.isac-ehrstedt.workers.dev"
+# ADMIN_EMAILS (who may moderate) is a secret too, so no address sits in this file.
+
+# Secrets, never written here. Set each with `npx wrangler secret put NAME`:
+#   ANTHROPIC_API_KEY   the AI look (Claude Haiku)
+#   TURNSTILE_SECRET    the "are you human" check
+#   IP_SALT             any long random string; addresses are only kept hashed with it
+#   ADMIN_EMAILS        comma-separated emails allowed into /admin
+# For `wrangler dev`, put them in .dev.vars (ignored by git), with AI_FAKE=pass and DEV_ADMIN=1.
+
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "textless-scenes"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "textless-market"
+database_id = "3541ea7c-5729-40f5-a92c-b4bde83f1a07"
+
+# Burst limit on uploads per person; the hourly limit is counted in D1. namespace_id is account-unique: Cubit uses
+# 1101-1103, the effortless report form 1201-1202.
+[[ratelimits]]
+name = "UPLOAD_BURST"
+namespace_id = "1301"
+simple = { limit = 2, period = 60 }
+
+# Saves from the settings page, per person.
+[[ratelimits]]
+name = "SETTINGS_BURST"
+namespace_id = "1302"
+simple = { limit = 20, period = 60 }
+
+# Stars, per person.
+[[ratelimits]]
+name = "STAR_BURST"
+namespace_id = "1303"
+simple = { limit = 30, period = 60 }
+
+# Optional: email Isac when a scene gets hidden. Needs Cloudflare Email Routing with NOTIFY_TO verified.
+# [[send_email]]
+# name = "NOTIFY"
+# destination_address = "<your address, verified in Email Routing>"

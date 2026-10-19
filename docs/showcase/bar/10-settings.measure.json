@@ -1,0 +1,146 @@
+{
+ "zoom": 1.5774409656148782,
+ "width": 768,
+ "params": {
+  "percent": 22,
+  "cacheMinutes": 59,
+  "effort": "medium",
+  "reason": "a small fix in one file",
+  "judged": true,
+  "judging": false,
+  "working": false,
+  "auto": true,
+  "bodyColumns": 100,
+  "press": [
+   "dash-settings"
+  ],
+  "command": "",
+  "trace": 0,
+  "options": {}
+ },
+ "glow": false,
+ "renderer": "c95e4d2cf-oXAujp09.js",
+ "band": {
+  "x": 0,
+  "y": 0,
+  "w": 752,
+  "h": 121.5
+ },
+ "site": {
+  "x": -8,
+  "y": -10.5,
+  "w": 768,
+  "h": 142.5
+ },
+ "button:settings-save": {
+  "x": 659.23,
+  "y": 14.75,
+  "w": 38.3,
+  "h": 20
+ },
+ "button:settings-close": {
+  "x": 713.36,
+  "y": 14.75,
+  "w": 21.81,
+  "h": 20
+ },
+ "button:settings-card-effort": {
+  "x": 17.83,
+  "y": 61,
+  "w": 165.38,
+  "h": 20
+ },
+ "button:settings-card-effort-2": {
+  "x": 17.83,
+  "y": 88,
+  "w": 165.38,
+  "h": 20
+ },
+ "button:settings-card-judge": {
+  "x": 199.39,
+  "y": 61,
+  "w": 165.38,
+  "h": 20
+ },
+ "button:settings-card-judge-2": {
+  "x": 199.39,
+  "y": 88,
+  "w": 165.38,
+  "h": 20
+ },
+ "button:settings-card-handoff": {
+  "x": 380.95,
+  "y": 61,
+  "w": 165.38,
+  "h": 20
+ },
+ "button:settings-card-handoff-2": {
+  "x": 380.95,
+  "y": 88,
+  "w": 165.38,
+  "h": 20
+ },
+ "button:settings-card-show": {
+  "x": 562.52,
+  "y": 61,
+  "w": 165.38,
+  "h": 20
+ },
+ "button:settings-card-show-2": {
+  "x": 562.52,
+  "y": 88,
+  "w": 165.38,
+  "h": 20
+ },
+ "img:": {
+  "x": 1,
+  "y": -59.25,
+  "w": 750,
+  "h": 240
+ },
+ "img:effortless mark": {
+  "x": 452.67,
+  "y": -46.5,
+  "w": 140,
+  "h": 140
+ },
+ "img:rule": {
+  "x": 1,
+  "y": 47.5,
+  "w": 750,
+  "h": 1
+ },
+ "img:effortless": {
+  "x": 16.83,
+  "y": 10.75,
+  "w": 92,
+  "h": 28
+ },
+ "img:Effort": {
+  "x": 25.73,
+  "y": 68,
+  "w": 14,
+  "h": 14
+ },
+ "img:Judge": {
+  "x": 207.3,
+  "y": 68,
+  "w": 14,
+  "h": 14
+ },
+ "img:Handoff": {
+  "x": 388.86,
+  "y": 68,
+  "w": 14,
+  "h": 14
+ },
+ "img:Show": {
+  "x": 570.42,
+  "y": 68,
+  "w": 14,
+  "h": 14
+ },
+ "buttonFont": "400 12px/17px anthropic-sans, system-ui, \"Segoe UI\", Roboto, Helvetica, Arial, \"PingFang SC\", \"PingFang TC\", \"Hiragino Sans\", \"Apple SD Gothic Neo\", \"Kohinoor Devanagari\", \"Kohinoor Bangla\", \"Kohinoor Telugu\", \"Tamil Sangam MN\", \"Kohinoor Gujarati\", \"Malayalam Sangam MN\", \"Nirmala UI\", \"Noto Sans Devanagari UI\", \"Noto Sans Devanagari\", \"Noto Sans Bengali UI\", \"Noto Sans Bengali\", \"Noto Sans Telugu UI\", \"Noto Sans Telugu\", \"Noto Sans Tamil UI\", \"Noto Sans Tamil\", \"Noto Sans Gujarati UI\", \"Noto Sans Gujarati\", \"Noto Sans Kannada UI\", \"Noto Sans Kannada\", \"Noto Sans Malayalam UI\", \"Noto Sans Malayalam\", Thonburi, \"Leelawadee UI\", \"Noto Sans Thai UI\", \"Noto Sans Thai\", Kefa, Ebrima, \"Noto Sans Ethiopic\", \"Abyssinica SIL\", sans-serif, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, \"PingFang SC\", \"PingFang TC\", \"Hiragino Sans\", \"Apple SD Gothic Neo\", sans-serif",
+ "bandBorder": "1px 10px",
+ "devicePixelRatio": 1.5774409770965576
+}

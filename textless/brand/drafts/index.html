@@ -1,0 +1,4 @@
+<!doctype html><meta charset="utf-8"><title>logo drafts</title>
+<style>body{margin:0;display:flex;font:12px system-ui}.p{flex:1;padding:28px;display:flex;flex-direction:column;gap:22px}.d{background:#1f1e1d;color:#aaa}.l{background:#faf9f5;color:#666}.r{display:flex;gap:28px;align-items:end}</style>
+<div class="p d" id="d"></div><div class="p l" id="l"></div>
+<script>for(const id of['d','l']){document.getElementById(id).innerHTML=`<img src="wordmark.svg" style="width:384px"><div class="r">${['a-bubble','b-peek','c-strike','d-tile'].map(n=>`<div><img src="icon-${n}.svg" style="width:96px"><br>${n}<br><img src="icon-${n}-32.png"> <img src="icon-${n}-16.png"></div>`).join('')}</div>`}</script>

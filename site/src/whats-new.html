@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What's new · effortless</title>
+<meta name="description" content="What changed in each release of effortless, the Claude Code mod.">
+<link rel="canonical" href="https://heycubit.github.io/effortless/whats-new/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="effortless">
+<meta property="og:title" content="What's new in effortless">
+<meta property="og:description" content="Every release of the effortless Claude Code plugin, newest first.">
+<meta property="og:url" content="https://heycubit.github.io/effortless/whats-new/">
+<meta property="og:image" content="https://heycubit.github.io/effortless/og.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="effortless: picks the reasoning effort for every prompt in Claude Code">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What's new in effortless">
+<meta name="twitter:description" content="Every release of the effortless Claude Code plugin, newest first.">
+<meta name="twitter:image" content="https://heycubit.github.io/effortless/og.png">
+<meta name="theme-color" content="#121214">
+<link rel="icon" href="__ICON__">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500&display=swap" rel="stylesheet">
+<style>
+/* What's new: a plain list, newest first, from public.json. */
+:root{--page:#121214;--text:#ececef;--muted:#9a9aa4;--dim:#82828c;--accent:#a79cf7;--sans:Inter,"Segoe UI",system-ui,-apple-system,sans-serif;--display:Outfit,Inter,"Segoe UI",system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--text);font:15px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.top{max-width:760px;margin:0 auto;padding:22px 24px 0;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.name{display:inline-flex;align-items:center;gap:10px;font:500 23px var(--display);letter-spacing:-.01em;text-decoration:none}
+.name .spark{width:44px;height:44px;margin:-8px -3px -8px -8px}
+.back{color:var(--muted);text-decoration:none;font-size:15.5px}
+.back:hover{color:var(--text)}
+main{max-width:760px;margin:0 auto;padding:72px 24px 96px}
+h1{margin:0;font:500 clamp(30px,4vw,42px)/1.1 var(--display);letter-spacing:-.02em;color:#f4f2ff}
+/* Each release is a bar, drawn like the mod's dashboard: the dark band, the grey art on the right, the mark, then the
+   version in the effort word's place, the note, and the date. The newest version is violet. */
+.rel{list-style:none;margin:32px 0 0;padding:0;display:grid;gap:10px}
+.rel li{position:relative;overflow:hidden;display:grid;grid-template-columns:20px 4.6em minmax(0,1fr) auto;align-items:center;column-gap:14px;row-gap:8px;min-height:52px;padding:10px 16px 10px 14px;border-radius:10px;background:#141416;border:1px solid #2a2a2f;color:#d4d4d8;font-size:15px;line-height:1.4}
+.rel li:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(30% 140% at 89% 50%,#9a9aa21d,transparent),linear-gradient(90deg,transparent 43%,#9a9aa210 62%,#9a9aa223 85%,#9a9aa231),repeating-linear-gradient(110deg,transparent 0 46px,#ffffff09 46px 49px,transparent 49px 88px),radial-gradient(#ffffff12 .5px,transparent .7px) 0 0/4px 4px;-webkit-mask-image:linear-gradient(90deg,transparent 40%,#000 75%);mask-image:linear-gradient(90deg,transparent 40%,#000 75%)}
+.rel li>*{position:relative}
+.rel .spark{width:20px;height:20px}
+.rel .v{font-weight:650;font-variant-numeric:tabular-nums}
+.rel li:first-child .v{color:#9b7bff}
+.rel .n{min-width:0}
+.rel .d{grid-column:3 / -1;display:grid;gap:6px;margin:0 0 4px;color:#a9a9b3;font-size:14px;line-height:1.5}
+.rel .d p{position:relative;margin:0;padding-left:16px}
+.rel .d p:before{content:"";position:absolute;left:3px;top:.62em;width:5px;height:5px;border-radius:50%;background:#6e6a85}
+.rel time{color:#8b8b93;font-size:13.5px;font-variant-numeric:tabular-nums}
+@media (max-width:560px){.rel li{grid-template-columns:20px minmax(0,1fr) auto;row-gap:6px}.rel .v{grid-column:2}.rel .n{grid-column:1 / -1;padding-left:34px}.rel time{grid-column:3;grid-row:1}.rel .v{grid-row:1}.rel .d{grid-column:1 / -1;padding-left:34px}}
+.more{margin-top:6px}
+.more summary{cursor:pointer;color:var(--muted);font-size:14px}
+.more summary:hover{color:var(--text)}
+.more .rel{margin-top:10px}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+@media (max-width:560px){.top{padding:16px 16px 0}main{padding:48px 16px 72px}}
+/* Touch screens: links and buttons are at least 44 px to hit. */
+@media (pointer:coarse){.back{display:inline-flex;align-items:center;min-height:44px}.name{min-height:44px}.more summary{padding:11px 0}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="name" href="../">__SPARK__effortless</a>
+  <a class="back" href="../">Back to the site</a>
+</header>
+<main>
+  <h1>What's new</h1>
+  __WHATSNEW__
+</main>
+</body>
+</html>

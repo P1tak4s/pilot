@@ -1,0 +1,142 @@
+[
+ {
+  "tag": "hb-opus-high-s1-on-1",
+  "model": "opus",
+  "eff": "high",
+  "task": "s1",
+  "cond": "on",
+  "rep": "1",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "medium",
+   "medium"
+  ],
+  "cost": 0.41525559999999995,
+  "turns": 1,
+  "ms": 8770,
+  "sub": "opus-5-5 $0.415"
+ },
+ {
+  "tag": "hb-opus-high-s1-on-2",
+  "model": "opus",
+  "eff": "high",
+  "task": "s1",
+  "cond": "on",
+  "rep": "2",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "medium",
+   "medium"
+  ],
+  "cost": 0.29866439999999994,
+  "turns": 3,
+  "ms": 34069,
+  "sub": "opus-5-5 $0.299"
+ },
+ {
+  "tag": "hb-opus-high-s2-on-1",
+  "model": "opus",
+  "eff": "high",
+  "task": "s2",
+  "cond": "on",
+  "rep": "1",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "medium"
+  ],
+  "cost": 0.33275579999999993,
+  "turns": 2,
+  "ms": 28712,
+  "sub": "opus-5-5 $0.333"
+ },
+ {
+  "tag": "hb-opus-high-s2-on-2",
+  "model": "opus",
+  "eff": "high",
+  "task": "s2",
+  "cond": "on",
+  "rep": "2",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "medium"
+  ],
+  "cost": 0.1863918,
+  "turns": 2,
+  "ms": 27232,
+  "sub": "opus-5-5 $0.186"
+ },
+ {
+  "tag": "hb-opus-high-s3-on-1",
+  "model": "opus",
+  "eff": "high",
+  "task": "s3",
+  "cond": "on",
+  "rep": "1",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "medium",
+   "medium"
+  ],
+  "cost": 0.9720788,
+  "turns": 2,
+  "ms": 29646,
+  "sub": "opus-5-5 $0.972"
+ },
+ {
+  "tag": "hb-opus-high-s3-on-2",
+  "model": "opus",
+  "eff": "high",
+  "task": "s3",
+  "cond": "on",
+  "rep": "2",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "high",
+   "high"
+  ],
+  "cost": 1.5570412000000002,
+  "turns": 2,
+  "ms": 31857,
+  "sub": "opus-5-5 $1.557"
+ },
+ {
+  "tag": "hb-opus-high-s4-on-1",
+  "model": "opus",
+  "eff": "high",
+  "task": "s4",
+  "cond": "on",
+  "rep": "1",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "medium"
+  ],
+  "cost": 0.2996646,
+  "turns": 2,
+  "ms": 21921,
+  "sub": "opus-5-5 $0.300"
+ },
+ {
+  "tag": "hb-opus-high-s4-on-2",
+  "model": "opus",
+  "eff": "high",
+  "task": "s4",
+  "cond": "on",
+  "rep": "2",
+  "ok": true,
+  "why": "",
+  "helpers": [
+   "medium"
+  ],
+  "cost": 0.17362940000000002,
+  "turns": 2,
+  "ms": 19608,
+  "sub": "opus-5-5 $0.174"
+ }
+]

@@ -1,0 +1,38 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>textless scenes</title>
+<style>
+  body { margin: 0; padding: 16px; font: 13px system-ui; background: #888; color: #111 }
+  .scene { margin-bottom: 24px }
+  .row { display: flex; gap: 0 }
+  .pane { padding: 20px }
+  .dark { background: #1f1e1d } .light { background: #faf9f5 }
+  .pane > div { width: 560px; height: 350px }
+  h2 { margin: 4px 0; font-size: 14px }
+  .big .pane { padding: 0 } .big .pane > div { width: 768px; height: 480px } .big .light { display: none } svg { width: 100%; height: 100% }
+</style>
+<p>Scenes: <span id="list"></span> · <label>t = <input id="t" type="number" step="0.05" value="" placeholder="live"> s</label> <button id="go">freeze all at t</button> <button id="live">play</button></p>
+<div id="out"></div>
+<script>
+// ?s=coffee,laptop limits the page to those scenes. Each SVG is inlined so its SMIL clock can be frozen at a time.
+const names = (new URLSearchParams(location.search).get('s') || 'meadow,coffee,laptop,campfire,rainy,fishing').split(',')
+const out = document.getElementById('out')
+document.getElementById('list').textContent = names.join(', ')
+async function load() {
+  for (const n of names) {
+    const r = await fetch(`../plugin/hooks/scenes/${n}.svg?${Date.now()}`)
+    if (!r.ok) continue
+    const svg = await r.text()
+    const el = document.createElement('div')
+    el.className = 'scene'
+    el.innerHTML = `<h2>${n} (${svg.length} chars)</h2><div class="row"><div class="pane dark"><div>${svg}</div></div><div class="pane light"><div>${svg.replace(/id="fade"/g, 'id="fade2"').replace(/url\(#fade\)/g, 'url(#fade2)')}</div></div></div>`
+    out.appendChild(el)
+  }
+}
+function svgs() { return [...document.querySelectorAll('svg')] }
+document.getElementById('go').onclick = () => { const t = +document.getElementById('t').value || 0; for (const s of svgs()) { s.pauseAnimations(); s.setCurrentTime(t) } }
+document.getElementById('live').onclick = () => { for (const s of svgs()) s.unpauseAnimations() }
+window.freeze = t => { for (const s of svgs()) { s.pauseAnimations(); s.setCurrentTime(t) } }
+if (new URLSearchParams(location.search).get('big')) document.body.classList.add('big')
+load()
+</script>

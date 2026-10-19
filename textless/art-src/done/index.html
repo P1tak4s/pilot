@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>done cards</title>
+<style>
+  body { margin: 0; font: 13px ui-monospace, monospace; display: flex }
+  .pane { flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 22px }
+  .dark { background: #1f1e1d; color: #8a8580 } .light { background: #faf9f5; color: #77726c }
+  .row { display: flex; align-items: center; gap: 16px }
+  h3 { margin: 0; font: 12px system-ui; opacity: .7 }
+</style>
+<div class="pane dark" id="d"></div><div class="pane light" id="l"></div>
+<script>
+for (const id of ['d', 'l']) {
+  const el = document.getElementById(id)
+  for (const v of ['a', 'b', 'c']) {
+    el.insertAdjacentHTML('beforeend', `<h3>${v.toUpperCase()}</h3>` + ['done', 'ask'].map(k =>
+      `<div class="row"><img src="${v}-${k}.svg"><span>12 steps · 1m 40s</span><span>show steps</span></div>`).join(''))
+  }
+}
+</script>

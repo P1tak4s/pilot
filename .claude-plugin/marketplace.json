@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "pilot",
+  "description": "pilot: auto effort, limit guard, Haiku for the legwork, one quiet line above the prompt.",
+  "owner": {
+    "name": "P1tak4s",
+    "url": "https://github.com/P1tak4s"
+  },
+  "plugins": [
+    {
+      "name": "pilot",
+      "description": "pilot: auto effort, limit guard, Haiku for the legwork, one quiet line above the prompt.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

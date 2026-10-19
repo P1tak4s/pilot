@@ -1,0 +1,5 @@
+{
+  "name": "heycubit",
+  "owner": { "name": "Isac Ehrstedt" },
+  "plugins": [{ "name": "textless", "source": "./plugin", "description": "While Claude works, the chat shows one pixel-art card instead of every step." }]
+}

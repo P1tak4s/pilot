@@ -1,0 +1,542 @@
+[
+ {
+  "id": "e01",
+  "tier": "easy",
+  "route": [
+   "haiku",
+   "low"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both are correct, but A also covers the useful edge case that the stash is kept on a merge conflict and must be dropped manually, while B's comparison to `git stash apply` is accurate but less practically important.",
+  "baseCost": 0.007232000000000001,
+  "routedCost": 0.001282,
+  "baseMs": 3104,
+  "routedMs": 2861,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-haiku-4-5-20251001"
+ },
+ {
+  "id": "e02",
+  "tier": "easy",
+  "route": [
+   "haiku",
+   "low"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both conversions are correct, but B also points out that function declarations are hoisted and const arrow functions are not, a real behavioral difference that A omits, though A's answer is fully correct and sufficient on its own.",
+  "baseCost": 0.007568,
+  "routedCost": 0.0018499999999999999,
+  "baseMs": 3164,
+  "routedMs": 4973,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-haiku-4-5-20251001"
+ },
+ {
+  "id": "e03",
+  "tier": "easy",
+  "route": [
+   "haiku",
+   "low"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "A is accurate throughout and adds useful edge cases (NaN, reference equality, the `== null` idiom), while B gets the core distinction right but gives wrong coercion explanations (the empty string becomes 0, not false, and `null == undefined` is a special rule rather than mutual coercion) and an unsupported performance claim.",
+  "baseCost": 0.018619999999999998,
+  "routedCost": 0.0030820000000000005,
+  "baseMs": 7704,
+  "routedMs": 7585,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-haiku-4-5-20251001"
+ },
+ {
+  "id": "e04",
+  "tier": "easy",
+  "route": [
+   "haiku",
+   "low"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "B anchors its main regex so it matches only a standalone year and offers a word-boundary variant for searching text, while A leads with an unanchored pattern and wrongly calls all three versions 'equally effective' even though it notes the unanchored one matches inside longer numbers like '21999'; A's word-boundary version still gives a usable answer.",
+  "baseCost": 0.012436,
+  "routedCost": 0.003902,
+  "baseMs": 14813,
+  "routedMs": 8037,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-haiku-4-5-20251001"
+ },
+ {
+  "id": "e05",
+  "tier": "easy",
+  "route": [
+   "haiku",
+   "low"
+  ],
+  "graded": true,
+  "winner": "tie",
+  "ok": true,
+  "reason": "Both answers produce the identical, correct renamed code with all three occurrences replaced, and B's extra enumeration of changes adds no meaningful value for such a trivial task.",
+  "baseCost": 0.00592,
+  "routedCost": 0.0017589999999999997,
+  "baseMs": 2363,
+  "routedMs": 4035,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-haiku-4-5-20251001"
+ },
+ {
+  "id": "e06",
+  "tier": "easy",
+  "route": [
+   "haiku",
+   "low"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both correctly identify 429 and mention Retry-After, but A adds the defining RFC 6585, both Retry-After formats, and a concrete example, while B is still fully correct and sufficient on its own.",
+  "baseCost": 0.007804,
+  "routedCost": 0.001539,
+  "baseMs": 3678,
+  "routedMs": 3287,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-haiku-4-5-20251001"
+ },
+ {
+  "id": "e07",
+  "tier": "easy",
+  "route": [
+   "haiku",
+   "low"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": false,
+  "reason": "B uses $_.FullName and correct find -exec syntax and shows per-file plus total counts, while A's recommended one-liner passes $_ directly to Get-Content, which in Windows PowerShell 5.1 can resolve to the bare filename for files in subfolders, causing errors and an undercounted total; its xargs variant also breaks on filenames with spaces.",
+  "baseCost": 0.013332,
+  "routedCost": 0.003733,
+  "baseMs": 5957,
+  "routedMs": 7676,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-haiku-4-5-20251001"
+ },
+ {
+  "id": "e08",
+  "tier": "easy",
+  "route": [
+   "haiku",
+   "low"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both give the same correct fix, but A is cleaner while B insists it needs a filename and lists two redundant options for providing one.",
+  "baseCost": 0.006424,
+  "routedCost": 0.0020340000000000002,
+  "baseMs": 1927,
+  "routedMs": 4485,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-haiku-4-5-20251001"
+ },
+ {
+  "id": "e09",
+  "tier": "easy",
+  "route": [
+   "haiku",
+   "low"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": false,
+  "reason": "A correctly explains that calling an async function returns an unexecuted coroutine and clearly warns that async neither parallelizes nor unblocks blocking calls, while B gets the basics right but misleadingly says async runs database queries 'in parallel' and does file I/O concurrently, which standard asyncio file operations don't.",
+  "baseCost": 0.02382,
+  "routedCost": 0.003359,
+  "baseMs": 12651,
+  "routedMs": 5396,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-haiku-4-5-20251001"
+ },
+ {
+  "id": "e10",
+  "tier": "easy",
+  "route": [
+   "haiku",
+   "low"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both give the same correct query, but B also gives accurate alternatives for SQL Server and Oracle, where LIMIT fails, which helps users of an unspecified dialect.",
+  "baseCost": 0.008324000000000002,
+  "routedCost": 0.0017460000000000002,
+  "baseMs": 3001,
+  "routedMs": 3224,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-haiku-4-5-20251001"
+ },
+ {
+  "id": "e11",
+  "tier": "easy",
+  "route": [
+   "haiku",
+   "low"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both translations are correct, but B's \"kommer fram på fredag\" is the most idiomatic Swedish for a package arriving, while A's \"anländer\" is slightly stiffer and its formality comparison is debatable, though not misleading.",
+  "baseCost": 0.005684,
+  "routedCost": 0.0020870000000000003,
+  "baseMs": 2145,
+  "routedMs": 4440,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-haiku-4-5-20251001"
+ },
+ {
+  "id": "e12",
+  "tier": "easy",
+  "route": [
+   "haiku",
+   "low"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "B is more precise (it notes that at least one access must be a write), adds a concrete lost-update example, and mentions how races are prevented, while A is correct but less precise and stops at the definition and the debugging difficulty.",
+  "baseCost": 0.0091,
+  "routedCost": 0.0018039999999999998,
+  "baseMs": 3930,
+  "routedMs": 4370,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-haiku-4-5-20251001"
+ },
+ {
+  "id": "n01",
+  "tier": "normal",
+  "route": [
+   "sonnet",
+   "medium"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both are correct trailing-edge debounces with proper cancel and inferred argument types, but B also types `this` through the generic `T` (A types it as `unknown`) and shows a type-error example, making it slightly more precise, while A is still fully correct and usable.",
+  "baseCost": 0.019156,
+  "routedCost": 0.00817,
+  "baseMs": 7760,
+  "routedMs": 6961,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-sonnet-5-5"
+ },
+ {
+  "id": "n02",
+  "tier": "normal",
+  "route": [
+   "sonnet",
+   "medium"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both correctly identify the bug and give working fixes, but A more precisely explains why the error seems intermittent (it fails on any non-empty input and succeeds only on empty or whitespace-only text) and also flags the punctuation issue with split(), while B is correct but slightly less complete.",
+  "baseCost": 0.01784,
+  "routedCost": 0.00621,
+  "baseMs": 7535,
+  "routedMs": 4524,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-sonnet-5-5"
+ },
+ {
+  "id": "n03",
+  "tier": "normal",
+  "route": [
+   "sonnet",
+   "medium"
+  ],
+  "graded": true,
+  "winner": "tie",
+  "ok": true,
+  "reason": "Both give the same correct query (a LEFT JOIN with the date range in ON, COALESCE, and RANK() over the aggregate) and the same key notes; B's extra Oracle date-literal caveat and COALESCE remark are minor additions that don't change how useful the answer is.",
+  "baseCost": 0.019332000000000002,
+  "routedCost": 0.007796,
+  "baseMs": 7485,
+  "routedMs": 5452,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-sonnet-5-5"
+ },
+ {
+  "id": "n04",
+  "tier": "normal",
+  "route": [
+   "sonnet",
+   "medium"
+  ],
+  "graded": true,
+  "winner": "tie",
+  "ok": true,
+  "reason": "Both answers are correct and complete, with nearly identical explanations, examples, and comparison tables; A states the never-rejects caveat a bit more precisely and B adds a useful note on Promise.race and Promise.any, but neither difference changes how well a reader is served.",
+  "baseCost": 0.025344000000000005,
+  "routedCost": 0.010476,
+  "baseMs": 11022,
+  "routedMs": 11892,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-sonnet-5-5"
+ },
+ {
+  "id": "n05",
+  "tier": "normal",
+  "route": [
+   "sonnet",
+   "medium"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both are correct and safely scoped, but B is better: it writes to a .partial file so a failed run never leaves a broken archive named like a real backup, it uses an exact 14-day cutoff instead of -mtime +14 (which keeps about 15 days), and it resolves paths with cd && pwd instead of realpath, which is missing on some systems; A still works well enough that a user would not be misled.",
+  "baseCost": 0.037372,
+  "routedCost": 0.011992000000000001,
+  "baseMs": 15371,
+  "routedMs": 7602,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-sonnet-5-5"
+ },
+ {
+  "id": "n06",
+  "tier": "normal",
+  "route": [
+   "sonnet",
+   "medium"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both answers find the same real bugs and give the same correct fix, but B wrongly suggests the result might be 'partially filled', when the return always runs before any await resumes and yields an empty array, so A is slightly more accurate while B is still fully usable.",
+  "baseCost": 0.024764,
+  "routedCost": 0.009241999999999998,
+  "baseMs": 11378,
+  "routedMs": 8603,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-sonnet-5-5"
+ },
+ {
+  "id": "n07",
+  "tier": "normal",
+  "route": [
+   "sonnet",
+   "medium"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both survive JSON parse errors, but B handles key changes during render, so there is no stale-value flash and no transient write of the old value to the new key. B also handles `undefined` and notes useful extensions, while A's extra `remove` gets undone when its persist effect writes `initial` back. A's flaws are minor and it still works for the stated requirement.",
+  "baseCost": 0.07626,
+  "routedCost": 0.014324,
+  "baseMs": 32657,
+  "routedMs": 15067,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-sonnet-5-5"
+ },
+ {
+  "id": "n08",
+  "tier": "normal",
+  "route": [
+   "sonnet",
+   "medium"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both are accurate and cover revocation, size, staleness, readability, key management, lookup cost and infrastructure, but A stays well under 150 words (about 123) and adds useful points like denylists reintroducing state, while B lands at or slightly over the limit (about 150) with no extra substance that matters.",
+  "baseCost": 0.012832,
+  "routedCost": 0.006248,
+  "baseMs": 5813,
+  "routedMs": 7814,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-sonnet-5-5"
+ },
+ {
+  "id": "n09",
+  "tier": "normal",
+  "route": [
+   "sonnet",
+   "medium"
+  ],
+  "graded": true,
+  "winner": "tie",
+  "ok": true,
+  "reason": "Both use the same correct sort-and-merge algorithm, have three correct tests covering unsorted, nested, touching and empty inputs, and explain the touching-interval choice, so neither has a meaningful advantage.",
+  "baseCost": 0.022532,
+  "routedCost": 0.009992,
+  "baseMs": 9063,
+  "routedMs": 6124,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-sonnet-5-5"
+ },
+ {
+  "id": "n10",
+  "tier": "normal",
+  "route": [
+   "sonnet",
+   "medium"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both are polite, two-paragraph declines that meet the brief, but A edges ahead by giving a concrete availability date and offering a later phase, which makes the offer of later work easier to act on; B is still fully usable.",
+  "baseCost": 0.011776000000000002,
+  "routedCost": 0.005152,
+  "baseMs": 5164,
+  "routedMs": 3674,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-sonnet-5-5"
+ },
+ {
+  "id": "n11",
+  "tier": "normal",
+  "route": [
+   "sonnet",
+   "medium"
+  ],
+  "graded": true,
+  "winner": "tie",
+  "ok": true,
+  "reason": "Both give the same correct conversion and propagate both errors through promise rejection; A maps each error case more explicitly, while B adds a useful note on why `.then(onOk, onErr)` avoids calling `cb` twice, so neither is clearly better.",
+  "baseCost": 0.016475999999999998,
+  "routedCost": 0.007065999999999999,
+  "baseMs": 6690,
+  "routedMs": 7236,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-sonnet-5-5"
+ },
+ {
+  "id": "n12",
+  "tier": "normal",
+  "route": [
+   "sonnet",
+   "medium"
+  ],
+  "graded": true,
+  "winner": "baseline",
+  "ok": true,
+  "reason": "Both answers are correct and cover the main costs (write overhead, low selectivity, small tables, cache pressure, planner misestimates), but A explains more precisely how an index can actively make a read slower, through ORDER BY ... LIMIT traps, correlated predicates, cached parameterized plans and non-covering double lookups, while B's extra items (non-sargable predicates, wrong column order) mostly describe indexes that go unused rather than ones that slow queries down.",
+  "baseCost": 0.045335999999999994,
+  "routedCost": 0.016368,
+  "baseMs": 23499,
+  "routedMs": 12896,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-sonnet-5-5"
+ },
+ {
+  "id": "h01",
+  "tier": "hard",
+  "route": [
+   "opus",
+   "high"
+  ],
+  "graded": false,
+  "winner": "tie",
+  "ok": true,
+  "reason": "same model and effort, not graded",
+  "baseCost": 0.26927999999999996,
+  "routedCost": 0.26927999999999996,
+  "baseMs": 147389,
+  "routedMs": 147389,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-opus-5-5"
+ },
+ {
+  "id": "h02",
+  "tier": "hard",
+  "route": [
+   "opus",
+   "high"
+  ],
+  "graded": false,
+  "winner": "tie",
+  "ok": true,
+  "reason": "same model and effort, not graded",
+  "baseCost": 0.079588,
+  "routedCost": 0.079588,
+  "baseMs": 41122,
+  "routedMs": 41122,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-opus-5-5"
+ },
+ {
+  "id": "h03",
+  "tier": "hard",
+  "route": [
+   "opus",
+   "high"
+  ],
+  "graded": false,
+  "winner": "tie",
+  "ok": true,
+  "reason": "same model and effort, not graded",
+  "baseCost": 0.16563600000000003,
+  "routedCost": 0.16563600000000003,
+  "baseMs": 72890,
+  "routedMs": 72890,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-opus-5-5"
+ },
+ {
+  "id": "h04",
+  "tier": "hard",
+  "route": [
+   "opus",
+   "high"
+  ],
+  "graded": false,
+  "winner": "tie",
+  "ok": true,
+  "reason": "same model and effort, not graded",
+  "baseCost": 0.516476,
+  "routedCost": 0.516476,
+  "baseMs": 258213,
+  "routedMs": 258213,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-opus-5-5"
+ },
+ {
+  "id": "h05",
+  "tier": "hard",
+  "route": [
+   "opus",
+   "high"
+  ],
+  "graded": false,
+  "winner": "tie",
+  "ok": true,
+  "reason": "same model and effort, not graded",
+  "baseCost": 0.04090800000000001,
+  "routedCost": 0.04090800000000001,
+  "baseMs": 19776,
+  "routedMs": 19776,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-opus-5-5"
+ },
+ {
+  "id": "h06",
+  "tier": "hard",
+  "route": [
+   "opus",
+   "high"
+  ],
+  "graded": false,
+  "winner": "tie",
+  "ok": true,
+  "reason": "same model and effort, not graded",
+  "baseCost": 0.09249199999999998,
+  "routedCost": 0.09249199999999998,
+  "baseMs": 49934,
+  "routedMs": 49934,
+  "baseModel": "claude-opus-5-5",
+  "routedModel": "claude-opus-5-5"
+ }
+]

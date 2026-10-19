@@ -1,0 +1,206 @@
+[
+  {
+    "version": "0.15.16",
+    "date": "2026-10-16",
+    "note": "Terminal chess is clickable, and more scenes draw in the terminal.",
+    "detail": [
+      "In a plain terminal the chess pieces can be clicked again, and the board is a little smaller.",
+      "More scenes draw and move in the terminal; scenes made of pictures are swapped for one that can be drawn."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.15",
+    "date": "2026-10-16",
+    "note": "The terminal scene plays, and chess pieces show.",
+    "detail": [
+      "In a plain terminal the scene now moves while Claude works.",
+      "The terminal chess board shows its pieces again, and a click anywhere on a square counts.",
+      "The terminal card has its own labelled buttons: Aa, settings and Minimize."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.14",
+    "date": "2026-10-16",
+    "note": "Artwork in the terminal.",
+    "detail": [
+      "In a plain terminal the pixel-art scenes are painted as coloured blocks while Claude works, and quotes show as text.",
+      "The terminal chess board has bigger squares and white and black pieces you can tell apart."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.13",
+    "date": "2026-10-16",
+    "note": "Chess shows in the terminal, and no update offer on a folder copy.",
+    "detail": [
+      "A copy of textless run straight from a folder no longer shows an update card it could not act on.",
+      "The chess board now draws in a plain terminal, as letters on coloured squares, instead of an empty board."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.12",
+    "date": "2026-10-16",
+    "note": "Sound credits.",
+    "detail": [
+      "The credits for the chess sounds are written down. Nothing else changed."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.11",
+    "date": "2026-10-16",
+    "note": "Clearer update card messages.",
+    "detail": [
+      "The update card says plainly when textless runs from a folder and there is nothing to update, and the update check points at the card under the newest answer."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.10",
+    "date": "2026-10-16",
+    "note": "A mistyped command no longer flips the card.",
+    "detail": [
+      "An unknown /textless word shows the list of commands instead of switching the card on or off.",
+      "When textless runs from a folder instead of an install, the update card says there is nothing to update."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.9",
+    "date": "2026-10-16",
+    "note": "The update card shows next to effortless.",
+    "detail": [
+      "The update card now sits under the newest answer, where it shows whether or not effortless is installed."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.8",
+    "date": "2026-10-16",
+    "note": "The chess sounds ship with textless.",
+    "detail": [
+      "Move, capture, check and game-end sounds, with a few move variants picked by chance. Your own wav files in ~/.claude/textless/sounds still replace them.",
+      "/textless debug also logs why the update card above the prompt does or does not show."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.6",
+    "date": "2026-10-16",
+    "note": "The settings gear works on a Mac, and chess no longer freezes the app.",
+    "detail": [
+      "On a Mac the gear opens the full settings page in the browser instead of the small panel.",
+      "The chess opponent thinks without holding the app up, and a game stuck on its turn wakes when you click."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.5",
+    "date": "2026-10-16",
+    "note": "A calmer chess board.",
+    "detail": [
+      "The picked chess piece and its moves are highlighted in green instead of orange-red.",
+      "The built-in chess opponent takes a second or two to answer instead of snapping back."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.4",
+    "date": "2026-10-16",
+    "note": "/textless update now, and a calmer chess highlight.",
+    "detail": [
+      "/textless update now installs a new version when the update card does not show above the prompt.",
+      "The picked chess piece and its moves are highlighted in green instead of orange-red."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.3",
+    "date": "2026-10-16",
+    "note": "/textless settings opens the full settings page.",
+    "detail": [
+      "/textless settings opens the settings page on the website, like the gear on the card. /textless panel opens the small version inside the app."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.2",
+    "date": "2026-10-16",
+    "note": "A safety fix for community scenes.",
+    "detail": [
+      "Scenes from the marketplace are checked more strictly for links that load from outside the file."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.1",
+    "date": "2026-10-16",
+    "note": "One chess board at a time, started with /chess.",
+    "detail": [
+      "Chess is started with /chess and is no longer part of the card's rotation. While a game is open in a chat, the board takes the card there; /chess end brings the scenes back.",
+      "One board at a time: with the game open in two chats, only the one that started or took it shows the board."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.15.0",
+    "date": "2026-10-16",
+    "note": "Play chess on the card, minimize it, and a few fixes.",
+    "detail": [
+      "Play chess in the chat with /chess, against a built-in opponent. The settings page lists it under Interactive sets with its commands.",
+      "Play against a built-in opponent with four levels, or against Claude with /chess claude. Your side is picked by chance.",
+      "Piece sounds on every move, with check, win and game over. Sound can be switched off on the board, and your own wav files in ~/.claude/textless/sounds replace the bundled ones.",
+      "Minimize the card to one line and bring it back, from the card or under any answer.",
+      "Quotes and scenes pick at random each turn, without repeating the last ones."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.14.0",
+    "date": "2026-10-14",
+    "note": "Quotes, your own sets and favourites, and a lighter card.",
+    "detail": [
+      "200 quotes, written on by a pixel quill.",
+      "Make your own sets and star favourites on the settings page.",
+      "Remove scenes you shared in the marketplace.",
+      "textless sends its note to Claude less often, so chats use fewer tokens."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.11.0",
+    "date": "2026-10-13",
+    "note": "Make your own sets, play chess against Claude, and a Nostalgia set.",
+    "detail": [
+      "Make your own sets on the settings page: tick any scenes from any set.",
+      "Chess against Claude with /chess, on a board above the prompt.",
+      "New Minimal and Nostalgia sets.",
+      "Marketplace scenes name who drew them under the card."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.10.0",
+    "date": "2026-10-13",
+    "note": "New versions show above the prompt, and one press installs them.",
+    "detail": [
+      "An update card offers each new version. Update installs it and reloads textless in the chat.",
+      "What's new, Share and Star on GitHub sit on the card once it has updated."
+    ],
+    "public": true
+  },
+  {
+    "version": "0.9.72",
+    "date": "2026-10-14",
+    "note": "One pixel-art card while Claude works, and your questions listed under the answer.",
+    "detail": [
+      "While Claude works, the chat shows one tall card of Clawd instead of every step.",
+      "When the turn ends, the answer shows with a done line. Questions, links and the next step are listed under it.",
+      "Pick scenes on the settings page, add your own pictures, or get more in the marketplace."
+    ],
+    "public": true
+  }
+]

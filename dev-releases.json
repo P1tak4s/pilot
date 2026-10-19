@@ -1,0 +1,557 @@
+[
+  {
+    "version": "1.70.6",
+    "date": "2026-10-11",
+    "note": "Update works without claude on PATH, or says how to get it"
+  },
+  {
+    "version": "1.70.5",
+    "date": "2026-10-11",
+    "note": "Terminal: effort word flashes, choices are buttons, cards back to title"
+  },
+  {
+    "version": "1.70.4",
+    "date": "2026-10-11",
+    "note": "Auto sits in the terminal bar"
+  },
+  {
+    "version": "1.70.3",
+    "date": "2026-10-11",
+    "note": "Terminal Settings cards open from either line; no noise art at rest"
+  },
+  {
+    "version": "1.70.2",
+    "date": "2026-10-11",
+    "note": "Settings work in the terminal"
+  },
+  {
+    "version": "1.70.1",
+    "date": "2026-10-10",
+    "note": "Named effort levels skip the judge; subagents follow the turn"
+  },
+  {
+    "version": "1.69.14",
+    "date": "2026-10-10",
+    "note": "Settings cards: cover the whole card at any width"
+  },
+  {
+    "version": "1.69.13",
+    "date": "2026-10-10",
+    "note": "Helpers switch: cover reaches both edges"
+  },
+  {
+    "version": "1.69.12",
+    "date": "2026-10-10",
+    "note": "Settings cards: clickable edge to edge"
+  },
+  {
+    "version": "1.69.11",
+    "date": "2026-10-10",
+    "note": "Helpers switch: a cover that takes the click"
+  },
+  {
+    "version": "1.69.10",
+    "date": "2026-10-10",
+    "note": "Helpers switch like Auto, compact alert at 70%, no card under replies"
+  },
+  {
+    "version": "1.69.9",
+    "date": "2026-10-10",
+    "note": "Effort card: Helpers on its own row, narrower slider"
+  },
+  {
+    "version": "1.69.8",
+    "date": "2026-10-10",
+    "note": "Settings: Compact with moves to the Model card"
+  },
+  {
+    "version": "1.69.7",
+    "date": "2026-10-10",
+    "note": "Settings: alerts in the Handoff card, Helpers easy to click"
+  },
+  {
+    "version": "1.69.6",
+    "date": "2026-10-10",
+    "note": "Model card: experimental as a yellow warning tag"
+  },
+  {
+    "version": "1.69.5",
+    "date": "2026-10-10",
+    "note": "Alerts stay closed, cold handoffs by Haiku, alert switches"
+  },
+  {
+    "version": "1.69.4",
+    "date": "2026-10-10",
+    "note": "Bench: helpers at medium floor"
+  },
+  {
+    "version": "1.69.3",
+    "date": "2026-10-10",
+    "note": "Helpers start at medium"
+  },
+  {
+    "version": "1.69.2",
+    "date": "2026-10-10",
+    "note": "Bench: effort for helpers on vs off"
+  },
+  {
+    "version": "1.69.1",
+    "date": "2026-10-10",
+    "note": "Effort for helpers: the judge picks each subagent's effort"
+  },
+  {
+    "version": "1.68.11",
+    "date": "2026-10-09",
+    "note": "Measured savings: README, site and benchmark page"
+  },
+  {
+    "version": "1.68.10",
+    "date": "2026-10-09",
+    "note": "Say so when the app's effort pick turns Auto off"
+  },
+  {
+    "version": "1.68.9",
+    "date": "2026-10-09",
+    "note": "Model switching off by default"
+  },
+  {
+    "version": "1.68.8",
+    "date": "2026-10-09",
+    "note": "Debug: the model used on its own line"
+  },
+  {
+    "version": "1.68.7",
+    "date": "2026-10-09",
+    "note": "Debug shows what was asked and what was sent"
+  },
+  {
+    "version": "1.68.6",
+    "date": "2026-10-09",
+    "note": "Fix: Auto off still sent an old effort (issue #20)"
+  },
+  {
+    "version": "1.68.5",
+    "date": "2026-10-09",
+    "note": "Light mode: near-white panels, white switch knobs"
+  },
+  {
+    "version": "1.68.4",
+    "date": "2026-10-09",
+    "note": "Light appearance"
+  },
+  {
+    "version": "1.68.3",
+    "date": "2026-10-09",
+    "note": "Opus price ratio fixed to 2x, bench against Opus medium"
+  },
+  {
+    "version": "1.68.2",
+    "date": "2026-10-09",
+    "note": "Redo detection for cheaper answers, and measure how sure the judge is"
+  },
+  {
+    "version": "1.68.1",
+    "date": "2026-10-09",
+    "note": "Cherry blossom petals only on the pink art"
+  },
+  {
+    "version": "1.67.8",
+    "date": "2026-10-09",
+    "note": "Add the answer-quality benchmark and its results"
+  },
+  {
+    "version": "1.67.7",
+    "date": "2026-10-09",
+    "note": "Model gets its own settings card"
+  },
+  {
+    "version": "1.67.6",
+    "date": "2026-10-09",
+    "note": "Model switch on the Effort card"
+  },
+  {
+    "version": "1.67.5",
+    "date": "2026-10-09",
+    "note": "Cherry blossom petals: pinker, quieter, slower"
+  },
+  {
+    "version": "1.67.4",
+    "date": "2026-10-09",
+    "note": "New theme: rose, with falling cherry-blossom petals"
+  },
+  {
+    "version": "1.67.3",
+    "date": "2026-10-09",
+    "note": "The cold band waits for a chat of 150k tokens"
+  },
+  {
+    "version": "1.67.2",
+    "date": "2026-10-09",
+    "note": "Typed skills and custom slash commands are judged"
+  },
+  {
+    "version": "1.67.1",
+    "date": "2026-10-09",
+    "note": "Cache-aware routing, back in dev with a live test"
+  },
+  {
+    "version": "1.66.3",
+    "date": "2026-10-09",
+    "note": "Hold the cache-aware router back until it is tested live"
+  },
+  {
+    "version": "1.66.2",
+    "date": "2026-10-09",
+    "note": "Routing is cache-aware: a cheaper model only when switching pays"
+  },
+  {
+    "version": "1.66.1",
+    "date": "2026-10-09",
+    "note": "Haiku compaction keeps the latest work whole; README says where keys really go"
+  },
+  {
+    "version": "1.65.1",
+    "date": "2026-10-09",
+    "note": "The bar shows which model the prompt runs on"
+  },
+  {
+    "version": "1.64.1",
+    "date": "2026-10-09",
+    "note": "Compact button stays visible in a narrow pane"
+  },
+  {
+    "version": "1.63.1",
+    "date": "2026-10-08",
+    "note": "No restarting animations when a chat opens cold"
+  },
+  {
+    "version": "1.62.1",
+    "date": "2026-10-08",
+    "note": "Update card never sticks on Loading"
+  },
+  {
+    "version": "1.61.1",
+    "date": "2026-10-08",
+    "note": "Compact stays beside Handoff once the slot is Handoff"
+  },
+  {
+    "version": "1.60.1",
+    "date": "2026-10-08",
+    "note": "No stuck Cold after a reload: timers restart and a stale Cold is cleared"
+  },
+  {
+    "version": "1.59.1",
+    "date": "2026-10-08",
+    "note": "Update loads into this chat, no false Cold after a reload, Handoff button setting"
+  },
+  {
+    "version": "1.58.1",
+    "date": "2026-10-08",
+    "note": "Update forces the reload so the chat runs the new version"
+  },
+  {
+    "version": "1.57.1",
+    "date": "2026-10-08",
+    "note": "Update card no longer claims the new version loaded before it has"
+  },
+  {
+    "version": "1.56.3",
+    "date": "2026-10-08",
+    "note": "Haiku always judges, Jev is an optional add-on; the Custom judge is gone"
+  },
+  {
+    "version": "1.56.2",
+    "date": "2026-10-08",
+    "note": "One Compact/Handoff button; a Haiku check decides when a handoff would suit"
+  },
+  {
+    "version": "1.56.1",
+    "date": "2026-10-08",
+    "note": "Compact is a quiet text button until context passes 30%"
+  },
+  {
+    "version": "1.55.1",
+    "date": "2026-10-08",
+    "note": "Settings cards no longer show stacked dots at some widths"
+  },
+  {
+    "version": "1.54.3",
+    "date": "2026-10-08",
+    "note": "A short 5-minute cache reading no longer drops the 1-hour countdown to Cold"
+  },
+  {
+    "version": "1.54.2",
+    "date": "2026-10-08",
+    "note": "/effortless debug shows the cache countdown's facts"
+  },
+  {
+    "version": "1.54.1",
+    "date": "2026-10-08",
+    "note": "Updated card: alt text on the wash and dividers so the app draws them"
+  },
+  {
+    "version": "1.53.6",
+    "date": "2026-10-08",
+    "note": "Updated card: textured green left, dividers between links, roomier Share hover"
+  },
+  {
+    "version": "1.53.5",
+    "date": "2026-10-08",
+    "note": "Updated card: green wash on the left; Share hover covers the icon"
+  },
+  {
+    "version": "1.53.4",
+    "date": "2026-10-08",
+    "note": "Updated card: Share hover covers the icon; no left wash"
+  },
+  {
+    "version": "1.53.3",
+    "date": "2026-10-08",
+    "note": "Updated card: Share icon, hover, green wash on the left"
+  },
+  {
+    "version": "1.53.2",
+    "date": "2026-10-08",
+    "note": "Setup: Full handoff defaults to the built-in writer"
+  },
+  {
+    "version": "1.53.1",
+    "date": "2026-10-08",
+    "note": "C:/Program Files/Git/effortless card previews the update card"
+  },
+  {
+    "version": "1.52.1",
+    "date": "2026-10-08",
+    "note": "Updated card: green mark, short line, no art"
+  },
+  {
+    "version": "1.51.1",
+    "date": "2026-10-08",
+    "note": "Logo on the update, handoff and compact cards; no stale Cold after a plugin switch"
+  },
+  {
+    "version": "1.48.4",
+    "date": "2026-10-08",
+    "note": "Updated card: near black, one link row, Share"
+  },
+  {
+    "version": "1.48.3",
+    "date": "2026-10-08",
+    "note": "Haiku recommends a handoff when one would suit"
+  },
+  {
+    "version": "1.48.2",
+    "date": "2026-10-08",
+    "note": "Compact button always on the bar; alert default 80%"
+  },
+  {
+    "version": "1.48.1",
+    "date": "2026-10-08",
+    "note": "GitHub panel: black, rounded, close at the far right"
+  },
+  {
+    "version": "1.47.2",
+    "date": "2026-10-08",
+    "note": "Star on GitHub in a black panel on the Updated card"
+  },
+  {
+    "version": "1.47.1",
+    "date": "2026-10-08",
+    "note": "Settings cards: Judge last, Customize second to last"
+  },
+  {
+    "version": "1.46.1",
+    "date": "2026-10-08",
+    "note": "Star on GitHub is a plain link with the mark"
+  },
+  {
+    "version": "1.45.10",
+    "date": "2026-10-08",
+    "note": "Appearance becomes Customize, with a pencil"
+  },
+  {
+    "version": "1.45.9",
+    "date": "2026-10-08",
+    "note": "Neutral panel greys in the Claude orange theme"
+  },
+  {
+    "version": "1.45.8",
+    "date": "2026-10-08",
+    "note": "Settings title all white, less blur"
+  },
+  {
+    "version": "1.45.7",
+    "date": "2026-10-08",
+    "note": "Settings title grain: white with a light accent tint"
+  },
+  {
+    "version": "1.45.6",
+    "date": "2026-10-08",
+    "note": "Settings title is white, its grain takes the accent"
+  },
+  {
+    "version": "1.45.5",
+    "date": "2026-10-08",
+    "note": "Settings cards take a click anywhere on them"
+  },
+  {
+    "version": "1.45.4",
+    "date": "2026-10-08",
+    "note": "Settings keeps its grainy title and mark"
+  },
+  {
+    "version": "1.45.3",
+    "date": "2026-10-08",
+    "note": "Compacting card is one quiet line"
+  },
+  {
+    "version": "1.45.2",
+    "date": "2026-10-08",
+    "note": "Calmer Settings top bar"
+  },
+  {
+    "version": "1.45.1",
+    "date": "2026-10-08",
+    "note": "Check for updates looks even while an old Updated card shows"
+  },
+  {
+    "version": "1.44.1",
+    "date": "2026-10-08",
+    "note": "Update check reads public.json with git"
+  },
+  {
+    "version": "1.43.1",
+    "date": "2026-10-08",
+    "note": "Star on GitHub as a white pill with the GitHub mark"
+  },
+  {
+    "version": "1.42.1",
+    "date": "2026-10-08",
+    "note": "No Star link in Settings"
+  },
+  {
+    "version": "1.41.1",
+    "date": "2026-10-08",
+    "note": "Star moves next to the name in Settings, bright"
+  },
+  {
+    "version": "1.40.2",
+    "date": "2026-10-08",
+    "note": "Star on GitHub in the Updated card"
+  },
+  {
+    "version": "1.40.1",
+    "date": "2026-10-08",
+    "note": "Star on GitHub link at the foot of Appearance"
+  },
+  {
+    "version": "1.39.1",
+    "date": "2026-10-08",
+    "note": "Settings no longer offers an older version; publish syncs the site"
+  },
+  {
+    "version": "1.38.1",
+    "date": "2026-10-08",
+    "note": "Updates work without a GitHub SSH key"
+  },
+  {
+    "version": "1.37.2",
+    "date": "2026-10-07",
+    "note": "Theme in Appearance: violet or Claude orange"
+  },
+  {
+    "version": "1.37.1",
+    "date": "2026-10-07",
+    "note": "Check for updates in Settings"
+  },
+  {
+    "version": "1.36.18",
+    "date": "2026-10-07",
+    "note": "Fade ends before the app's stale redraw"
+  },
+  {
+    "version": "1.36.17",
+    "date": "2026-10-07",
+    "note": "Glow fade without stair steps"
+  },
+  {
+    "version": "1.36.16",
+    "date": "2026-10-07",
+    "note": "Glow survives the app redrawing old copies"
+  },
+  {
+    "version": "1.36.15",
+    "date": "2026-10-07",
+    "note": "Glow images start at their exact brightness"
+  },
+  {
+    "version": "1.36.14",
+    "date": "2026-10-07",
+    "note": "Glow placed at the moment it is drawn"
+  },
+  {
+    "version": "1.36.13",
+    "date": "2026-10-07",
+    "note": "Glow: redraw at judge start, log its timings"
+  },
+  {
+    "version": "1.36.12",
+    "date": "2026-10-07",
+    "note": "Rim fades at the verdict, with the effort flash"
+  },
+  {
+    "version": "1.36.11",
+    "date": "2026-10-07",
+    "note": "Deciding glow lights up, holds, fades from full"
+  },
+  {
+    "version": "1.36.10",
+    "date": "2026-10-07",
+    "note": "Version in the settings header"
+  },
+  {
+    "version": "1.36.9",
+    "date": "2026-10-07",
+    "note": "Glow placed by the clock, judge line off by default"
+  },
+  {
+    "version": "1.36.8",
+    "date": "2026-10-07",
+    "note": "Deciding glow is one fixed sequence"
+  },
+  {
+    "version": "1.36.7",
+    "date": "2026-10-07",
+    "note": "Deciding glow fades without a jump"
+  },
+  {
+    "version": "1.36.6",
+    "date": "2026-10-07",
+    "note": "Settings saved card"
+  },
+  {
+    "version": "1.36.5",
+    "date": "2026-10-07",
+    "note": "Deciding glow fades over the running breath"
+  },
+  {
+    "version": "1.36.4",
+    "date": "2026-10-07",
+    "note": "Exact fade, no cold text in the normal bar, dev releases kept apart"
+  },
+  {
+    "version": "1.36.3",
+    "date": "2026-10-07",
+    "note": "Report a bug link carries this version"
+  },
+  {
+    "version": "1.36.2",
+    "date": "2026-10-07",
+    "note": "Haiku first in the setup, Report a bug, softer fade"
+  },
+  {
+    "version": "1.36.1",
+    "date": "2026-10-07",
+    "note": "Violet glow while the judge decides"
+  }
+]

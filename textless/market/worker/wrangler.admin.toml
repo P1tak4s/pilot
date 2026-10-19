@@ -1,0 +1,26 @@
+# textless moderation: the same code with ROLE=admin, so it serves only /admin. Its whole workers.dev address sits
+# behind Cloudflare Access (turn it on in the dashboard: Domains, the Production row, Enable Access), which the public
+# marketplace cannot have because uploads and installs must stay open. Deploy: npx wrangler deploy -c wrangler.admin.toml
+name = "textless-market-admin"
+main = "src/index.mjs"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+preview_urls = false
+
+[vars]
+ROLE = "admin"
+ALLOWED_ORIGINS = ""
+# Cloudflare Access: the team domain (<team>.cloudflareaccess.com) and the application's audience tag.
+ACCESS_TEAM = "lucky-boat-7d7a"
+ACCESS_AUD = "a542b670a443cc8dd961dce60503496511daed48ad7987620e060332f05476c2"
+# Secret: ADMIN_EMAILS (who may moderate), set with npx wrangler secret put ADMIN_EMAILS -c wrangler.admin.toml
+
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "textless-scenes"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "textless-market"
+database_id = "3541ea7c-5729-40f5-a92c-b4bde83f1a07"
