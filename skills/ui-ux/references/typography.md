@@ -29,6 +29,15 @@ Type is most of the interface. Get it right and a plain layout looks designed.
 - Rotate display faces between projects; reusing the same "designer" font everywhere becomes its own cliché (Fraunces, Playfair Display, Instrument Serif, Space Grotesk and Syne are the current overused ones).
 - Never Arial/Helvetica/Times by accident, Comic Sans, or more than one decorative face.
 
+### Habit faces and caps
+
+- Reflex picks to avoid unless the brief names them: Cormorant, Lora, Crimson, Newsreader, Space Mono, IBM Plex, DM Sans, DM Serif, Outfit, Plus Jakarta Sans, Instrument Sans (plus the list in anti-slop). A subject association ("it is a bookshop, so a serif") is never the reason for a face.
+- Starting pairs when nothing is given: Geist + Geist Mono, Satoshi + JetBrains Mono, Cabinet Grotesk + Inter Tight. Serif only when the brief earns it (PP Editorial New, GT Sectra, Tiempos, Canela).
+- Caps for a calm system: one family (two at most), 3 to 4 sizes, 2 to 3 weights. Making a design quieter: 900 becomes 600, 700 becomes 500.
+- Hero headline size follows its word count: 3 to 5 words may go very large, 6+ words step down. A headline that wraps to 4 lines is a size bug, not a copy problem.
+- Italic display type needs line-height of at least 1.1 and a little bottom padding, or descenders (g, j, p, q, y) get clipped.
+- Display sizes beyond ~6rem, tracking past -0.04em and huge scale jumps belong to Experience pages only: see `experience.md`.
+
 ## Measure and leading
 
 - Prose 45 to 75 characters per line, 65ch default: `max-width: 65ch`. Mobile 35 to 60.

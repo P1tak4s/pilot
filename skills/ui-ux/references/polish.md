@@ -58,6 +58,15 @@
 - `::selection` in the brand color, `accent-color` on native checkboxes and radios, `caret-color` matching the accent.
 - Favicon, page `<title>` per route, `theme-color` meta for mobile browser chrome.
 
+## A few expensive-looking details
+
+- Double-bezel cards: an outer shell with 6 to 8px padding, a hairline ring and a large radius, holding an inner core whose radius is the outer radius minus the padding, with a faint inset top highlight.
+- A trailing arrow in its own small circle inside a pill button, nudged a few px on hover.
+- Premium briefs want light icon weights (Phosphor Light, Remix Line); heavy default sets read cheap there.
+- Even a minimal site needs 2 to 3 real images. Use a generator if one is available, else real photos, else clearly labelled placeholder slots listed in the reply.
+- Fixed UI over imagery stays readable with `mix-blend-mode: difference` on white text, or a scrim.
+- `touch-action: manipulation` on tappable elements; `content-visibility: auto` on long off-screen sections.
+
 ## Final polish pass
 
 1. Replace every hard-coded value with a token.

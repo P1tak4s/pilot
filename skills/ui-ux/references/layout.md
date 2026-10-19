@@ -56,6 +56,16 @@ which element leads, and the intended density. Diagnose structure before decorat
 - Inputs 16px font minimum to avoid iOS zoom; correct `type`, `inputmode` and `autocomplete` so the right keyboard appears.
 - Avoid horizontal swipe for primary content (conflicts with system back gestures).
 
+## Rules that keep layouts honest
+
+- Hero top padding about 6rem at most on desktop. An empty-feeling hero needs bigger type or a bigger asset, not more air.
+- Bento and multi-cell grids: at least 2 to 3 cells carry real visual variation (image, gradient, pattern, tint), not text on white.
+- Every multi-column section states its below-768px layout in the same component; do not leave it to framework defaults.
+- Navigation adapts: sidebar from ~1024px, bottom or top bar below. Bottom nav only for top-level destinations.
+- A floating, detached pill nav reads more premium than a bar glued to the top edge, on Persuade pages.
+- Fixed corner UI on long pages can hide on scroll down (past ~160px) and return on scroll up.
+- Print styles for documents and receipts: break at logical points, drop nav, footer and interactive parts, black on white, show full URLs.
+
 ## Specific layouts
 
 - **Dashboard**: one key question per screen; KPI row with 3 to 5 numbers that drive decisions; charts below; tables last. Filters persistent and visible.

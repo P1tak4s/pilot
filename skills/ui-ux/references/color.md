@@ -76,6 +76,14 @@ Define semantic tokens and use only those in components:
 - The reflex "premium" palette: warm cream + brass/terracotta + espresso text. Fine when the brief or subject truly calls for it, wrong as a default.
 - Five accent colors competing in one view.
 
+## More habits
+
+- One theme per page. Sections do not flip light/dark while scrolling, except one deliberate switch.
+- The warm-paper default (`#f5f1ea`, `#efeae0` ground, `#b08947` brass, `#b6553a` terracotta, `#1a1714` ink) is spent. Check the first palette: if a warm, bookish or child-facing subject produced cream, serif and lamplight, rework it from the subject's own saturated materials.
+- Premium without beige: cold luxury (silver, chrome, smoke), forest (deep green, bone, amber), black and tan, cobalt and cream, olive, brick and paper, or monochrome with one pop. Do not reuse the previous project's family.
+- Making a design quieter: bring saturation down to 70 to 85% of the original rather than swapping hues.
+- Compare build colours to the spec by number (sample the pixels). "A bit warmer" is drift, not noise.
+
 ## Data visualization
 
 - Categorical: up to 6 to 8 distinguishable hues with similar lightness; beyond that, group into "Other".

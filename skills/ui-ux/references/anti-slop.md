@@ -27,7 +27,7 @@ deliberately asks for it; it is a problem when it shows up because nobody decide
 
 ## Layout tells
 
-- Eyebrow label above every heading ("FEATURES", "HOW IT WORKS"). Allow at most one eyebrow per three sections.
+- Eyebrow labels above headings ("FEATURES", "HOW IT WORKS"). Default to none; one per page at most, and only when it carries information the heading does not. Never numbered ("001 · Capabilities").
 - Section numbers "01 / 02 / 03" when the content is not a real sequence.
 - "Big headline left, small paragraph right" as the header of every section.
 - Six identical image-left/text-right rows in a row.
@@ -37,6 +37,13 @@ deliberately asks for it; it is a problem when it shows up because nobody decide
 - Hero that does not fit the first viewport or a 4-line headline.
 - "Scroll to explore" cues, rotated vertical text, decorative crosshairs and grid lines as filler.
 - Two marquees on one page; marquee as filler.
+
+- Decorative status dots: none unless they show a real live state, and then one per section.
+- Version or beta tags in a hero ("V0.6", "EARLY ACCESS") outside an actual launch.
+- Generic step labels ("Step 1", "Phase 01"): use the verb ("Install", "Configure", "Ship").
+- Pills over photos, photo credits used as decoration, mono word strips ("BRAND. MOTION. SPATIAL."), version footers on marketing pages.
+- Comparison bars drawn on a filled grey track; use the number, or a bar without a track.
+- Geometric masks (circles, blobs) standing in for a cut-out of a photo subject.
 
 ## Copy tells
 
@@ -48,6 +55,8 @@ deliberately asks for it; it is a problem when it shows up because nobody decide
 - Mixed registers (marketing hype next to technical jargon next to poetry).
 - Em dashes everywhere; over-used middle dots as separators.
 - "Get started", "Learn more", "Sign up", "Try it free" all on the same page for the same action.
+
+- Locale, time or weather strips and poetic labels ("Field notes", "Quietly trusted by") on pages that are not about those things.
 
 ## Motion tells
 

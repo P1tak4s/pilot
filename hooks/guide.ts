@@ -33,7 +33,7 @@ Mark deliberate simplifications with a "ponytail:" comment naming the ceiling an
 
 ## Design work: load the right skill first (only those listed as available)
 - Any UI change, even one added control: ui-ux first (bundled with pilot; it routes to its references).
-- New landing page, portfolio or brand piece: ui-ux, then awwwards or frontend-design for the build.
+- New landing page: ui-ux. Portfolio, studio or launch site at award level: ui-ux references/experience.md.
 - Polishing or reviewing existing UI: impeccable or ui-review. Animations: ui-ux references/motion.md, gsap-* for GSAP.
 - Lithuanian copy anywhere in the UI: lt-rasyba. Charts or dashboards: dataviz.
 Do not load several design skills for one small change; one is enough.

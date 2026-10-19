@@ -1,6 +1,6 @@
 ---
 name: ui-ux
-description: One complete UI/UX and motion design skill for any interface work. Use it to design, build, redesign, polish or review web and mobile UI (landing pages, SaaS apps, dashboards, forms, onboarding, e-commerce, portfolios, native iOS/Android screens). Covers design direction, typography, color, layout, components and states, UX copy, motion and animation (durations, easing, springs, reduced motion, performance), UX laws (Jakob, Hick, Fitts, Doherty, Gestalt, Tesler, Postel, Peak-End), accessibility numbers, AI-slop tells to avoid, and a scored review method. Replaces separate taste, impeccable, ui-ux-pro-max and motion skills.
+description: One complete UI/UX and motion design skill for any interface work. Use it to design, build, redesign, polish or review web and mobile UI (landing pages, SaaS apps, dashboards, forms, onboarding, e-commerce, portfolios, native iOS/Android screens). Covers design direction, typography, color, layout, components and states, UX copy, motion and animation (durations, easing, springs, reduced motion, performance), UX laws (Jakob, Hick, Fitts, Doherty, Gestalt, Tesler, Postel, Peak-End), accessibility numbers, AI-slop tells to avoid, and a scored review method. Also covers award-level experience sites (scroll storytelling, GSAP, Lenis, WebGL, page transitions). Replaces separate taste, impeccable, ui-ux-pro-max, motion and awwwards skills.
 ---
 
 # UI/UX
@@ -18,6 +18,7 @@ with a purpose, then verify. This file is the operating manual. Detailed rules l
 | Spacing, grids, responsive, mobile/native, safe areas | `references/layout.md` |
 | States, forms, nav, modals, tables, empty/loading/error, UX copy | `references/components.md` |
 | Animation: when, durations, easing, springs, patterns, perf, a11y | `references/motion.md` |
+| Award-level portfolio, studio or launch sites: concept, GSAP/Lenis/WebGL, loaders, transitions, display type | `references/experience.md` |
 | Micro-details that make UI feel expensive, icons, images, depth | `references/polish.md` |
 | What makes UI look machine-made, and what to do instead | `references/anti-slop.md` |
 | UX laws, Nielsen heuristics, Norman principles | `references/laws.md` |

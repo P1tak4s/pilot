@@ -79,6 +79,22 @@ Shipping half of them is the most common reason UI feels unfinished.
 - Title states the insight ("Revenue up 12% since June"), axis labels with units, direct labels over legends, tooltips on hover and focus, an accessible table alternative.
 - Empty and error states for charts too. Aggregate or sample above ~1,000 points.
 
+## Behaviour details
+
+- Buttons: a label fits one line at desktop, three words at most; a wrapping CTA fails review. Disabled is 0.38 to 0.5 opacity plus the native `disabled` attribute, and read-only looks different from disabled.
+- Forms: password fields get show/hide; never ask again for data entered earlier in the same flow; helper text answers the question the field raises, it does not restate the label.
+- Search inputs debounce ~300ms; scroll and resize handlers throttle ~100ms. Virtualize lists from about 50 rich rows.
+- Map errors to the UI: 400 shows field errors, 401 goes to sign-in, 403 explains the missing permission, 404 says what is gone, 429 says when to retry, 500 apologises and offers support. One failing widget never blanks the whole screen.
+- Drag and swipe always have a single-pointer and keyboard alternative (WCAG 2.2), a visible hint, and a small movement threshold before they start.
+- Sticky headers and banners must not cover the focused control: set `scroll-padding-top`.
+- After a route change, move focus to the main region or announce the new title. Destructive actions (delete account, log out) sit apart from navigation.
+- A nav destination that is unavailable says why instead of vanishing; tab badges clear once visited.
+- Onboarding tours: 3 to 7 steps, a visible Skip, replayable from help; a dismissed tip stays dismissed.
+- Delight: never on ordinary clicks, no sound without opt-in, never blocking, still pleasant on the 100th time.
+- Quotes: at most 3 lines, real quote marks, name plus role plus company.
+- Lists of more than ~5 items get structure (grouped columns, cards, tabs, accordion), not one long bullet list; spec tables cluster into 2 to 3 groups instead of a rule under every row.
+- Native: Android uses a snackbar (not a toast), one FAB per screen, dialogs only for interrupting decisions. iOS never blocks the edge-swipe back gesture, and settings use grouped inset lists, not cards.
+
 ## UX copy
 
 - Write from the user's side: name things by what people control, not how the system works ("Notifications", not "Webhook config").

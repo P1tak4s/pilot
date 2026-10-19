@@ -28,6 +28,16 @@ For motion-specific reviews use `Before | After | Why` rows with exact durations
 
 **Cognitive load**: count failures of single focus, chunking (4 or fewer per group), grouping, hierarchy, one decision at a time, 4 or fewer visible choices at a decision point, no memory across screens, progressive disclosure. 0 to 1 low, 2 to 3 moderate, 4+ high.
 
+## Review discipline
+
+- Judge the design yourself before running any detector or linter, so tool output does not anchor the verdict.
+- Severity tie-breaker: would a user contact support about this? Then it is at least P1.
+- Personas by surface: landing (first-timer, skeptic, mobile user), dashboard (power user, analyst), e-commerce (mobile user, skeptic, first-timer), onboarding (first-timer, mobile user), forms and wizards (first-timer, analyst, mobile user). Pass marks: the power user finishes the core task in under 60s; the first-timer knows the first action within 5s; the mobile user has primary actions in thumb reach with 44pt targets on a slow connection.
+- Screenshots count only when valid: let entrance motion settle, capture from the top, open each file and reject blank, black or wrong-section shots. Native screens come from the simulator or emulator, also in dark mode and at large text (iOS Dynamic Type, Android font scale 1.3).
+- Test on one real iPhone and one cheap Android before calling mobile done; simulators hide gesture and performance problems.
+- Re-read every visible string before shipping: broken grammar, unclear references and invented wordplay become plain sentences.
+- At the finish, record the system as built (DESIGN.md): overview, colors, typography, layout, elevation, shapes, components, do's and don'ts. A value used once is not a token. Never record a shortcut you took as a rule.
+
 ## Pre-ship checklist
 
 **Direction**
@@ -66,6 +76,8 @@ For motion-specific reviews use `Before | After | Why` rows with exact durations
 - [ ] Touch targets 44px+, primary action in thumb reach on mobile, safe areas respected.
 - [ ] LCP < 2.5s, INP < 200ms, CLS < 0.1; images sized with `aspect-ratio`; fonts preloaded and subset.
 - [ ] No console errors, unused imports or `any` left from the build.
+
+- Headings run h1 to h6 without skipping a level; a skip-to-content link comes first.
 
 ## Hardening inputs
 

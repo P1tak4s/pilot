@@ -61,6 +61,16 @@ When the subject is vague, choose a concrete subject, audience and single job yo
 If the user names a style ("make it brutalist", "riso", "bento"), or you need a fast starting point,
 pick the closest entry in `styles-catalog.md`, then adapt it to the brand and this file's rules.
 
+### Before showing a new visual direction
+
+- Capture product truth first: who uses it, the one job, what evidence exists, what must not be invented. At most 3 questions per round, and none about taste.
+- Explore wide: sketch several systems across at least three different material families before narrowing; if most candidates share one family, keep digging. Always also offer the category standard played straight as a fallback, without recommending it.
+- Skeleton test: strip the copy. If the bare structure does not say what each section is and why it matters, the boldness is only in font size.
+- The direction contract includes a first-viewport line: what sits where, at what scale, and where the primary action is.
+- For a new surface or a redesign, get one explicit approval of the direction before writing code.
+- Operate test: a person fluent in the category trusts the product UI at first sight. Strangeness without purpose (ornate buttons, display fonts in labels) fails it.
+- Experience pages (portfolios, studios, launches, award-level sites) follow `experience.md`.
+
 ## Use an existing design system when it fits
 
 If the brief or codebase names one, install the official package and use its components. Do not
