@@ -14,6 +14,7 @@ A Claude Code plugin that spends your usage where it matters. Website: **[pilot-
 - **Design.** Bundles the [ui-ux skill](https://github.com/P1tak4s/ui-ux-skill): direction, type, colour, motion and review for any UI change.
 - **SEO and AI search.** Bundles the [seo-geo skill](https://github.com/P1tak4s/seo-geo-skill): technical SEO, content, schema, AI citations, local, hreflang.
 - **Security.** Bundles Cloudflare's [security-audit skill](https://github.com/cloudflare/security-audit-skill).
+- **Writing.** Bundles [humanizer](https://github.com/blader/humanizer), [stop-slop](https://github.com/hardikpandya/stop-slop), [unslop](https://github.com/MohamedAbdallah-14/unslop) and [avoid-ai-writing](https://github.com/P1tak4s/avoid-ai-writing) so copy reads like a person wrote it, plus **lt-rasyba** for Lithuanian spelling, punctuation and style.
 
 ## Install
 
@@ -84,7 +85,7 @@ on your own Claude login.
 ## Credits
 
 Built on [effortless](https://github.com/HeyCubit/effortless) by HeyCubit (MIT). Code rules from
-[ponytail](https://github.com/DietrichGebert/ponytail) (MIT). Security skill by Cloudflare (MIT).
+[ponytail](https://github.com/DietrichGebert/ponytail) (MIT). Security skill by Cloudflare (MIT). Writing skills by Siqi Chen, Hardik Pandya and Mohamed Abdallah (MIT).
 
 ## License
 

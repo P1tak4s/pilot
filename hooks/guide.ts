@@ -35,8 +35,15 @@ Mark deliberate simplifications with a "ponytail:" comment naming the ceiling an
 - Any UI change, even one added control: ui-ux first (bundled with pilot; it routes to its references).
 - New landing page: ui-ux. Portfolio, studio or launch site at award level: ui-ux references/experience.md.
 - Polishing or reviewing existing UI: impeccable or ui-review. Animations: ui-ux references/motion.md, gsap-* for GSAP.
-- Lithuanian copy anywhere in the UI: lt-rasyba. Charts or dashboards: dataviz.
+- Lithuanian copy anywhere in the UI: lt-rasyba (bundled). Charts or dashboards: dataviz.
 Do not load several design skills for one small change; one is enough.
+
+## Writing for people: bundled writing skills
+Text people will read (site copy, emails, posts, docs, READMEs) should not sound generated. Pick one:
+- Drafting or rewriting English prose: avoid-ai-writing; a quick pass on a short text: stop-slop.
+- Making an existing draft sound human: humanizer (never adds facts). Tidying AI patterns in code comments or docs: unslop.
+- Any Lithuanian text: lt-rasyba first, always; it has its own checker script.
+No em dashes in prose unless the person uses them. Never use these to disguise AI text where disclosure is required.
 
 ## SEO and AI search: the seo-geo skill
 Load seo-geo (bundled with pilot) for anything about search visibility: titles and meta, indexing, sitemaps,
