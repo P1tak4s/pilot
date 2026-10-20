@@ -1,7 +1,10 @@
 {
   "name": "pilot",
-  "version": "2.0.0",
+  "version": "2.0.3",
   "description": "Auto effort per prompt, a limit guard, Haiku for the legwork, and one quiet line above the prompt.",
+  "homepage": "https://pilot-plugin.vercel.app",
+  "repository": "https://github.com/P1tak4s/pilot",
+  "license": "MIT",
   "types": "./types/index.d.ts",
   "userConfig": {
     "judge": {
@@ -81,7 +84,7 @@
     "hide": {
       "type": "string",
       "title": "Switched off",
-      "description": "Comma-separated: handoff (the footer button), timer (the cache countdown), reason (the judge's line), swamp (the context alert), hot (the running-low alert), cold (the cold-cache alert). Empty shows everything. The judge's line is off unless switched on.",
+      "description": "Comma-separated: handoff (the footer button), timer (the cache countdown), reason (the judge's line), swamp (the context alert), hot (the running-low alert), cold (the cold-cache alert), usage (the 5h/weekly usage row). Empty shows everything. The judge's line is off unless switched on.",
       "default": "reason"
     },
     "modelAuto": {

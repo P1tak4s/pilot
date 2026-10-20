@@ -123,13 +123,6 @@ const isCompacting = atom({ plugin: 'pilot', key: 'isCompacting' } as const, fal
 const compactAsk = atom({ plugin: 'pilot', key: 'compactAsk' } as const, false)
 // What is typed in that field. Kept here, not in state: a write per key would redraw the bar under the cursor.
 let compactNote = ''
-// When the compact bar opened: its first half second fades the swamped band's colours out (see compactFadeSvg).
-let compactOpenedAt = 0
-const COMPACT_FADE_MS = 450
-/** The swamped band's colours over the compact bar, fading to nothing: the band seems to turn from green to violet. */
-function compactFadeSvg(elapsedMs: number): string {
-  return inPhase(`<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="240" viewBox="0 0 1600 240" preserveAspectRatio="none"><style>.f{animation:f ${COMPACT_FADE_MS / 1000}s ease-out forwards}@keyframes f{from{opacity:1}to{opacity:0}}</style><rect class="f" width="1600" height="240" fill="${BOG_BG}"/></svg>`, elapsedMs)
-}
 // The person closed the cold band; it comes back the next time the cache goes cold.
 // The test pane of /effortless try pane.
 // Where a handoff is: null idle, writing (the handoff turn runs), clearing (clear and resend).
@@ -205,6 +198,16 @@ const judgeTest = atom({ plugin: 'pilot', key: 'judgeTest' } as const, null)
 const judgeDownHidden = atom({ plugin: 'pilot', key: 'judgeDownHidden' } as const, null)
 // A usage limit is close: which window, how much is used, when it resets. Null below the line.
 const hot = atom({ plugin: 'pilot', key: 'hot' } as const, null)
+const limits = atom({ plugin: 'pilot', key: 'limits' } as const, [] as { kind: string; percent: number; resetsAt: string | null }[])
+const bandFolded = atom({ plugin: 'pilot', key: 'bandFolded' } as const, false)
+let bandFoldedLoaded = false
+/** Folds the slim bar away or brings it back; kept in the store, so a new chat opens it as it was left. */
+async function setFolded($: EngineInterface, folded: boolean) {
+  await update($, bandFolded, () => folded)
+  await $.store.set('bandFolded', folded).catch(() => undefined)
+  $.ui.invalidate('ui.render')
+}
+const chatTokens = atom({ plugin: 'pilot', key: 'chatTokens' } as const, 0)
 // The running-hot band was closed at this many percent; it returns ten points later or in a new window.
 // The running-hot band closed with its cross: in which window and how full. Kept in the store too, so a new chat keeps it closed.
 const hotHidden = atom({ plugin: 'pilot', key: 'hotHidden' } as const, null as HotClosed | null)
@@ -1333,9 +1336,14 @@ async function closeHot($: EngineInterface, heat: { kind: string; percent: numbe
 }
 
 /** The fullest of the 5-hour and weekly windows, once one passes HOT_PERCENT. Save mode ends with its window. */
-async function checkHot($: EngineInterface, limits: readonly { kind: string; percentUsed: number; resetsAt?: string }[]) {
-  const windows = limits.filter(l => l.kind === 'five_hour' || l.kind === 'seven_day')
-  const top = windows.sort((a, b) => b.percentUsed - a.percentUsed)[0]
+async function checkHot($: EngineInterface, reported: readonly { kind: string; percentUsed: number; resetsAt?: string }[]) {
+  const windows = reported.filter(l => l.kind === 'five_hour' || l.kind === 'seven_day')
+  const seen = windows.map(l => ({ kind: l.kind, percent: l.percentUsed, resetsAt: l.resetsAt ?? null }))
+  if (JSON.stringify(seen) !== JSON.stringify(await read($, limits))) {
+    await update($, limits, () => seen)
+    $.ui.invalidate('ui.render')
+  }
+  const top = [...windows].sort((a, b) => b.percentUsed - a.percentUsed)[0]
   const next = top && top.percentUsed >= HOT_PERCENT ? { kind: top.kind, percent: top.percentUsed, resetsAt: top.resetsAt ?? null } : null
   const was = await read($, hot)
   if (JSON.stringify(next) !== JSON.stringify(was)) {
@@ -1352,6 +1360,19 @@ export function resetLabel(iso: string | null, now: number): string {
   const at = new Date(iso)
   const hm = `${String(at.getHours()).padStart(2, '0')}:${String(at.getMinutes()).padStart(2, '0')}`
   return at.getTime() - now < 20 * 3600_000 ? hm : `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][at.getDay()]} ${hm}`
+}
+
+/** The usage row: each window's share left and when it resets, then the chat's tokens. "5h 58% left · 14:30". */
+export function usageParts(windows: readonly { kind: string; percent: number; resetsAt: string | null }[], used: number, now: number): { text: string; low: boolean }[] {
+  const name: Record<string, string> = { five_hour: '5h', seven_day: 'Week' }
+  const parts = (['five_hour', 'seven_day'] as const).flatMap(kind => {
+    const w = windows.find(x => x.kind === kind)
+    if (!w) return []
+    const left = Math.max(0, Math.round(100 - w.percent))
+    const at = resetLabel(w.resetsAt, now)
+    return [{ text: `${name[kind]} ${left}% left${at ? ` · ${at}` : ''}`, low: left <= 100 - HOT_PERCENT }]
+  })
+  return used > 0 ? [...parts, { text: `${used >= 1000 ? kTokens(used) : used} tokens`, low: false }] : parts
 }
 
 /**
@@ -1635,19 +1656,12 @@ async function openHandoffBar($: EngineInterface) {
 export function enterSvg(color: string): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14"><g fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 2.5V7.2A1.8 1.8 0 0 1 9.7 9H2.8"/><path d="M5.3 6.4 2.7 9l2.6 2.6"/></g></svg>`
 }
-/** The compact bar's Compact: a white pill like the app's primary buttons, GO_CELLS wide. */
 // The narrowest bar (in cells) that still has room for a Compact button beside Auto and Handoff.
 const COMPACT_BUTTON_MIN_COLUMNS = 80
-const GO_CELLS = 12
-const GO_W = Math.round(GO_CELLS * 7.9)
-function goPillSvg(): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${GO_W}" height="20" viewBox="0 0 ${GO_W} 20"><rect width="${GO_W}" height="20" rx="5" fill="#ffffff"/></svg>`
-}
 /** Compact pressed: on desktop a bar asks for an optional note first; the terminal compacts at once. */
 async function openCompact($: EngineInterface, e: { surface: string }) {
   if (e.surface === 'terminal') return compactCold($)
   compactNote = ''
-  compactOpenedAt = await $.clock.now()
   await update($, compactAsk, () => true)
 }
 async function closeHandoffBar($: EngineInterface) {
@@ -2583,32 +2597,15 @@ function handoffCardTree($: EngineInterface, e: RenderInput<'AssistantMessage'> 
   }[fresh.kind]
   // Compacting is a wait in the background, not a result: one quiet line over the band's calm art, not the loud glow.
   const quiet = fresh.kind === 'compacting'
+  const landed = cardLanded(fresh.kind)
+  // One plain row: title, what happened, ✕. The absolute art drew as a tall block in VS Code.
   const card = (
-    <Box key="reply-handoff" position="relative" flexDirection="row" alignItems="center" paddingX={1} overflow="hidden"
-      backgroundColor={cardLanded(fresh.kind) ? DONE_BG : BRAND_BG} borderStyle="round" borderColor={cardLanded(fresh.kind) ? DONE_EDGE : BRAND_EDGE}>
-      <Box key="reply-handoff-art" position="absolute" top={-1} right={0} bottom={-1}>
-        {quiet ? (
-          <Svg source={DASH_SVG} alt="compacting" width={FROST_WIDTH * 2} height={FROST_HEIGHT * 2} />
-        ) : cardRunning(fresh.kind) ? (
-          <Svg source={HANDOFF_SVG} alt="handing off" width={FROST_WIDTH * 2} height={FROST_HEIGHT * 2} />
-        ) : (
-          <Svg source={cardLanded(fresh.kind) ? DONE_SVG : BRAND_SVG} alt="effortless" width={FROST_WIDTH * 2} height={FROST_HEIGHT * 2} />
-        )}
-      </Box>
-      <Box key="reply-handoff-words" position="relative" flexDirection={quiet ? 'row' : 'column'} gap={quiet ? 1 : 0} flexShrink={1} minWidth={0}>
-        {markTitle({ Box, Text, Svg }, 'reply-handoff-title', cardLanded(fresh.kind) ? DONE_ACCENT : ACCENT, words[0], cardLanded(fresh.kind) ? DONE_MARK_SVG : MARK_SVG)}
-        <Text wrap="truncate">{words[1]}</Text>
-      </Box>
-      {onDismiss ? (
-        <Box key="reply-handoff-close" position="relative" flexGrow={1} flexDirection="row" justifyContent="flex-end">
-          <Box position="absolute" top={0} left={0} />
-          {/* A box just the ✕'s size: in the wide one its hover lit up anywhere on the card's right half. */}
-          <Box key="card-close-box" position="relative" flexShrink={0}>
-            <Box position="absolute" top={0} left={0} />
-            <Button key="card-close" plain role="dismiss" label="✕" hover={{ backgroundColor: CARD_CLOSE_HOVER }} onPress={onDismiss} />
-          </Box>
-        </Box>
-      ) : null}
+    <Box key="reply-handoff" flexDirection="row" alignItems="center" columnGap={1} paddingX={1}
+      backgroundColor={landed ? DONE_BG : BRAND_BG} borderStyle="round" borderColor={landed ? DONE_EDGE : BRAND_EDGE}>
+      <Text bold color={landed ? DONE_ACCENT : ACCENT}>{words[0]}</Text>
+      <Text dimColor={quiet} wrap="truncate">{words[1]}</Text>
+      <Box flexGrow={1} />
+      {onDismiss ? <Button key="card-close" plain dimColor role="dismiss" onPress={onDismiss}>{' ✕ '}</Button> : null}
     </Box>
   )
   if (above === undefined) return card
@@ -2623,7 +2620,6 @@ function handoffCardTree($: EngineInterface, e: RenderInput<'AssistantMessage'> 
 /** Where the mod learns of a new version: the newest entry of public.json on main, written only by tools/publish.sh.
  * Releases between publishes (releases.json) reach the dev channel, never this card. */
 // The API, not raw.githubusercontent.com: the raw file sits behind a cache that lagged two releases behind.
-const RELEASES_URL = 'https://api.github.com/repos/HeyCubit/effortless/contents/public.json?ref=main'
 const WHATS_NEW_URL = 'https://heycubit.github.io/effortless/whats-new/'
 /** The site, the link Share copies for a friend. */
 const SITE_URL = 'https://heycubit.github.io/effortless/'
@@ -2673,36 +2669,27 @@ async function installedVersion($: EngineInterface): Promise<string | undefined>
 let lastUpdateCheck = 'not checked yet'
 /** public.json as it is on stable, read with git: a depth-1 fetch without file contents into a small repo of its own, then
  * the one file. Git has no cache in the way, unlike the host's web fetch, and works on the dev channel too. */
-async function latestFromGit($: EngineInterface): Promise<{ version: string; note: string } | undefined> {
-  const dir = `${$.plugin.root.replace(/[\\/]cache[\\/].*$/, '')}/data/effortless-release-check`
-  const git = (...args: string[]) => $.process.run(['git', '-C', dir, ...args], { timeoutMs: 60_000 })
-  if ((await git('rev-parse', '--git-dir').catch(() => null))?.exitCode !== 0) {
-    await $.process.run(['git', 'init', '-q', dir], { timeoutMs: 30_000 })
-    await git('remote', 'add', 'origin', 'https://github.com/HeyCubit/effortless.git')
+/** The newest public pilot: the version in plugin.json on main of the public repo, over the web; where that fails,
+ * the marketplace's own copy after `claude plugin marketplace update pilot`. (Was HeyCubit/effortless's public.json,
+ * which stays at 1.71 and so never offered pilot anything.) */
+const PILOT_PLUGIN_URL = 'https://api.github.com/repos/P1tak4s/pilot/contents/.claude-plugin/plugin.json?ref=main'
+export function pluginVersion(text: string): { version: string; note: string } | undefined {
+  try {
+    const v = (JSON.parse(text) as { version?: unknown }).version
+    return typeof v === 'string' && /^\d+\.\d+\.\d+$/.test(v) ? { version: v, note: '' } : undefined
+  } catch {
+    return undefined
   }
-  const fetched = await git('fetch', '-q', '--depth', '1', '--filter=blob:none', 'origin', 'stable')
-  if (fetched.exitCode !== 0) return undefined
-  const shown = await git('show', 'FETCH_HEAD:public.json')
-  return shown.exitCode === 0 ? latestRelease(shown.stdout) : undefined
 }
-/** The newest public release: from git first; where git is missing or offline, public.json on main over the web and the
- * marketplace's own copy after `claude plugin marketplace update`, whichever is newer. */
 async function latestAvailable($: EngineInterface): Promise<{ latest?: { version: string; note: string }; how: string }> {
-  const fromGit = await latestFromGit($).catch(() => undefined)
-  if (fromGit) return { latest: fromGit, how: `git ${fromGit.version}` }
-  const res = await $.http.fetch(`${RELEASES_URL}&t=${Date.now()}`, { headers: { accept: 'application/vnd.github.raw', 'user-agent': 'effortless' } }).catch((error: unknown) => ({ ok: false, status: 0, text: String(error) }))
-  const fromWeb = res.ok ? latestRelease(res.text) : undefined
-  const web = res.ok ? (fromWeb ? `web ${fromWeb.version}` : 'web: unreadable') : `web refused (${res.status || res.text.slice(0, 80)})`
-  const marketplace = `${$.plugin.root.replace(/[\\/]cache[\\/].*$/, '')}/marketplaces/effortless/public.json`
-  const readLocal = async () => {
-    const text = await $.fs.read(marketplace).catch(() => '')
-    return latestRelease(typeof text === 'string' ? text : '')
-  }
-  // Always refreshed: the host's web fetch can answer from its own cache, git does not.
-  await runClaude($, ['plugin', 'marketplace', 'update', 'effortless'], { timeoutMs: 120_000, env: GITHUB_OVER_HTTPS }).catch(() => null)
-  const local = await readLocal()
-  const best = fromWeb && (!local || !isNewer(local.version, fromWeb.version)) ? fromWeb : local
-  return { latest: best, how: `git failed; ${web}; marketplace ${local?.version ?? 'unreadable'}` }
+  const res = await $.http.fetch(`${PILOT_PLUGIN_URL}&t=${Date.now()}`, { headers: { accept: 'application/vnd.github.raw', 'user-agent': 'pilot' } }).catch((error: unknown) => ({ ok: false, status: 0, text: String(error) }))
+  const fromWeb = res.ok ? pluginVersion(res.text) : undefined
+  if (fromWeb) return { latest: fromWeb, how: `web ${fromWeb.version}` }
+  const market = pluginId($).split('@')[1] || 'pilot'
+  await runClaude($, ['plugin', 'marketplace', 'update', market], { timeoutMs: 120_000, env: GITHUB_OVER_HTTPS }).catch(() => null)
+  const text = await $.fs.read(`${$.plugin.root.replace(/[\\/]cache[\\/].*$/, '')}/marketplaces/${market}/.claude-plugin/plugin.json`).catch(() => '')
+  const local = pluginVersion(typeof text === 'string' ? text : '')
+  return { latest: local, how: `web refused (${res.status || res.text.slice(0, 80)}); marketplace ${local?.version ?? 'unreadable'}` }
 }
 /** The session's timers. A reload starts the module over, maybe with no session start (the countdown froze on "Cold"),
  * so the band's first draw starts them too. A session start always starts them: a timer started inside a request may
@@ -2802,7 +2789,7 @@ async function checkUpdateNow($: EngineInterface) {
 }
 // The repo is public, so HTTPS needs no key (only this repo's address is rewritten). Without it, git reaches GitHub
 // over SSH and fails for anyone with no SSH key there ("make sure you have the correct access rights").
-const GITHUB_OVER_HTTPS = { GIT_CONFIG_COUNT: '1', GIT_CONFIG_KEY_0: 'url.https://github.com/HeyCubit/.insteadOf', GIT_CONFIG_VALUE_0: 'git@github.com:HeyCubit/' }
+const GITHUB_OVER_HTTPS = { GIT_CONFIG_COUNT: '1', GIT_CONFIG_KEY_0: 'url.https://github.com/P1tak4s/.insteadOf', GIT_CONFIG_VALUE_0: 'git@github.com:P1tak4s/' }
 /** The line of a failed `claude plugin` run that says what went wrong: git's own `fatal:`/`error:` line, else the
  * CLI's ✘ line, else the last line. The last line alone was often the tail of a wrapped sentence. */
 export function updateFailure(output: string): string {
@@ -3527,8 +3514,19 @@ async function slimBar($: EngineInterface, e: RenderInput<'AbovePrompt'>) {
   if (!working) workStartedAt = null
   const effort = effortOf(v, v.modelNow ?? (await sessionModel($)))
   const word = v.judging ? 'Deciding' : v.pausedNow ? 'Paused' : effort ? EFFORT_LABELS[effort] : 'Auto'
+  if (!bandFoldedLoaded) {
+    bandFoldedLoaded = true
+    if ((await $.store.get('bandFolded').catch(() => null)) === true) await update($, bandFolded, () => true)
+  }
+  // Folded: only the effort word and the arrow that brings the bar back, at the right edge.
+  if (await read($, bandFolded))
+    return (
+      <Box key="slim-folded" flexDirection="row" justifyContent="flex-end" paddingX={1}>
+        <Button key="slim-unfold" plain dimColor onPress={() => setFolded($, false)}>{` ‹  ${word} `}</Button>
+      </Box>
+    )
   const handing = (await read($, handoffStage)) !== null
-  const status = v.compacting ? 'Compacting' : handing ? 'Handing off' : null
+  const status = v.compacting ? 'Compacting' : handing ? 'Handing off' : (await read($, updateCard))?.stage === 'updating' ? 'Updating pilot' : null
 
   // At most one alert, the most pressing first: a colour, a few words, one action.
   let alert: { color: string; text: string; label: string; onPress: () => unknown } | null = null
@@ -3537,6 +3535,7 @@ async function slimBar($: EngineInterface, e: RenderInput<'AbovePrompt'>) {
   const swampTokens = await read($, swamped)
   const swampHidden = await read($, swampHiddenAt)
   const coldTokens = v.compacting ? null : await coldWorth($)
+  const upd = await read($, updateCard)
   if (down && down !== (await read($, judgeDownHidden)))
     alert = { color: RED, text: 'judge down', label: 'Settings', onPress: () => openPluginSettings($) }
   else if (heat && !config.hide.includes('hot') && hotVisible(heat, await hotClosedNow($)))
@@ -3547,6 +3546,12 @@ async function slimBar($: EngineInterface, e: RenderInput<'AbovePrompt'>) {
     alert = { color: ICE, text: 'cache cold', label: 'Compact', onPress: () => openCompact($, e) }
   else if (swampTokens !== null && !config.hide.includes('swamp') && !v.compacting && (swampHidden === null || swampTokens >= swampHidden + SWAMP_REGROW))
     alert = { color: BOG, text: `${kTokens(swampTokens)} reread`, label: 'Compact', onPress: () => openCompact($, e) }
+  else if (upd?.stage === 'offer')
+    alert = { color: ACCENT, text: `v${upd.version} out`, label: 'Update', onPress: () => runUpdate($, upd) }
+  else if (upd?.stage === 'failed')
+    alert = { color: RED, text: 'update failed', label: 'Retry', onPress: () => runUpdate($, upd) }
+  else if (upd?.stage === 'done' && now - upd.at < UPDATED_CARD_MS)
+    alert = { color: DONE_ACCENT, text: `v${upd.version} installed`, label: 'OK', onPress: () => update($, updateCard, () => null) }
   else if (handoffLoud() && !config.hide.includes('handoff'))
     alert = { color: ACCENT, text: 'fresh chat would pay', label: 'Handoff', onPress: () => openHandoffBar($) }
 
@@ -3554,8 +3559,8 @@ async function slimBar($: EngineInterface, e: RenderInput<'AbovePrompt'>) {
   const lowPrompts = (spent.byEffort.low?.prompts ?? 0)
   const subs = subagentRuns.haiku + subagentRuns.other
   const light = [
-    spent.prompts ? `${lowPrompts}/${spent.prompts} light` : '',
-    subs ? `Haiku ${subagentRuns.haiku}/${subs}` : '',
+    spent.prompts ? `${lowPrompts}/${spent.prompts} prompts light` : '',
+    subs ? `${subagentRuns.haiku}/${subs} agents on Haiku` : '',
   ].filter(Boolean).join(' · ')
   const ctx = lastContext && lastContext.window ? lastContext.percent : null
   const cache = config.hide.includes('timer') || v.cacheNow === null || v.cacheNow <= 0 ? null : cacheLabel(v.cacheNow)
@@ -3568,7 +3573,7 @@ async function slimBar($: EngineInterface, e: RenderInput<'AbovePrompt'>) {
       $.ui.invalidate('ui.render')
     } else await openPluginSettings($)
   }
-  return (
+  const bar = (
     <Box key="slim" position="relative" flexDirection="row" alignItems="center" gap={1} paddingX={1}>
       {/* The signature: a hairline that sweeps while Claude works. First child, so it paints under the buttons and never takes their clicks. */}
       {working && Svg ? (
@@ -3579,13 +3584,13 @@ async function slimBar($: EngineInterface, e: RenderInput<'AbovePrompt'>) {
       {/* The effort is the one accent; pressing it switches Auto. One Button holding the words, padded, so the whole
           area takes the click (an overlay sized by blank labels was a few pixels wide). */}
       <Button key="slim-auto" plain onPress={() => toggleAutoEffort($)}>
-        {' '}<Text bold={v.auto} color={v.auto && !v.judging ? ACCENT : undefined} dimColor={!v.auto}>{word}</Text>{v.auto ? '' : <Text dimColor> · manual</Text>}{' '}
+        {' '}{v.auto ? <Text dimColor>Auto </Text> : null}<Text bold={v.auto} color={v.auto && !v.judging ? ACCENT : undefined} dimColor={!v.auto}>{word}</Text>{v.auto ? '' : <Text dimColor> (manual)</Text>}{' '}
       </Button>
       {status ? <Text dimColor wrap="truncate">{status}</Text> : model ? <Text dimColor wrap="truncate">{model}</Text> : null}
       {ctx !== null && Svg ? (
         <Box key="slim-ctx" flexShrink={0} flexDirection="row" gap={1} alignItems="center">
           <Svg source={ringSvg(ctx, DASH_DIM)} alt={`${ctx}% of context`} width={12} height={12} />
-          <Text dimColor>{`${ctx}%`}</Text>
+          <Text dimColor>{`${ctx}% context`}</Text>
         </Box>
       ) : null}
       {/* The cache only once it runs low (yellow, red): a countdown that is fine is noise. */}
@@ -3594,8 +3599,22 @@ async function slimBar($: EngineInterface, e: RenderInput<'AbovePrompt'>) {
       {light ? <Text dimColor wrap="truncate">{light}</Text> : null}
       <Box flexGrow={1} />
       {alert ? <Text color={alert.color} wrap="truncate">{`● ${alert.text}`}</Text> : null}
-      {alert ? <Button key="slim-act" variant="secondary" label={alert.label} onPress={alert.onPress} /> : null}
+      {alert ? <Button key="slim-act" variant="secondary" label={` ${alert.label} `} onPress={alert.onPress} /> : null}
+      {/* Compact within reach once the chat is sizeable, not only when an alert offers it. */}
+      {!alert && !status && ctx !== null && ctx >= 30 ? <Button key="slim-compact" plain dimColor onPress={() => openCompact($, e)}>{' Compact '}</Button> : null}
       <Button key="slim-settings" plain dimColor onPress={toggleSettings}>{'  ⚙  '}</Button>
+      <Button key="slim-fold" plain dimColor onPress={() => setFolded($, true)}>{' › '}</Button>
+    </Box>
+  )
+  // Usage under the bar: the 5-hour and weekly windows left and their resets, and the tokens this chat used.
+  const usage = config.hide.includes('usage') ? [] : usageParts(await read($, limits), await read($, chatTokens), now)
+  if (!usage.length) return bar
+  return (
+    <Box key="slim-wrap" flexDirection="column">
+      {bar}
+      <Box key="slim-usage" flexDirection="row" gap={2} paddingX={2} overflow="hidden">
+        {usage.map((u, i) => <Text key={`slim-usage-${i}`} color={u.low ? EMBER : undefined} dimColor={!u.low} wrap="truncate">{u.text}</Text>)}
+      </Box>
     </Box>
   )
 }
@@ -4373,6 +4392,11 @@ Saved to ${out}.md and .json` }
       // A prompt run on a cheaper model leaves the chat's own cache as it was: only the chat's model restarts the countdown.
       if (e.agentId === undefined && answer?.usage && request.model === e.model) await cacheTouched($, answer.usage).catch(() => undefined)
       if (e.agentId === undefined && answer?.usage) turnCost += weighted(answer.usage)
+      if (answer?.usage) {
+        const u = answer.usage
+        const n = u.input_tokens + u.output_tokens + (u.cache_read_input_tokens ?? 0) + (u.cache_creation_input_tokens ?? 0)
+        await update($, chatTokens, t => t + n).catch(() => undefined)
+      }
       if (e.agentId !== undefined && answer?.usage) await agentCost($, e.agentId, weighted(answer.usage)).catch(() => undefined)
       return answer
     }
@@ -5059,67 +5083,19 @@ Saved to ${out}.md and .json` }
     if (e.surface !== 'terminal' && (await read($, compactAsk))) {
       const { Input } = themedEls($.ui.resolve(e))
       const go = () => compactCold($, compactNote)
-      const nowCompact = await $.clock.now()
-      // One redraw once the fade is over, to drop its layer.
-      if (nowCompact - compactOpenedAt < COMPACT_FADE_MS) $.clock.after(COMPACT_FADE_MS + 150 - (nowCompact - compactOpenedAt), () => $.ui.invalidate('ui.render'))
+      // Built like the slim bar: one row, real Buttons holding their words. The old drawn pill, blank overlay buttons
+      // and absolute art rendered in VS Code as a tall violet block with blank white and blue buttons.
       return (
-        <Box key="compact-bar" position="relative" flexDirection="row" alignItems="center" paddingX={1} overflow="hidden"
+        <Box key="compact-bar" flexDirection="row" alignItems="center" columnGap={1} paddingX={1}
           backgroundColor={BRAND_BG} borderStyle="round" borderColor={BRAND_EDGE}>
-          <Box key="compact-art" position="absolute" top={-1} right={0} bottom={-1}>
-            <Svg source={BRAND_SVG} alt="effortless" width={FROST_WIDTH * 2} height={FROST_HEIGHT * 2} />
+          <Text bold color={ACCENT}>✦ Compact</Text>
+          <Button key="compact-to-handoff" plain dimColor onPress={async () => { await update($, compactAsk, () => false); await openHandoffBar($) }}>{' Handoff instead '}</Button>
+          <Box key="compact-field" flexGrow={1} flexShrink={1} minWidth={6}>
+            <Input key="compact-note" placeholder="Summary (optional)"
+                onInput={v => { compactNote = v }} onSubmit={v => { compactNote = v; void go() }} />
           </Box>
-          {/* Opening from the swamped band: its green fades out over the violet, then the entrance sweep. */}
-          {nowCompact - compactOpenedAt < COMPACT_FADE_MS + 100 ? (
-            <Box key="compact-fade" position="absolute" top={-1} left={0} right={0} bottom={-1}>
-              <Svg source={compactFadeSvg(nowCompact - compactOpenedAt)} alt="" width={1600} height={240} />
-            </Box>
-          ) : null}
-          {introLayer({ Box, Svg }, 'compact', await introShows($, 'compact'))}
-          {/* One line, as tall as the bands: the name, then the field and the buttons on the right. */}
-          <Box key="compact-words" position="relative" flexShrink={0}>
-            {markTitle({ Box, Text, Svg }, 'compact-title', ACCENT, '✦ Compact')}
-            <Box key="compact-switch-box" position="relative" flexShrink={0} marginLeft={1}>
-              <Box position="absolute" top={0} left={0} />
-              <Button key="compact-to-handoff" plain dimColor label="Handoff instead" onPress={async () => { await update($, compactAsk, () => false); await openHandoffBar($) }} />
-            </Box>
-          </Box>
-          <Box key="compact-controls" position="relative" flexGrow={1} flexShrink={1} minWidth={0} flexDirection="row" justifyContent="flex-end" alignItems="center" gap={1}>
-            <Box position="absolute" top={0} left={0} />
-            {/* The field shows through a window anchored right: its own Enter hint (a submit button 12 px wide, 6 px
-                after the field) is pushed past the window's right edge and clipped, whatever width the app gives the
-                field. Three cells out, one cell of padding back: the field ends 2 px inside, the hint starts 4 px out. */}
-            {/* The window reaches a row above and below the field (absolutely, so the bar stays one line): one line tall,
-                it cut the field's focus ring off at the top and bottom. */}
-            {/* It gives way before the Compact button does: in a narrow pane the field shrinks, the button stays. */}
-            <Box key="compact-field" position="relative" width={48} minWidth={6} height={1} flexShrink={1}>
-              <Box position="absolute" top={-1} bottom={-1} left={0} right={0} overflow="hidden">
-                <Box position="absolute" top={0} bottom={0} right={-3} width={60} flexDirection="row" alignItems="center" justifyContent="flex-end" paddingRight={1}>
-                  <Input key="compact-note" placeholder="Summary (optional)" submitLabel={'​'}
-                      onInput={v => { compactNote = v }} onSubmit={v => { compactNote = v; void go() }} />
-                </Box>
-              </Box>
-            </Box>
-            {/* Compact with the Enter mark in it: a white pill drawn, the word in the app's font, the mark as Claude's prompt
-                box draws its own, and a blank button over all three. A Button's label is text only, and ↵ there was a
-                hairline. */}
-            <Box key="compact-go-box" position="relative" flexShrink={0} flexDirection="row" alignItems="center">
-              <Box width={GO_CELLS} height={1} flexShrink={0} />
-              <Box position="absolute" top={0} bottom={0} left={0} right={0} alignItems="center" justifyContent="center">
-                <Svg source={goPillSvg()} alt="Compact" width={GO_W} height={20} />
-              </Box>
-              <Box position="absolute" top={0} bottom={0} left={0} right={0} flexDirection="row" alignItems="center" justifyContent="center" gap={1}>
-                <Text color="#141416">Compact</Text>
-                <Svg source={enterSvg('#141416')} alt="Enter" width={14} height={14} />
-              </Box>
-              <Box position="absolute" top={0} bottom={0} left={0} right={0} alignItems="center" justifyContent="center">
-                <Button key="compact-go" plain hover={{ backgroundColor: '#00000000' }} label={' '.repeat(GO_CELLS)} onPress={go} />
-              </Box>
-            </Box>
-            <Box key="compact-close-box" position="relative" flexShrink={0}>
-              <Box position="absolute" top={0} left={0} />
-              <Button key="compact-close" plain label="✕" hover={{ backgroundColor: CARD_CLOSE_HOVER }} onPress={() => update($, compactAsk, () => false)} />
-            </Box>
-          </Box>
+          <Button key="compact-go" variant="secondary" onPress={go}>{' Compact ↵ '}</Button>
+          <Button key="compact-close" plain dimColor onPress={() => update($, compactAsk, () => false)}>{' ✕ '}</Button>
         </Box>
       )
     }
@@ -5135,42 +5111,17 @@ Saved to ${out}.md and .json` }
       // Go is the one lit button: the picked kind is a quiet box, the other plain text. The app draws a hotkey's
       // letter faint on a grey button, so only the terminal gets letters there.
       const term = e.surface === 'terminal'
-      const kindNow = await $.clock.now()
       const controls = [
-        // Desktop: one switch with both words, the knob under the picked one (like Auto), each half a blank button.
-        !term && Svg ? (
-          <Box key="handoff-kind" position="relative" flexShrink={0} flexDirection="row" alignItems="center">
-            <Box width={KIND_CELLS * 2} height={1} flexShrink={0} />
-            <Box position="absolute" top={0} bottom={0} left={0} right={0} alignItems="center" justifyContent="center">
-              <Svg source={kindSwitchSvg(choice.kind, kindNow - kindFlipAt)} alt={choice.kind === 'full' ? 'Full handoff' : 'Quick handoff'} width={KIND_W} height={KIND_H} />
-            </Box>
-            <Box position="absolute" top={0} bottom={0} left={0} right={0} flexDirection="row" alignItems="center">
-              {(['quick', 'full'] as const).map(k => (
-                <Box key={`handoff-kind-${k}`} flexGrow={1} width={0} flexDirection="row" alignItems="center" justifyContent="center">
-                  <Box flexShrink={0} width={2} alignItems="center"><Svg source={rowIconSvg(k, choice.kind === k ? '#141416' : DASH_DIM)} alt={k === 'quick' ? 'bolt' : 'pen'} width={14} height={14} /></Box>
-                  <Text color={choice.kind === k ? '#141416' : DASH_DIM}>{k === 'quick' ? 'Quick' : 'Full'}</Text>
-                </Box>
-              ))}
-            </Box>
-            <Box position="absolute" top={0} bottom={0} left={0} right={0} flexDirection="row" alignItems="center">
-              {(['quick', 'full'] as const).map(k => (
-                <Box key={`handoff-kind-hit-${k}`} flexGrow={1} width={0} justifyContent="center">
-                  <Button key={`handoff-${k}`} plain hover={{ backgroundColor: '#00000000' }} label={' '.repeat(KIND_CELLS)} onPress={setBar({ kind: k })} />
-                </Box>
-              ))}
-            </Box>
-          </Box>
-        ) : null,
-        term || !Svg ? (choice.kind === 'quick' ? (
+        (choice.kind === 'quick' ? (
           <Button key="handoff-quick" hotkey={term ? 'q' : undefined} variant="secondary" label="Quick" onPress={setBar({ kind: 'quick' })} />
         ) : (
           <Button key="handoff-quick" hotkey={term ? 'q' : undefined} plain dimColor label="Quick" onPress={setBar({ kind: 'quick' })} />
-        )) : null,
-        term || !Svg ? (choice.kind === 'full' ? (
+        )),
+        (choice.kind === 'full' ? (
           <Button key="handoff-full" hotkey={term ? 'f' : undefined} variant="secondary" label="Full" onPress={setBar({ kind: 'full' })} />
         ) : (
           <Button key="handoff-full" hotkey={term ? 'f' : undefined} plain dimColor label="Full" onPress={setBar({ kind: 'full' })} />
-        )) : null,
+        )),
         <Select key="handoff-after" value={choice.after}
           options={[
             { value: 'continue', label: 'Clear & carry on' },
@@ -5185,32 +5136,15 @@ Saved to ${out}.md and .json` }
       // says what happens after.
       const line = e.surface === 'terminal' ? `${what.by}. ${what.then}` : choice.kind === 'full' ? (config.handoffSkill ? `/${config.handoffSkill}` : 'Saves HANDOFF.md') : 'A few seconds'
       if (e.surface === 'terminal') return terminalPanel($, e, 'handoff-bar', '⇥ Handoff', line, controls)
+      // One plain row like the slim bar: the absolute art and action layer drew as a tall block in VS Code.
       return (
-        // The art is a still image here: an animated one sits in a frame the app rebuilds on every redraw, and the bar
-        // redraws on every choice. The title over the line on what happens, on the left; the controls on the right in
-        // their own absolute layer, drawn last: the app draws anything in the flow under the absolute art, where it takes
-        // no clicks.
-        <Box key="handoff-bar" position="relative" flexDirection="row" alignItems="center" paddingX={1} overflow="hidden"
+        <Box key="handoff-bar" flexDirection="row" alignItems="center" columnGap={1} paddingX={1}
           backgroundColor={BRAND_BG} borderStyle="round" borderColor={BRAND_EDGE}>
-          <Box key="handoff-art" position="absolute" top={-1} right={0} bottom={-1}>
-            <Svg source={BRAND_SVG} alt="effortless" width={FROST_WIDTH * 2} height={FROST_HEIGHT * 2} />
-          </Box>
-          {/* The entrance as the bar opens, only then: a choice redraws the bar. */}
-          {introLayer({ Box, Svg }, 'handoff', await introShows($, 'handoff'))}
-          {/* One line: the name, then what the picked kind does, dim. */}
-          <Box key="handoff-words" position="relative" flexDirection="row" gap={1} flexShrink={1} minWidth={0}>
-            <Text color={ACCENT} bold wrap="truncate">
-              ⇥ Handoff
-            </Text>
-            <Text key="handoff-what" dimColor wrap="truncate">
-              {line}
-            </Text>
-          </Box>
-          <Box flexGrow={1} minWidth={48} />
-          <Box key="handoff-actions" position="absolute" top={0} right={1} bottom={0} flexDirection="row" gap={1} alignItems="center">
-            {!term ? <Button key="handoff-to-compact" plain dimColor label="Compact instead" onPress={async () => { await closeHandoffBar($); await openCompact($, e) }} /> : null}
-            {controls}
-          </Box>
+          <Text color={ACCENT} bold>⇥ Handoff</Text>
+          <Text key="handoff-what" dimColor wrap="truncate">{line}</Text>
+          <Box flexGrow={1} />
+          <Button key="handoff-to-compact" plain dimColor onPress={async () => { await closeHandoffBar($); await openCompact($, e) }}>{' Compact instead '}</Button>
+          {controls}
         </Box>
       )
     }
@@ -5347,7 +5281,13 @@ Saved to ${out}.md and .json` }
       ])
     }
     // ponytail: the slim bar says every alert itself; the update and saved cards are skipped in the fork.
-    if (e.surface !== 'terminal' && config.layout === 'default' && !(await compactCard($, !!e.props.isWorking))) return slimBar($, e)
+    // In the slim layout a running or just-landed compact/handoff shows its own plain card, nothing else.
+    if (e.surface !== 'terminal' && config.layout === 'default') {
+      const c = await compactCard($, !!e.props.isWorking)
+      if (!c) return slimBar($, e)
+      return handoffCardTree($, e, c, undefined,
+        !cardRunning(c.kind) ? () => update($, handoffCard, card => (card && !cardRunning(card.kind) ? null : card)) : undefined)
+    }
     // The judge the person picked is failing: Haiku stands in until it works again.
     const downReason = await read($, judgeDown)
     if (downReason && !config.hide.includes('down') && downReason !== (await read($, judgeDownHidden))) {

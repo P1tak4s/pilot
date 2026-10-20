@@ -1,6 +1,6 @@
 # pilot
 
-A Claude Code plugin that spends your usage where it matters.
+A Claude Code plugin that spends your usage where it matters. Website: **[pilot-plugin.vercel.app](https://pilot-plugin.vercel.app)**
 
 - **Auto effort.** Every prompt gets the reasoning effort it needs: quick questions run at Low, hard work at High.
   A judge picks it (Jev with a TypeSafe key, or Haiku on your own login).
@@ -58,21 +58,24 @@ line moves under it while Claude works. In the terminal, if `/pilot` says the mo
 of Haiku's 1 s. Run `/plugin configure pilot@pilot` and paste it under *TypeSafe API key*. Without a key, Haiku judges
 on your own Claude login.
 
-**Update:** `/plugin marketplace update pilot`, then `/reload-plugins`.
+**Update:** press **Update** when the line says a new version is out, or run `/plugin marketplace update pilot`, then `/reload-plugins`.
 **Remove:** `/plugin uninstall pilot@pilot`.
 
 ## The line above the prompt
 
 | Shows | Means |
 |---|---|
-| **High** | the effort Auto picked. Press it to switch Auto off (it says `manual`) and on again |
+| **Auto High** | the effort Auto picked. Press it to switch Auto off (it then reads `High (manual)`) and on again |
 | Opus | the chat's model |
-| ◔ 38% | how full the context is |
-| 7/10 light | prompts this session that ran at Low |
-| Haiku 3/4 | subagents this session that ran on Haiku |
+| ◔ 38% context | how full the context is |
+| 7/10 prompts light | prompts this session that ran at Low |
+| 3/4 agents on Haiku | subagents this session that ran on Haiku |
 | 12m | the prompt cache runs out soon (shown only when low) |
-| ● 91% · max High | close to a usage limit; the limit guard is on. **Save** caps lower |
+| ● 91% · max High **Save** | close to a usage limit; the limit guard is on. **Save** caps lower |
+| **Compact** | shown once the context passes 30%; opens a bar for an optional note, then Haiku writes the summary |
+| ● v2.0.4 out **Update** | a newer pilot is out; **Update** installs it, then reload the window |
 | ⚙ | settings |
+| › | folds the line down to the effort word |
 
 ## Commands
 

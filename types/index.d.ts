@@ -167,6 +167,12 @@ declare module 'claude-code' {
       installedSkills: string[]
       /** The fullest usage window once past 80%, or null. */
       hot: { kind: string; percent: number; resetsAt: string | null } | null
+      /** The account's usage windows (five_hour, seven_day) as the last response reported them; empty off a subscription. */
+      limits: { kind: string; percent: number; resetsAt: string | null }[]
+      /** The slim bar is folded away to its right edge: only the arrow that brings it back shows. */
+      bandFolded: boolean
+      /** Every token this chat's requests used (main chat and its helpers): fresh input, cache writes and reads, output. */
+      chatTokens: number
       /** Percent at which the running-hot band was closed. */
       hotHidden: number | null
       /** Save mode until this time (ms), or null. */

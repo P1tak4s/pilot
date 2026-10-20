@@ -1,7 +1,7 @@
 import { describe, expect, mock, test as baseTest } from 'claude-code/testing'
 import type { On } from 'claude-code'
 import type { Engine } from 'claude-code/testing'
-import { guarded, GUARD_AT, helperFloor, namedEffort, hotVisible, looksLikeRedo, REDO_STAY_PROMPTS, routeWorth, syncPlan, tipped, bounded, handoffEvidence, parseHandoffAnswer, withJevKey, parseVerdict, capped, resetLabel, HANDOFF_PROMPT, handoffMessage, withAttachments, endsOnQuestion, keepsEffort, benchGrade, benchReport, judgeFailure, contextFrom, readConfig, asSpent, cacheColor, cacheLabel, cacheClock, cacheSafe, cacheTtlOf, mostlyCached, isFollowUp, parseJevAnswer, parseJevKey, savedText, forkOutcome, setupNext, setupBack, setupCounter, dashboardLines, flashColor, handoffGlowStep, weighted, handoffLook, isNewer, latestRelease, updateSnoozed, updateFailure, claudeCandidates, noClaudeHint, compactTranscript, judgeGlowSvg, judgeGlowAt, judgeBrightnessAt, JUDGE_RISE_MS, JUDGE_FADE_MS, JUDGE_STEP_MS, JUDGE_PIECE_MS } from '../hooks/register'
+import { guarded, GUARD_AT, helperFloor, namedEffort, hotVisible, looksLikeRedo, REDO_STAY_PROMPTS, routeWorth, syncPlan, tipped, bounded, handoffEvidence, parseHandoffAnswer, withJevKey, parseVerdict, capped, resetLabel, usageParts, HANDOFF_PROMPT, handoffMessage, withAttachments, endsOnQuestion, keepsEffort, benchGrade, benchReport, judgeFailure, contextFrom, readConfig, asSpent, cacheColor, cacheLabel, cacheClock, cacheSafe, cacheTtlOf, mostlyCached, isFollowUp, parseJevAnswer, parseJevKey, savedText, forkOutcome, setupNext, setupBack, setupCounter, dashboardLines, flashColor, handoffGlowStep, weighted, handoffLook, isNewer, latestRelease, updateSnoozed, updateFailure, claudeCandidates, noClaudeHint, compactTranscript, judgeGlowSvg, judgeGlowAt, judgeBrightnessAt, JUDGE_RISE_MS, JUDGE_FADE_MS, JUDGE_STEP_MS, JUDGE_PIECE_MS } from '../hooks/register'
 import { ART_COLUMNS, artFrame, artPixel, MOVING } from '../hooks/art'
 import { isLight, lightHex, lightProps, setLight, setTheme, themedEls, themedSvg, tint, tintHex } from '../hooks/theme'
 import { importsOf, moduleLinks, moduleOf, relPath, withTouch } from '../hooks/agents'
@@ -1584,6 +1584,17 @@ describe('running hot and judge down', () => {
     expect(resetLabel(null, now)).toBe('')
   })
 
+  test('usage row: share left per window, its reset, then the chat\'s tokens', () => {
+    const now = new Date('2026-10-06T10:00:00').getTime()
+    const parts = usageParts([
+      { kind: 'seven_day', percent: 85, resetsAt: '2026-10-09T09:00:00' },
+      { kind: 'five_hour', percent: 42.4, resetsAt: '2026-10-06T14:30:00' },
+    ], 2_100_000, now)
+    expect(parts.map(p => p.text)).toEqual(['5h 58% left · 14:30', 'Week 15% left · Fri 09:00', '2.1M tokens'])
+    expect(parts.map(p => p.low)).toEqual([false, true, false])
+    expect(usageParts([], 0, now)).toEqual([])
+  })
+
 })
 
 describe('settings panel', () => {
@@ -2051,6 +2062,23 @@ describe('dashboard', () => {
     const busy = await $.ui.mount({ plugin: 'pilot', surface: 'desktop', ...BAND, props: { ...BAND.props, isWorking: true } } as never)
     expect(await busy.find({ key: 'slim-sweep' })).toBeDefined()
     await busy.unmount()
+  })
+
+  test('desktop: the arrow folds the slim bar to its edge, and the arrow there brings it back', DASH, async ($, on) => {
+    engine(on)
+    const mocked = mock.clock(on)
+    on('session.usage', () => ({ value: { context: { tokens: 180_000, window: 1_000_000, percent: 18 }, rateLimits: [{ kind: 'five_hour', percentUsed: 40 }] } }) as never)
+    await start($, on)
+    await closeSetup($, DESK_BAND)
+    await mocked.advance(16_000)
+    const band = await $.ui.mount(DESK_BAND)
+    expect(await band.find({ key: 'slim-usage' })).toBeDefined()
+    await band.press({ key: 'slim-fold' })
+    expect(await band.find({ key: 'slim' })).toBeUndefined()
+    expect(await band.find({ key: 'slim-usage' })).toBeUndefined()
+    await band.press({ key: 'slim-unfold' })
+    expect(await band.find({ key: 'slim' })).toBeDefined()
+    await band.unmount()
   })
 
   test('readConfig keeps handoffButton to advised or always', () => {
