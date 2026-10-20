@@ -1,6 +1,6 @@
 ---
 name: seo-geo
-description: One skill for search visibility, classic and AI. Use it to audit, plan or fix SEO and GEO/AEO for any site: crawling and indexing, Core Web Vitals, on-page and content (intent, E-E-A-T, briefs, clusters, internal links), schema/JSON-LD, AI search citations (Google AI Overviews and AI Mode, ChatGPT search, Perplexity, Gemini, Copilot, Claude), AI crawlers and robots.txt, llms.txt, entity and brand signals, local SEO and Google Business Profile, hreflang and translations, programmatic pages, backlinks, measurement (GSC, GA4, CrUX), and Lithuanian sites. Replaces separate seo-*, geo-*, aeo, ai-seo, schema and llms.txt skills.
+description: One skill for search visibility, classic and AI. Use it to audit, plan or fix SEO and GEO/AEO for any site: crawling and indexing, Core Web Vitals, on-page and content (intent, E-E-A-T, briefs, clusters, internal links), schema/JSON-LD, AI search citations (Google AI Overviews and AI Mode, ChatGPT search, Perplexity, Gemini, Copilot, Claude), AI crawlers and robots.txt, llms.txt, entity and brand signals, agent readiness (Is Agentic score), local SEO and Google Business Profile, hreflang and translations, programmatic pages, backlinks, measurement (GSC, GA4, CrUX), and Lithuanian sites. Replaces separate seo-*, geo-*, aeo, ai-seo, schema and llms.txt skills.
 ---
 
 # SEO + GEO
@@ -17,6 +17,7 @@ This file is the operating manual; detail lives in `references/`. Load only what
 | Google Business Profile, reviews, NAP, location pages | `references/local.md` |
 | hreflang, translations, locale formats | `references/international.md` |
 | Programmatic and template pages at scale | `references/programmatic.md` |
+| Agent readiness: run Is Agentic (free API/CLI), read its checks, fix them | `references/agent-readiness.md` |
 | Audit workflow, scoring, priorities, backlinks, measurement APIs, regression watch | `references/audit.md` |
 | Lithuanian sites: language, titles, schema fields, directories, AI search in LT | `references/lithuania.md` |
 
@@ -32,9 +33,10 @@ This file is the operating manual; detail lives in `references/`. Load only what
 
 1. **Scope.** Site type (local service, e-commerce, SaaS, publisher, agency), market and language, goal (traffic, leads, citations), and what exists (GSC, GA4, GBP access).
 2. **Plan and confirm** (rule 1). Offer narrower options: technical only, content only, AI search only, local only.
-3. **Check in this order**, stopping to fix blockers first: indexability (robots, noindex, canonical, status codes) → rendering (raw HTML) → speed (CWV field data) → on-page → content and intent → schema → AI search readiness → local → off-page.
-4. **Report** findings as `priority | where | evidence | fix`, Critical first (see `audit.md`), with a short plan: this week, this month, this quarter.
-5. **Fix** with the smallest change that removes the problem, then re-check the raw HTML or tool output. Never claim a fix that was not verified.
+3. **Get the quick external read first** for a public site: the Is Agentic report (`curl -s "https://is-agentic.com/api/v1/report?url=https://SITE"`, free, no key) gives an agent-readiness score with evidence; PageSpeed Insights gives field CWV. Quote both with their dates.
+4. **Check in this order**, stopping to fix blockers first: indexability (robots, noindex, canonical, status codes) → rendering (raw HTML) → speed (CWV field data) → on-page → content and intent → schema → AI search readiness → local → off-page.
+5. **Report** findings as `priority | where | evidence | fix`, Critical first (see `audit.md`), with a short plan: this week, this month, this quarter.
+6. **Fix** with the smallest change that removes the problem, then re-check the raw HTML or tool output. Never claim a fix that was not verified.
 
 ## Numbers to know by heart
 

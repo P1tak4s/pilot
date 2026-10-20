@@ -6,7 +6,7 @@
 2. Crawl politely: at most a few hundred pages, a few requests at a time, about a second between
    requests, 30s timeout, respect robots.txt. On HTTP 429, back off and report partial results, naming
    what was not checked.
-3. Check in order: indexability, rendering, speed, on-page, content and intent, schema, AI search,
+3. Pull the Is Agentic report (`agent-readiness.md`) and field CWV first, then check in order: indexability, rendering, speed, on-page, content and intent, schema, AI search,
    local, off-page.
 4. Write the report: summary with the 3 to 5 changes that matter most, then findings by priority.
 
