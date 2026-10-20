@@ -1,6 +1,6 @@
 {
   "name": "pilot",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Auto effort per prompt, a limit guard, Haiku for the legwork, and one quiet line above the prompt.",
   "homepage": "https://pilot-plugin.vercel.app",
   "repository": "https://github.com/P1tak4s/pilot",

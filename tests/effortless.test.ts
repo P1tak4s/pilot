@@ -1,7 +1,7 @@
 import { describe, expect, mock, test as baseTest } from 'claude-code/testing'
 import type { On } from 'claude-code'
 import type { Engine } from 'claude-code/testing'
-import { guarded, GUARD_AT, helperFloor, namedEffort, hotVisible, looksLikeRedo, REDO_STAY_PROMPTS, routeWorth, syncPlan, tipped, bounded, handoffEvidence, parseHandoffAnswer, withJevKey, parseVerdict, capped, resetLabel, usageParts, HANDOFF_PROMPT, handoffMessage, withAttachments, endsOnQuestion, keepsEffort, benchGrade, benchReport, judgeFailure, contextFrom, readConfig, asSpent, cacheColor, cacheLabel, cacheClock, cacheSafe, cacheTtlOf, mostlyCached, isFollowUp, parseJevAnswer, parseJevKey, savedText, forkOutcome, setupNext, setupBack, setupCounter, dashboardLines, flashColor, handoffGlowStep, weighted, handoffLook, isNewer, latestRelease, updateSnoozed, updateFailure, claudeCandidates, noClaudeHint, compactTranscript, judgeGlowSvg, judgeGlowAt, judgeBrightnessAt, JUDGE_RISE_MS, JUDGE_FADE_MS, JUDGE_STEP_MS, JUDGE_PIECE_MS } from '../hooks/register'
+import { guarded, GUARD_AT, newerLimits, helperFloor, namedEffort, hotVisible, looksLikeRedo, REDO_STAY_PROMPTS, routeWorth, syncPlan, tipped, bounded, handoffEvidence, parseHandoffAnswer, withJevKey, parseVerdict, capped, resetLabel, usageParts, HANDOFF_PROMPT, handoffMessage, withAttachments, endsOnQuestion, keepsEffort, benchGrade, benchReport, judgeFailure, contextFrom, readConfig, asSpent, cacheColor, cacheLabel, cacheClock, cacheSafe, cacheTtlOf, mostlyCached, isFollowUp, parseJevAnswer, parseJevKey, savedText, forkOutcome, setupNext, setupBack, setupCounter, dashboardLines, flashColor, handoffGlowStep, weighted, handoffLook, isNewer, latestRelease, updateSnoozed, updateFailure, claudeCandidates, noClaudeHint, compactTranscript, judgeGlowSvg, judgeGlowAt, judgeBrightnessAt, JUDGE_RISE_MS, JUDGE_FADE_MS, JUDGE_STEP_MS, JUDGE_PIECE_MS } from '../hooks/register'
 import { ART_COLUMNS, artFrame, artPixel, MOVING } from '../hooks/art'
 import { isLight, lightHex, lightProps, setLight, setTheme, themedEls, themedSvg, tint, tintHex } from '../hooks/theme'
 import { importsOf, moduleLinks, moduleOf, relPath, withTouch } from '../hooks/agents'
@@ -2054,10 +2054,10 @@ describe('dashboard', () => {
     const band = await $.ui.mount(DESK_BAND)
     expect(await band.find({ key: 'slim' })).toBeDefined()
     expect(await band.find({ key: 'dash' })).toBeUndefined()
-    expect(await drawn(band)).toContain('"children":["18%"]')
+    expect(await drawn(band)).toContain('"children":["18% context"]')
     expect(await band.find({ key: 'slim-sweep' })).toBeUndefined()
     await band.press({ key: 'slim-auto' })
-    expect(await drawn(band)).toContain('· manual')
+    expect(await drawn(band)).toContain('(manual)')
     await band.unmount()
     const busy = await $.ui.mount({ plugin: 'pilot', surface: 'desktop', ...BAND, props: { ...BAND.props, isWorking: true } } as never)
     expect(await busy.find({ key: 'slim-sweep' })).toBeDefined()
@@ -2600,5 +2600,19 @@ describe('theme', () => {
     } finally {
       setTheme('violet')
     }
+  })
+})
+
+describe('newerLimits', () => {
+  const a = [{ kind: 'five_hour', percent: 40, resetsAt: null }]
+  const b = [{ kind: 'five_hour', percent: 70, resetsAt: null }]
+  test('an idle chat shows what another chat heard later', () => {
+    expect(newerLimits(a, false, { at: 2, windows: b }, 3)).toEqual({ windows: b, write: false })
+  })
+  test('new numbers in this chat go to the store', () => {
+    expect(newerLimits(b, true, { at: 1, windows: a }, 3)).toEqual({ windows: b, write: true })
+  })
+  test('nothing kept yet: this chat seeds the store', () => {
+    expect(newerLimits(a, false, null, 3)).toEqual({ windows: a, write: true })
   })
 })

@@ -1335,10 +1335,35 @@ async function closeHot($: EngineInterface, heat: { kind: string; percent: numbe
   await $.store.set('hotClosed', closed).catch(() => undefined)
 }
 
+// The limits are one account's, but each chat only hears them with its own replies: an idle chat keeps showing what it
+// heard last. So a chat that hears new numbers writes them to the store with the time, and every chat shows the newest.
+type Limit = { kind: string; percent: number; resetsAt: string | null }
+let ownLimits: string | undefined
+/** Of this chat's limits and the store's, the newer; this chat's count as new only when they changed since last read. */
+export function newerLimits(own: Limit[], ownChanged: boolean, kept: { at: number; windows: Limit[] } | null, now: number): { windows: Limit[]; write: boolean } {
+  if (own.length && ownChanged && (!kept || now >= kept.at)) return { windows: own, write: true }
+  if (kept && Array.isArray(kept.windows) && kept.windows.length) return { windows: kept.windows, write: false }
+  return { windows: own, write: own.length > 0 }
+}
+async function sharedLimits($: EngineInterface, own: Limit[]): Promise<Limit[]> {
+  const key = JSON.stringify(own)
+  const changed = ownLimits !== undefined && key !== ownLimits
+  const first = ownLimits === undefined
+  ownLimits = key
+  const kept = (await $.store.get('limits').catch(() => null)) as { at: number; windows: Limit[] } | null
+  const now = await $.clock.now().catch(() => Date.now())
+  const got = newerLimits(own, changed || (first && !kept), kept, now)
+  if (got.write) await $.store.set('limits', { at: now, windows: got.windows }).catch(() => undefined)
+  return got.windows
+}
+
 /** The fullest of the 5-hour and weekly windows, once one passes HOT_PERCENT. Save mode ends with its window. */
 async function checkHot($: EngineInterface, reported: readonly { kind: string; percentUsed: number; resetsAt?: string }[]) {
-  const windows = reported.filter(l => l.kind === 'five_hour' || l.kind === 'seven_day')
-  const seen = windows.map(l => ({ kind: l.kind, percent: l.percentUsed, resetsAt: l.resetsAt ?? null }))
+  const own = reported
+    .filter(l => l.kind === 'five_hour' || l.kind === 'seven_day')
+    .map(l => ({ kind: l.kind, percent: l.percentUsed, resetsAt: l.resetsAt ?? null }))
+  const seen = await sharedLimits($, own)
+  const windows = seen.map(l => ({ kind: l.kind, percentUsed: l.percent, resetsAt: l.resetsAt ?? undefined }))
   if (JSON.stringify(seen) !== JSON.stringify(await read($, limits))) {
     await update($, limits, () => seen)
     $.ui.invalidate('ui.render')

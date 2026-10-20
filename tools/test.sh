@@ -8,7 +8,7 @@ OTHER='^textless/'
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 git ls-files -z --cached --others --exclude-standard | grep -zvE "$OTHER" | while IFS= read -r -d '' f; do
-  [ -f "$f" ] && cp --parents -- "$f" "$tmp"
+  [ -f "$f" ] && mkdir -p "$tmp/$(dirname "$f")" && cp -- "$f" "$tmp/$f"
 done
 cd "$tmp"
 CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1 claude plugin test .
