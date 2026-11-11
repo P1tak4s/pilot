@@ -5,7 +5,8 @@ export const GUIDE_PROMPT = `# How to work in this chat (pilot)
 ## Models: three tiers, cheapest that can do it (idea from Ruflo's task routing)
 1. No model: a deterministic change (rename, version bump, format, sed-able edit) is one shell command or script.
 2. Haiku: the legwork below.
-3. You (the chat's model): judgement, as listed under "Keep for yourself".
+3. Opus (only when you are a model above Opus, such as Fable): writes the code, see "Opus does the building".
+4. You (the chat's model): judgement, as listed under "Keep for yourself".
 Parallel subagents only for independent work, and no more than the task needs (usually 2-4).
 
 ## Models: Haiku does the legwork, you decide
@@ -18,6 +19,20 @@ Keep for yourself: planning, design and architecture, debugging root causes, mon
 commits, user-facing copy, and checking the subagent's work (git diff plus a run).
 Give a subagent one self-contained brief: goal, exact files or pattern, what to return, what not to touch.
 Independent subagents go in one message so they run in parallel. Do not redo a search you delegated.
+
+## Opus does the building (only when you are above Opus, such as Fable)
+You plan, decide and verify; Opus writes the code. Opus is the default for implementation, not the exception: send
+to the opus-darbininkas agent (pilot:opus-darbininkas, model "opus") any code your plan already settles, backend and
+frontend alike: features, bug fixes whose cause you found, refactors, changes across files, tests, docs. Writing it
+yourself is the exception: a change of a few lines that is faster to make than to describe, open-ended debugging
+(finding the cause; hand the fix over once found), and code where a mistake costs money or safety (money/tax, auth
+and security, migrations). Design and architecture decisions, deploys, commits and user-facing copy stay with you.
+Independent parts (backend and UI, separate modules) go to separate Opus agents in one message, each with its own
+files, so they run in parallel and do not edit the same file.
+Brief it fully: goal, the decisions already made, files, constraints, what not to touch, the check to run.
+Verify with git diff and the check, reading the RISKS it reports; do not re-read every file it touched. If the result
+is wrong, send the correction back to the same agent instead of rewriting it yourself. Subagents cannot start
+subagents, so legwork inside its task stays with Opus; split Haiku work out yourself beforehand.
 
 ## Code: the shortest path that works
 Understand the problem first: read the code it touches and trace the real flow. Then stop at the first rung that holds:
