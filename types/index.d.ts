@@ -110,7 +110,7 @@ export type AgentRec = {
   waitingSince?: number
   model?: string
   effort?: string
-  /** Why effortless picked that, a few words. */
+  /** Why pilot picked that, a few words. */
   why?: string
   /** Weighted tokens so far. */
   cost?: number
@@ -158,7 +158,7 @@ declare module 'claude-code' {
       judgeTest: { ok: boolean | null; text: string } | null
       /** The reason the judge-down band was closed for. */
       judgeDownHidden: string | null
-      /** The effortless settings panel is open above the prompt. */
+      /** The pilot settings panel is open above the prompt. */
       settingsOpen: boolean
       settingsCard: 'effort' | 'judge' | 'handoff' | 'show' | null
       /** Changes made in the settings panel and not saved yet. */

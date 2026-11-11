@@ -90,12 +90,12 @@
     })
     // The functions to call, by role. render.mjs found their minified names in the chunk by content (rendererNames);
     // the module's top-level bindings are local to the function below, so it hands them back by those names.
-    const grab = Object.entries(R.names).map(([role, n]) => `${role}:typeof ${n}==="undefined"?undefined:${n}`).join(',')
+    const grab = Object.entries(R.names).filter(([role]) => role !== 'optionsStyle').map(([role, n]) => `${role}:typeof ${n}==="undefined"?undefined:${n}`).join(',')
     // eslint-disable-next-line no-new-func
     const run = new Function('__scope', `with(__scope){${body}\n;return {${grab}}}`)
     const app = run(scope)
     const expect = { surfaceCss: 'string' }
-    const wrong = Object.keys(R.names).filter((role) => typeof app[role] !== (expect[role] ?? 'function'))
+    const wrong = Object.keys(R.names).filter((role) => role !== 'optionsStyle').filter((role) => typeof app[role] !== (expect[role] ?? 'function'))
     if (wrong.length) throw new Error(`renderer chunk changed: ${wrong.map((r) => `${r} (${R.names[r]}) is ${typeof app[r]}`).join(', ')}`)
     if (!app.surfaceCss.includes('--engine-band-line')) throw new Error(`renderer chunk changed: surfaceCss (${R.names.surfaceCss}) has no --engine-band-line`)
 
@@ -109,7 +109,10 @@
       root.querySelector('[data-engine-tree]')?.remove()
       const shaped = app.shapeTree(tree) // the band's shapeTree (without the host's "Turn off" button)
       const marks = app.newMarks()
-      const drawn = app.buildTree(shaped, handlers, app.colorOf, marks, app.inkOf(host), true)
+      const drawn = R.names.optionsStyle
+        ? app.buildTree(shaped, handlers, { marks, ink: app.inkOf(host), liftsHoverCards: true })
+        : app.buildTree(shaped, handlers, app.colorOf, marks, app.inkOf(host), true)
+      if (!drawn) throw new Error('the app renderer built nothing from the tree (names: ' + JSON.stringify(R.names) + ', shaped: ' + JSON.stringify(shaped)?.slice(0, 200) + ')')
       if (drawn) {
         drawn.setAttribute('data-engine-tree', '')
         if (!drawn.matches('a[href],button,input,select,textarea')) drawn.setAttribute('tabindex', '-1')

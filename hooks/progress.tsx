@@ -151,7 +151,7 @@ export function takeCues(): Cue[] {
   return due
 }
 
-/** /effortless progress [ask|done|clear]: a demo task of five steps in the state asked for, to see the bar. */
+/** /pilot progress [ask|done|clear]: a demo task of five steps in the state asked for, to see the bar. */
 export function demoProgress(arg: string): { progress: Progress | null; cue?: Cue; text: string } {
   const demo = (completed: number, doing: boolean): ProgressStep[] =>
     [
@@ -173,17 +173,17 @@ export function demoProgress(arg: string): { progress: Progress | null; cue?: Cu
     return {
       progress: { phase: 'asking', steps: demo(2, true) },
       cue: 'question',
-      text: 'The progress bar is yellow: Claude is asking something (a test). /effortless progress clear removes it.',
+      text: 'The progress bar is yellow: Claude is asking something (a test). /pilot progress clear removes it.',
     }
   if (arg === 'done')
     return {
       progress: { phase: 'done', steps: demo(5, false) },
       cue: 'done',
-      text: 'The progress bar is green: every step is done (a test). /effortless progress clear removes it.',
+      text: 'The progress bar is green: every step is done (a test). /pilot progress clear removes it.',
     }
   return {
     progress: { phase: 'working', steps: demo(2, true) },
-    text: 'A demo progress bar is showing, step 3 of 5 (a test). Try /effortless progress plan, progress ask, progress done, progress clear.',
+    text: 'A demo progress bar is showing, step 3 of 5 (a test). Try /pilot progress plan, progress ask, progress done, progress clear.',
   }
 }
 
@@ -206,7 +206,7 @@ export function registerProgress(on: On, hidden: () => readonly string[]) {
   on('prompt.context', async ($, e, next) => {
     const result = await next(e)
     if (off()) return result
-    return { ...result, blocks: [...result.blocks, { name: 'effortless-progress', text: PROGRESS_PROMPT }] }
+    return { ...result, blocks: [...result.blocks, { name: 'pilot-progress', text: PROGRESS_PROMPT }] }
   })
 
   on('tool.call', async ($, e, next) => {
@@ -516,7 +516,7 @@ export function drawProgress(p: Progress, d: ProgressDraw) {
   const name = (
     <Box key="progress-name" position="relative" flexShrink={0}>
       <Text color={look.color} bold>
-        ✦ effortless
+        ✦ pilot
       </Text>
     </Box>
   )

@@ -1,13 +1,13 @@
 // Grades the runs bench/helpers/run.sh made: cost, whether each answer is right, and the effort each helper got.
 const fs = require('fs'), path = require('path'), cp = require('child_process')
-const B = process.env.EFFORTLESS_BENCH_DIR || path.join(process.env.TEMP || '/tmp', 'effbench')
+const B = process.env.PILOT_BENCH_DIR || path.join(process.env.TEMP || '/tmp', 'pilotbench')
 const pristine = f => fs.readFileSync(path.join(B, 'pristine', f), 'utf8')
 const walk = (d, base = d) => fs.readdirSync(d, { withFileTypes: true }).flatMap(e =>
   e.isDirectory() ? (['node_modules', '.git', '.claude'].includes(e.name) ? [] : walk(path.join(d, e.name), base))
     : [path.relative(base, path.join(d, e.name)).replace(/\\/g, '/')])
 const pristineFiles = new Set(walk(path.join(B, 'pristine')))
 const changed = dir => walk(dir).filter(f => !pristineFiles.has(f) || fs.readFileSync(path.join(dir, f), 'utf8') !== pristine(f))
-const trueTests = (pristine('tests/effortless.test.ts').match(/(^|[^.\w])test\(/gm) || []).length
+const trueTests = (pristine('tests/pilot.test.ts').match(/(^|[^.\w])test\(/gm) || []).length
 const trueHooks = fs.readdirSync(path.join(B, 'pristine', 'hooks')).filter(f => /\.tsx?$/.test(f)).length
 const rows = []
 for (const f of fs.readdirSync(path.join(B, 'r')).filter(f => f.startsWith('hb-') && f.endsWith('.json'))) {

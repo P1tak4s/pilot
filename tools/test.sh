@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
-# Runs effortless's own tests. `claude plugin test .` runs every *.test.ts under the folder and has no exclude, so a
-# plugin kept in a subfolder (textless/) would have its tests run against effortless. This runs them on a copy of the
-# working tree without those folders: tracked files plus new ones not ignored, as they are on disk now.
+# Runs pilot's tests on a copy of the working tree: tracked files plus new ones not ignored, as they are on disk now,
+# so ignored local folders (data/, node_modules/) never reach `claude plugin test`.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-OTHER='^textless/'
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
-git ls-files -z --cached --others --exclude-standard | grep -zvE "$OTHER" | while IFS= read -r -d '' f; do
+git ls-files -z --cached --others --exclude-standard | while IFS= read -r -d '' f; do
   [ -f "$f" ] && mkdir -p "$tmp/$(dirname "$f")" && cp -- "$f" "$tmp/$f"
 done
 cd "$tmp"

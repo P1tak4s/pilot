@@ -1,6 +1,6 @@
 {
   "name": "pilot",
-  "version": "2.0.5",
+  "version": "2.0.7",
   "description": "Auto effort per prompt, a limit guard, Haiku for the legwork, and one quiet line above the prompt.",
   "homepage": "https://pilot-plugin.vercel.app",
   "repository": "https://github.com/P1tak4s/pilot",
@@ -28,7 +28,7 @@
     "handoffSkill": {
       "type": "string",
       "title": "Handoff skill (optional)",
-      "description": "A skill or slash command that writes the Full handoff, e.g. session-handoff. Empty: effortless writes it itself (checks git, saves HANDOFF.md). Quick is always a fast fork with the built-in prompt.",
+      "description": "A skill or slash command that writes the Full handoff, e.g. session-handoff. Empty: pilot writes it itself (checks git, saves HANDOFF.md). Quick is always a fast fork with the built-in prompt.",
       "default": ""
     },
     "handoffAfter": {
@@ -157,7 +157,7 @@
     "theme": {
       "type": "string",
       "title": "Theme",
-      "description": "The accent colour of everything effortless draws. violet: the brand colour. orange: Claude Code orange. rose: cherry-blossom pink, with falling petals.",
+      "description": "The accent colour of everything pilot draws. violet: the brand colour. orange: Claude Code orange. rose: cherry-blossom pink, with falling petals.",
       "default": "violet",
       "options": [
         "violet",
@@ -184,6 +184,37 @@
         "on",
         "off"
       ]
+    },
+    "apiProvider": {
+      "type": "string",
+      "title": "API worker",
+      "description": "Coding jobs run on your own API key instead of the subscription. anthropic: Claude via claude -p. openai: codex exec (needs the codex CLI). other: any Anthropic-compatible endpoint (OpenRouter, DeepSeek, Kimi, z.ai), set its URL below. off: no worker. With an anthropic key, the chat itself can also go on on it once the usage limit is out: the Running hot band's Use API key, or /pilot api on|off.",
+      "default": "off",
+      "options": [
+        "off",
+        "anthropic",
+        "openai",
+        "other"
+      ]
+    },
+    "apiKey": {
+      "type": "string",
+      "title": "API key (for the API worker)",
+      "description": "Anthropic, OpenAI or the other provider's key. Stored as a secret by Claude Code.",
+      "sensitive": true,
+      "default": ""
+    },
+    "apiBaseUrl": {
+      "type": "string",
+      "title": "API base URL (only for other)",
+      "description": "Anthropic-compatible base URL, e.g. https://openrouter.ai/api",
+      "default": ""
+    },
+    "apiModel": {
+      "type": "string",
+      "title": "API model (optional)",
+      "description": "Model id for the worker. Empty: Claude Code's default for anthropic, gpt-6-luna for openai. For other, the provider's model id.",
+      "default": ""
     }
   }
 }

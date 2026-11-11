@@ -80,7 +80,7 @@
     "file": "hooks/register.tsx",
     "find": "(?! +(problem|worries|thanks|thank|need|rush|hurry))",
     "replace": "(?! +(worries|thanks|thank|need|rush|hurry))",
-    "report": "When I reply \"no problem\" (say after Claude apologizes), effortless treats it as if I said the last answer was wrong: with model Auto on, the next few prompts stay on the bigger model as for a redo, and stats count it as redone. \"no worries\" and \"no thanks\" don't do this.",
+    "report": "When I reply \"no problem\" (say after Claude apologizes), pilot treats it as if I said the last answer was wrong: with model Auto on, the next few prompts stay on the bigger model as for a redo, and stats count it as redone. \"no worries\" and \"no thanks\" don't do this.",
     "fails": [
       "dashboard > looksLikeRedo: a correction after a cheaper answer, not a thank-you or a new task",
       "dashboard > a thank-you after a cheaper answer is not a redo"
@@ -103,7 +103,7 @@
     "file": "hooks/register.tsx",
     "find": "const stay = contextTokens * MODEL_PRICE[inUse] * (warm.inUse ? WEIGHT.read : write)",
     "replace": "const stay = contextTokens * MODEL_PRICE[inUse] * (warm.to ? WEIGHT.read : write)",
-    "report": "With model Auto on, effortless moves prompts to a cheaper model even when that model's prompt cache is cold and the chat is big, while my main model's cache is still warm. That writes the whole chat into the cold cache and costs more than staying would. It should only switch when the switch comes out cheaper.",
+    "report": "With model Auto on, pilot moves prompts to a cheaper model even when that model's prompt cache is cold and the chat is big, while my main model's cache is still warm. That writes the whole chat into the cold cache and costs more than staying would. It should only switch when the switch comes out cheaper.",
     "fails": [
       "auto > routeWorth: a switch to a cold model pays only when it still comes out cheaper",
       "dashboard > cache-aware routing, live through the hooks: a cold Sonnet is skipped on a big warm Opus chat, Haiku moves, a cold chat moves, and a routed reply leaves the countdown alone"
@@ -115,7 +115,7 @@
     "file": "hooks/register.tsx",
     "find": "const reply = context.split('\\nassistant: ').pop() ?? ''",
     "replace": "const reply = context.split('\\nassistant: ')[0] ?? ''",
-    "report": "When Claude's reply ends with a question like \"Should I archive it?\" and I answer \"yes\", effortless just keeps the previous effort instead of judging the work my answer starts. And the other way round: if my own previous message had a question mark in it, a plain \"go\" between two steps gets judged even though Claude didn't ask anything.",
+    "report": "When Claude's reply ends with a question like \"Should I archive it?\" and I answer \"yes\", pilot just keeps the previous effort instead of judging the work my answer starts. And the other way round: if my own previous message had a question mark in it, a plain \"go\" between two steps gets judged even though Claude didn't ask anything.",
     "fails": [
       "short answers to a question > a short reply after a question goes to the judge; between two steps it keeps the effort"
     ]

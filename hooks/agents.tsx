@@ -12,7 +12,7 @@ import { ART_H, ART_W, looks, PILL_H, progressArtSvg, progressShare, progressTra
 // card's green, the settings bar's big tilted mark, cut off by the corner.
 
 /** The pane's id, for $.ui.open and its ui.render hook. */
-export const AGENTS_PANE = 'effortless-agents'
+export const AGENTS_PANE = 'pilot-agents'
 
 /** The progress band's phase each agent state is drawn in: its colours and its art. */
 const PHASE: Record<Exclude<AgentState, 'failed'>, Progress['phase']> = {
@@ -395,14 +395,14 @@ function header(d: AgentsDraw, agents: readonly AgentRec[]) {
       backgroundColor={CARD_BG} borderStyle="round" borderColor={CARD_EDGE}>
       {Svg ? (
         <Box key="agents-head-art" position="absolute" top={-1} right={0} bottom={-1}>
-          <Svg source={d.cardArt.source} alt="effortless" width={d.cardArt.width} height={d.cardArt.height} />
+          <Svg source={d.cardArt.source} alt="pilot" width={d.cardArt.width} height={d.cardArt.height} />
         </Box>
       ) : null}
       <Box position="relative" flexDirection="row" alignItems="center" minWidth={0}>
         <Box position="absolute" top={0} left={0} />
         {Svg ? (
           <Box flexShrink={0} marginRight={1} alignItems="center">
-            <Svg source={MARK_SVG} alt="effortless" width={18} height={18} />
+            <Svg source={MARK_SVG} alt="pilot" width={18} height={18} />
           </Box>
         ) : <Text color={accent()} bold>✦ </Text>}
         <Text color={color} bold>{moodWord(agents)}</Text>
@@ -565,7 +565,7 @@ export function agentsPane(d: AgentsDraw, agents: readonly AgentRec[]) {
       ) : null}
       {Svg ? (
         <Box key="agents-mark" position="absolute" right={-7} bottom={-4}>
-          <Svg source={CORNER_MARK} alt="effortless" width={230} height={230} />
+          <Svg source={CORNER_MARK} alt="pilot" width={230} height={230} />
         </Box>
       ) : null}
       <Box position="relative" flexDirection="column" gap={1}>
@@ -580,20 +580,20 @@ export function agentsPane(d: AgentsDraw, agents: readonly AgentRec[]) {
   )
 }
 
-/** Sample agents for `/effortless agents demo`: one of each state, so the pane can be seen without a real run. */
+/** Sample agents for `/pilot agents demo`: one of each state, so the pane can be seen without a real run. */
 export function demoAgents(nowMs: number): AgentRec[] {
   const step = (label: string, status: 'completed' | 'in_progress' | 'pending', i: number) => ({ id: `s${i}`, label, doing: label, status })
   return [
     { id: 'demo-1', type: 'Explore', task: 'find the pane and agent hooks', state: 'running', startedAt: nowMs - 103_000, model: 'Haiku', effort: 'Low', why: 'read-only search, wide but shallow', file: 'hooks/agents.tsx',
       now: 'Grep "agentId" in hooks/', steps: [step('List hooks', 'completed', 0), step('Read types', 'completed', 1), step('Find spawn', 'in_progress', 2), step('Report', 'pending', 3)] },
-    { id: 'demo-2', type: 'code-reviewer', task: 'review the agent-panel branch', state: 'waiting', file: 'tests/effortless.test.ts', startedAt: nowMs - 251_000, waitingSince: nowMs - 38_000, now: 'Bash npm test', model: 'Opus', effort: 'High', why: 'a review before merge: misses cost more' },
+    { id: 'demo-2', type: 'code-reviewer', task: 'review the agent-panel branch', state: 'waiting', file: 'tests/pilot.test.ts', startedAt: nowMs - 251_000, waitingSince: nowMs - 38_000, now: 'Bash npm test', model: 'Opus', effort: 'High', why: 'a review before merge: misses cost more' },
     { id: 'demo-3', type: 'Plan', task: 'outline the release notes', state: 'picking', startedAt: nowMs - 2_000 },
     { id: 'demo-4', type: 'general-purpose', task: 'add state for the panel', state: 'done', startedAt: nowMs - 400_000, endedAt: nowMs - 208_000, model: 'Sonnet', effort: 'Medium' },
     { id: 'demo-5', parentId: 'demo-4', type: 'Explore', task: 'read the tests', state: 'done', startedAt: nowMs - 380_000, endedAt: nowMs - 340_000, model: 'Haiku', effort: 'Low' },
   ]
 }
 
-/** The files the sample agents touched, for `/effortless agents demo`: three parts of the code and how they import. */
+/** The files the sample agents touched, for `/pilot agents demo`: three parts of the code and how they import. */
 export function demoFiles(nowMs: number): FileTouch[] {
   const f = (path: string, edited: boolean, imports: string[]): FileTouch => ({ path, edited, by: ['main'], lastAt: nowMs, imports })
   return [
@@ -601,7 +601,7 @@ export function demoFiles(nowMs: number): FileTouch[] {
     f('hooks/agents.tsx', true, ['hooks/progress', 'hooks/brand-mark', 'types']),
     f('hooks/progress.tsx', false, ['types']),
     f('types/index.d.ts', true, []),
-    f('tests/effortless.test.ts', false, ['hooks/register', 'hooks/progress']),
+    f('tests/pilot.test.ts', false, ['hooks/register', 'hooks/progress']),
     f('docs/agent-panel/PLAN.md', false, []),
     f('tools/render-band/render.mjs', false, []),
   ]

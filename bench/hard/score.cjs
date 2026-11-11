@@ -1,9 +1,9 @@
 // Grades the runs bench/hard/run.sh made. A run solved its bug when tests/ is untouched and the full test suite passes
 // in its copy (`claude plugin test`, local, calls no model). Prints a table per setup and a task x setup grid,
 // writes hard-scored.json next to the runs.
-// Usage: node bench/hard/score.cjs [jobs]   (EFFBENCH_HARD_DIR picks the bench folder, as in run.sh)
+// Usage: node bench/hard/score.cjs [jobs]   (PILOTBENCH_HARD_DIR picks the bench folder, as in run.sh)
 const fs = require('fs'), path = require('path'), cp = require('child_process'), os = require('os')
-const B = process.env.EFFBENCH_HARD_DIR || path.join(process.env.TEMP || os.tmpdir(), 'effbench-hard')
+const B = process.env.PILOTBENCH_HARD_DIR || path.join(process.env.TEMP || os.tmpdir(), 'pilotbench-hard')
 const JOBS = Number(process.argv[2]) || 4
 const tasks = JSON.parse(fs.readFileSync(path.join(__dirname, 'tasks.json'), 'utf8'))
 const walk = (d, base = d) => !fs.existsSync(d) ? [] : fs.readdirSync(d, { withFileTypes: true }).flatMap(e =>
@@ -70,7 +70,7 @@ async function grade(tag) {
   rows.sort((a, b) => a.tag.localeCompare(b.tag, 'en', { numeric: true }))
   fs.writeFileSync(path.join(B, 'hard-scored.json'), JSON.stringify(rows, null, 1))
 
-  const label = { m: 'medium, no effortless', h: 'high, no effortless', x: 'xhigh, no effortless', on: 'effortless on (app on medium)' }
+  const label = { m: 'medium, no pilot', h: 'high, no pilot', x: 'xhigh, no pilot', on: 'pilot on (app on medium)' }
   const order = ['m', 'h', 'x', 'on']
   const sum = (a, k) => a.reduce((s, r) => s + (r[k] || 0), 0)
   const money = v => '$' + v.toFixed(v < 1 ? 3 : 2)
@@ -103,7 +103,7 @@ async function grade(tag) {
     if (on.length) {
       const picks = {}
       for (const r of on) for (const e of r.picked.split('/')) picks[e] = (picks[e] || 0) + 1
-      console.log('\neffort effortless picked (runs): ' + JSON.stringify(picks))
+      console.log('\neffort pilot picked (runs): ' + JSON.stringify(picks))
     }
   }
   console.log('\nNot solved:')

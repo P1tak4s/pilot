@@ -1,6 +1,6 @@
 // The working guide: how to split work between Haiku and the chat's model, and how to write as little code as works
 // (the core of ponytail, MIT, DietrichGebert). Static text in the first message's context, so the prompt cache stays warm.
-export const GUIDE_PROMPT = `# How to work in this chat (effortless)
+export const GUIDE_PROMPT = `# How to work in this chat (pilot)
 
 ## Models: three tiers, cheapest that can do it (idea from Ruflo's task routing)
 1. No model: a deterministic change (rename, version bump, format, sed-able edit) is one shell command or script.

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Render rig for the effortless dashboard band, as the Claude desktop app (Code tab) draws it above the prompt.
+// Render rig for the pilot dashboard band, as the Claude desktop app (Code tab) draws it above the prompt.
 //
 //   node tools/render-band/render.mjs --percent 45 --width 768 --glow
 //
@@ -128,7 +128,7 @@ const page = `<!doctype html>
 <html lang="en" data-theme="claude" data-mode="${mode}" data-density="comfortable" data-color-version="v2" class="cds-root antialiased">
 <head>
 <meta charset="utf-8">
-<title>effortless band render</title>
+<title>pilot band render</title>
 ${stylesheets.map((h) => `<link rel="stylesheet" href="${h}">`).join('\n')}
 ${inlineStyles.map((s) => `<style>${s}</style>`).join('\n')}
 <style>
@@ -230,23 +230,41 @@ function rendererNames(src) {
     names[role] = [...hits][0]
   }
   // The AbovePrompt site hands the band's tree shaper and surface CSS to the shared site component as named props.
-  find('shapeTree', "the band's tree shaper (the AbovePrompt site's default shapeTree)",
-    `component:"AbovePrompt"[^}]*?shapeTree:(?:${id}\\.shapeTree\\?\\?)?(${id})`)
+  // Newer builds keep the default in a variable of their own (`r = props.shapeTree ?? defaultShape`) before the site.
+  const shapeDefault = `${id}=${id}\\.shapeTree\\?\\?(${id});return`
+  if (new RegExp(shapeDefault).test(src))
+    find('shapeTree', "the band's default tree shaper (`x = props.shapeTree ?? shaper`)", shapeDefault)
+  else
+    find('shapeTree', "the band's tree shaper (the AbovePrompt site's default shapeTree)",
+      `component:"AbovePrompt"[^}]*?shapeTree:(?:${id}\\.shapeTree\\?\\?)?(${id})`)
   find('surfaceCss', "the band's surface CSS (the AbovePrompt site's surfaceCss, which sets --engine-band-line)",
     `component:"AbovePrompt"[^}]*?surfaceCss:(${id})`)
   // Opens the host's shadow root once and puts the engine CSS plus the site's CSS in a <style> as its first child.
   find('attachRoot', 'the shadow-root setup (if (host.shadowRoot) return it; else attachShadow and add the engine CSS)',
     `function (${id})\\((${id}),${id}\\)\\{if\\(\\2\\.shadowRoot\\)return \\2\\.shadowRoot;let ${id}=\\2\\.attachShadow\\(`)
-  // A fresh collector for what one draw leaves behind: the image leaves, the hover rules, the groups.
-  find('newMarks', 'the marks collector (() => ({leaves: [], hoverRules: [], ...}))', `(${id})=\\(\\)=>\\(\\{leaves:\\[\\],hoverRules:\\[\\]`)
-  // The element renderer takes the marks collector's result as a default parameter, after the colour resolver.
-  find('buildTree', 'the element renderer (tree, handlers, colorOf = ..., marks = newMarks(), ...)',
-    `function (${id})\\(${id},${id},${id}=${id},${id}=${esc(names.newMarks)}\\(\\)`)
-  find('colorOf', "the colour resolver (the element renderer's default colorOf)",
-    `function ${esc(names.buildTree)}\\(${id},${id},${id}=(${id}),`)
-  // Where the shared site draws, the ink (the host's computed colour and font) comes from a helper called on the host.
-  find('inkOf', "the host's ink (the argument the site passes the element renderer before liftsHoverCards)",
-    `${esc(names.buildTree)}\\(${id},${id}\\.handlers,${id},${id},(${id})\\(${id}\\),${id}\\.liftsHoverCards`)
+  // A fresh collector for what one draw leaves behind: the image leaves, the hover rules, the groups. Newer builds
+  // declare it as a function, older ones as an arrow in a variable.
+  const arrow = `(${id})=\\(\\)=>\\(\\{leaves:\\[\\],hoverRules:\\[\\]`
+  const declared = `function (${id})\\(\\)\\{return\\{leaves:\\[\\],hoverRules:\\[\\]`
+  find('newMarks', 'the marks collector (() => ({leaves: [], hoverRules: [], ...}))', src.match(new RegExp(declared)) ? declared : arrow)
+  if (src.match(new RegExp(declared))) {
+    // Newer builds: buildTree(tree, handlers, { marks, ink, liftsHoverCards }) wraps the element renderer; the site
+    // calls it with the host's ink as `ink: inkOf(host)`.
+    names.optionsStyle = true
+    find('buildTree', 'the tree builder (tree, handlers, options = { marks, ink, liftsHoverCards })',
+      `function (${id})\\(${id},${id},${id}\\)\\{let ${id}=${id}\\(${id},\\{handlers:${id},colorOf:${id},marks:${id}\\?\\.marks\\?\\?${esc(names.newMarks)}\\(\\)`)
+    find('inkOf', "the host's ink (the site's `ink:` argument to the tree builder)",
+      `${esc(names.buildTree)}\\(${id},${id}\\.handlers,\\{marks:${id},ink:(${id})\\(`)
+  } else {
+    // The element renderer takes the marks collector's result as a default parameter, after the colour resolver.
+    find('buildTree', 'the element renderer (tree, handlers, colorOf = ..., marks = newMarks(), ...)',
+      `function (${id})\\(${id},${id},${id}=${id},${id}=${esc(names.newMarks)}\\(\\)`)
+    find('colorOf', "the colour resolver (the element renderer's default colorOf)",
+      `function ${esc(names.buildTree)}\\(${id},${id},${id}=(${id}),`)
+    // Where the shared site draws, the ink (the host's computed colour and font) comes from a helper called on the host.
+    find('inkOf', "the host's ink (the argument the site passes the element renderer before liftsHoverCards)",
+      `${esc(names.buildTree)}\\(${id},${id}\\.handlers,${id},${id},(${id})\\(${id}\\),${id}\\.liftsHoverCards`)
+  }
   // Writes the collected hover rules into one <style>, wrapped in @media (hover:hover).
   find('applyHover', 'the hover-rule writer (one <style> with @media (hover:hover){...})',
     `function (${id})\\((${id}),(${id})\\)\\{let ${id}=\\3\\.length===0\\?"":\`@media \\(hover:hover\\)\\{`)
@@ -301,7 +319,7 @@ function appZoom() {
 }
 
 function dumpTree() {
-  const work = mkdtempSync(join(tmpdir(), 'effortless-render-'))
+  const work = mkdtempSync(join(tmpdir(), 'pilot-render-'))
   try {
     for (const part of ['.claude-plugin', 'hooks', 'commands', 'sounds', 'types', 'tsconfig.json'])
       if (existsSync(join(REPO, part))) cpSync(join(REPO, part), join(work, part), { recursive: true })
@@ -372,7 +390,7 @@ function findChrome() {
 
 /** Headless Chrome over the DevTools protocol: the app's zoom as the device scale factor, wait for the page, shoot. */
 async function screenshot(pageUrl, png) {
-  const profile = mkdtempSync(join(tmpdir(), 'effortless-render-chrome-'))
+  const profile = mkdtempSync(join(tmpdir(), 'pilot-render-chrome-'))
   const chrome = spawn(findChrome(), ['--headless=new', '--remote-debugging-port=0', `--user-data-dir=${profile}`, '--hide-scrollbars', '--no-first-run', '--no-default-browser-check', 'about:blank'], { stdio: 'ignore' })
   try {
     const portFile = join(profile, 'DevToolsActivePort')

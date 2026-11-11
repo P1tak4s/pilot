@@ -19,7 +19,7 @@ type Params = {
   options: Record<string, string>
   // Buttons pressed on the band, by key, before the dump (e.g. dash-settings opens the settings panel).
   press: string[]
-  // An /effortless subcommand run before the dump (e.g. 'cold' or 'swamp' to show a test band).
+  // An /pilot subcommand run before the dump (e.g. 'cold' or 'swamp' to show a test band).
   command: string
   // --trace MS: press on the drawn band itself and log the tree after every act and every 20 ms of the clock for MS,
   // so the page can replay each redraw in time (the patched copy logs RIG-RENDER on each ui.render of the band).
@@ -31,8 +31,8 @@ const BAND = {
   component: 'AbovePrompt',
   props: { hasSurvey: false, isWorking: P.working, maxRows: 12, bodyColumns: P.bodyColumns, scroll: { offset: 0, bodyRows: 12 }, view: {} },
 } as const
-const DESK_BAND = { plugin: 'effortless', surface: 'desktop', ...BAND } as never
-const IDLE_BAND = { plugin: 'effortless', surface: 'desktop', ...BAND, props: { ...BAND.props, isWorking: false } } as never
+const DESK_BAND = { plugin: 'pilot', surface: 'desktop', ...BAND } as never
+const IDLE_BAND = { plugin: 'pilot', surface: 'desktop', ...BAND, props: { ...BAND.props, isWorking: false } } as never
 
 describe('render rig', () => {
   test('dump the desktop band', { options: { layout: 'default', ...P.options } } as never, async ($, on) => {
@@ -49,7 +49,7 @@ describe('render rig', () => {
     }) as never)
     on('store.delete', ((_$: unknown, e: { key: string }) => (kept.delete(e.key), { value: undefined })) as never)
     on('store.keys', (() => ({ value: [...kept.keys()] })) as never)
-    mock.env(on, { EFFORTLESS_MODEL_UI: '1' })
+    mock.env(on, { PILOT_MODEL_UI: '1' })
     on('prompt.submit', (_$, e) => ({ text: e.text }))
     on('ui.status', () => ({ value: undefined }))
     on('session.messages', () => ({ value: [] }) as never)
@@ -108,7 +108,7 @@ describe('render rig', () => {
       void $.prompt.submit({ text: 'and now the next one', wait: false, origin: { kind: 'composer' } } as never)
       await clock.advance(50)
     }
-    if (P.command) await $.command.run({ command: 'effortless', args: P.command } as never)
+    if (P.command) await $.command.run({ command: 'pilot', args: P.command } as never)
     if (P.trace) {
       const band = await $.ui.mount(DESK_BAND)
       let t = 0

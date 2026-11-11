@@ -1,5 +1,5 @@
 {
- "about": "Labelled prompts for /effortless bench. `ok` lists every effort a careful person would accept for the message on `current.model`; the first is the cheapest acceptable. `context` is what the judge sees of the conversation (the last user message and the end of the assistant's reply). Cases marked holdout were written before the judge prompts were tuned on the rest and are never tuned against; report both sets.",
+ "about": "Labelled prompts for /pilot bench. `ok` lists every effort a careful person would accept for the message on `current.model`; the first is the cheapest acceptable. `context` is what the judge sees of the conversation (the last user message and the end of the assistant's reply). Cases marked holdout were written before the judge prompts were tuned on the rest and are never tuned against; report both sets.",
  "cases": [
   {
    "id": "t01",

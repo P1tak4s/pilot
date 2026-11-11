@@ -52,12 +52,17 @@ line moves under it while Claude works. In the terminal, if `/pilot` says the mo
 { "env": { "CLAUDE_CODE_ENABLE_FUNCTION_HOOKS": "1" } }
 ```
 
-**Already use effortless or ponytail?** pilot does both jobs. Switch them off, or two bars draw above the prompt:
-`/plugin`, pick them, **Disable**.
+**Another plugin already draws a line above the prompt?** Switch it off, or two bars draw there: `/plugin`, pick it,
+**Disable**.
 
 **Faster judge (optional).** With a [TypeSafe](https://typesafe.ai) key, Jev picks the effort in about 0.25 s instead
 of Haiku's 1 s. Run `/plugin configure pilot@pilot` and paste it under *TypeSafe API key*. Without a key, Haiku judges
 on your own Claude login.
+
+**Code on your API credits (optional).** Run `/plugin configure pilot@pilot`, set *API worker* to `anthropic`,
+`openai` (needs the `codex` CLI) or `other` (any Anthropic-compatible endpoint such as `https://openrouter.ai/api`),
+and paste the key under *API key*. The chat then hands substantial coding jobs to a headless agent that runs on that key,
+not on your subscription, and checks the result itself. Commits and deploys stay with the chat.
 
 **Update:** press **Update** when the line says a new version is out, or run `/plugin marketplace update pilot`, then `/reload-plugins`.
 **Remove:** `/plugin uninstall pilot@pilot`.
@@ -74,7 +79,7 @@ on your own Claude login.
 | 12m | the prompt cache runs out soon (shown only when low) |
 | ● 91% · max High **Save** | close to a usage limit; the limit guard is on. **Save** caps lower |
 | **Compact** | shown once the context passes 30%; opens a bar for an optional note, then Haiku writes the summary |
-| ● v2.0.4 out **Update** | a newer pilot is out; **Update** installs it, then reload the window |
+| ● v2.0.6 out **Update** | a newer pilot is out; **Update** installs it, then reload the window |
 | ⚙ | settings |
 | › | folds the line down to the effort word |
 
@@ -84,8 +89,7 @@ on your own Claude login.
 
 ## Credits
 
-Built on [effortless](https://github.com/HeyCubit/effortless) by HeyCubit (MIT). Code rules from
-[ponytail](https://github.com/DietrichGebert/ponytail) (MIT). Security skill by Cloudflare (MIT). Writing skills by Siqi Chen, Hardik Pandya and Mohamed Abdallah (MIT).
+Code rules from [ponytail](https://github.com/DietrichGebert/ponytail) (MIT). Security skill by Cloudflare (MIT). Writing skills by Siqi Chen, Hardik Pandya and Mohamed Abdallah (MIT).
 
 ## License
 

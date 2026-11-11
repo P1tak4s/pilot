@@ -7,6 +7,7 @@ import { ART_COLUMNS, ART_FRAME_MS, ART_MIN_WIDTH, ART_ROWS, type ArtKind, artFr
 import { MARK_SVG } from './brand-mark'
 import { accent, setLight, setTheme, themedEls, type ThemeName, THEMES, tintHex } from './theme'
 import { GUIDE_PROMPT } from './guide'
+import { apiGuideBlock, apiWorkerCall, canFallback, configureApiWorker, isFallbackOn, loadApiFile, noteChatMode, readFallback, setFallback, startApiWorker } from './apiWorker'
 import { PILL_H, stepsFromTodos, thinkingSvg, THINK_W, withTaskCreated, withTaskUpdated } from './progress'
 
 // The ladders the two sliders walk, cheapest first.
@@ -124,7 +125,7 @@ const compactAsk = atom({ plugin: 'pilot', key: 'compactAsk' } as const, false)
 // What is typed in that field. Kept here, not in state: a write per key would redraw the bar under the cursor.
 let compactNote = ''
 // The person closed the cold band; it comes back the next time the cache goes cold.
-// The test pane of /effortless try pane.
+// The test pane of /pilot try pane.
 // Where a handoff is: null idle, writing (the handoff turn runs), clearing (clear and resend).
 const handoffStage = atom({ plugin: 'pilot', key: 'handoffStage' } as const, null)
 // The handoff bar above the prompt, open with the choice shown in it, or null.
@@ -168,7 +169,7 @@ const swampHiddenAt = atom({ plugin: 'pilot', key: 'swampHiddenAt' } as const, n
 // The first-run setup is not done: the footer offers "Setup".
 const setupPending = atom({ plugin: 'pilot', key: 'setupPending' } as const, false)
 // Why the judge the person picked is failing (Haiku stands in), or null when it works.
-// The effortless settings panel is open above the prompt.
+// The pilot settings panel is open above the prompt.
 const settingsOpen = atom({ plugin: 'pilot', key: 'settingsOpen' } as const, false)
 // What was changed in the panel and not saved yet, by field; Save applies it all, the cross drops it.
 // The user and plugin skills, read when the settings panel opens.
@@ -183,7 +184,7 @@ const CARDS: readonly { id: SettingsCard; title: string; about: string }[] = [
   { id: 'effort', title: 'Effort', about: 'How hard Claude thinks. The slider tips close calls; Min and Max are hard limits.' },
   { id: 'model', title: 'Model', about: "Whether a simple prompt may run on a cheaper model, and which model writes a compaction." },
   { id: 'handoff', title: 'Handoff & alerts', about: 'The full handoff skill, when to suggest compacting, and which alerts show.' },
-  { id: 'show', title: 'Customize', about: 'How effortless looks and which parts it shows. Uninstall removes it.' },
+  { id: 'show', title: 'Customize', about: 'How pilot looks and which parts it shows. Uninstall removes it.' },
   { id: 'judge', title: 'Judge', about: 'Haiku judges prompts and handoffs. Add Jev for quicker effort calls. Test checks it answers.' },
 ]
 // The Model card: the two ways to run. Effort follows the judge in both.
@@ -294,14 +295,14 @@ async function introShows($: EngineInterface, kind: string): Promise<boolean> {
 // The mark beside a card's title, sized to one line of text.
 const TITLE_MARK_SIZE = 16
 
-/** A card's title with the effortless mark where the ✦ stood; the ✦ stays where the surface draws no images. */
+/** A card's title with the pilot mark where the ✦ stood; the ✦ stays where the surface draws no images. */
 function markTitle(els: { Box: unknown; Text: unknown; Svg?: unknown }, key: string, color: string, title: string, mark = MARK_SVG) {
   const { Box: B, Text: T, Svg: S } = els as unknown as { Box: (p: Record<string, unknown>) => unknown; Text: (p: Record<string, unknown>) => unknown; Svg?: (p: Record<string, unknown>) => unknown }
   if (!S) return <T key={key} color={color} bold wrap="truncate">{title}</T>
   return (
     <B key={key} flexDirection="row" alignItems="center" flexShrink={1} minWidth={0}>
       <B flexShrink={0} marginRight={1} alignItems="center">
-        <S source={mark} alt="effortless" width={TITLE_MARK_SIZE} height={TITLE_MARK_SIZE} />
+        <S source={mark} alt="pilot" width={TITLE_MARK_SIZE} height={TITLE_MARK_SIZE} />
       </B>
       <T color={color} bold wrap="truncate">{title.replace(/^✦ /, '')}</T>
     </B>
@@ -447,12 +448,12 @@ const JEV_TASK =
   'question about how to do something that needs no tools is low. "think hard", "ultrathink" or "be thorough" means ' +
   'at least high; "quick question" means low.'
 
-/** The skill or custom command a typed "/name args" runs, or nothing for the app's own commands and effortless's. */
+/** The skill or custom command a typed "/name args" runs, or nothing for the app's own commands and pilot's. */
 async function typedSkill($: EngineInterface, text: string): Promise<{ name: string; description: string } | undefined> {
   const name = text.trim().slice(1).split(/\s+/)[0]
   if (!name) return undefined
   const found = (await $.command.list().catch(() => [])).find(c => c.name === name)
-  if (!found || !['user', 'plugin', 'mcp'].includes(found.source) || found.plugin === 'effortless') return undefined
+  if (!found || !['user', 'plugin', 'mcp'].includes(found.source) || found.plugin === 'pilot') return undefined
   return { name, description: found.description ?? '' }
 }
 
@@ -622,7 +623,7 @@ export type JudgeConfig = {
   modelAuto: 'on' | 'off'
   /** on: every subagent the chat sends off gets an effort picked by the judge before it starts. */
   helpers: 'on' | 'off'
-  /** The accent colour of everything effortless draws: the brand violet, Claude orange or cherry-blossom rose. */
+  /** The accent colour of everything pilot draws: the brand violet, Claude orange or cherry-blossom rose. */
   theme: ThemeName
   /** auto: light when Claude Code's own theme is light. dark and light fix it. */
   appearance: 'auto' | 'dark' | 'light'
@@ -631,7 +632,7 @@ export type JudgeConfig = {
 /** The swamp thresholds the settings offer, in percent of the context window. */
 export const SWAMP_STEPS = [10, 20, 30, 40, 50, 60, 70, 80] as const
 
-/** The parts of effortless a person can switch off: the footer's (setup) and the progress bar's (setup, settings).
+/** The parts of pilot a person can switch off: the footer's (setup) and the progress bar's (setup, settings).
  * The context (swamp), running-low (hot) and cold-cache alerts can be switched off for good in Customize; the judge-down
  * alert always shows. Each alert also has its own ✕. */
 export const HIDEABLE = ['handoff', 'timer', 'reason', 'progress', 'sounds', 'swamp', 'hot', 'cold'] as const
@@ -885,7 +886,7 @@ async function checkHandoff($: EngineInterface, next: string) {
   }
 }
 
-// The judge benchmark (/effortless bench): labelled prompts in bench/judge-cases.json, each run through the same
+// The judge benchmark (/pilot bench): labelled prompts in bench/judge-cases.json, each run through the same
 // pipeline a real prompt takes (a short follow-up keeps the current effort, anything else goes to a judge).
 export type BenchCase = { id: string; kind: string; holdout?: boolean; current: Pick; context?: string; message: string; ok: Effort[] }
 export type BenchAnswer = { id: string; judge: string; effort?: Effort; by?: string; why?: string; sure?: number; model?: ModelKey; ms: number; tokens: number }
@@ -1030,8 +1031,8 @@ async function sessionModel($: EngineInterface): Promise<ModelKey> {
 }
 
 
-// Proof log: every verdict, /effort and request effort, written to EFFORTLESS_LOG, or to
-// %TEMP%/effortless-proof.log while the mod is loaded from a dev-mods folder. Off otherwise.
+// Proof log: every verdict, /effort and request effort, written to PILOT_LOG, or to
+// %TEMP%/pilot-proof.log while the mod is loaded from a dev-mods folder. Off otherwise.
 const proofLines: string[] = []
 // An environment variable does not change while the session runs, so each one is asked for once. The
 // engine wants the name spelled out in every $.env.get call, hence one small getter per variable.
@@ -1044,10 +1045,10 @@ let askJevUrl: EnvAsk
 let askJevKey: EnvAsk
 let askUserProfile: EnvAsk
 let askHome: EnvAsk
-const envLog = ($: EngineInterface) => (askLog = askLog ?? $.env.get('EFFORTLESS_LOG'))
+const envLog = ($: EngineInterface) => (askLog = askLog ?? $.env.get('PILOT_LOG'))
 const envTemp = ($: EngineInterface) => (askTemp = askTemp ?? $.env.get('TEMP'))
 const envTmpdir = ($: EngineInterface) => (askTmpdir = askTmpdir ?? $.env.get('TMPDIR'))
-const envModelUi = ($: EngineInterface) => (askModelUi = askModelUi ?? $.env.get('EFFORTLESS_MODEL_UI'))
+const envModelUi = ($: EngineInterface) => (askModelUi = askModelUi ?? $.env.get('PILOT_MODEL_UI'))
 const envJevUrl = ($: EngineInterface) => (askJevUrl = askJevUrl ?? $.env.get('JEV_URL'))
 const envJevKey = ($: EngineInterface) => (askJevKey = askJevKey ?? $.env.get('TYPESAFE_API_KEY'))
 const envUserProfile = ($: EngineInterface) => (askUserProfile = askUserProfile ?? $.env.get('USERPROFILE'))
@@ -1058,7 +1059,7 @@ async function proofPath($: EngineInterface): Promise<string | undefined> {
   if (named) return named
   if (!$.plugin.root.replace(/\\/g, '/').includes('/dev-mods/')) return undefined
   const tmp = (await envTemp($)) ?? (await envTmpdir($)) ?? '/tmp'
-  return `${tmp}/effortless-proof.log`
+  return `${tmp}/pilot-proof.log`
 }
 async function proof($: EngineInterface, line: string) {
   const path = await proofPath($).catch(() => undefined)
@@ -1073,7 +1074,7 @@ async function proof($: EngineInterface, line: string) {
 let engineEffort: string | undefined
 // The pick was carried over from the last chat (the store), not made in this one: the app's effort may overrule it.
 let pickCarried = false
-// The last main-chat request, for /effortless debug: what the app asked for and what the mod sent instead, if anything.
+// The last main-chat request, for /pilot debug: what the app asked for and what the mod sent instead, if anything.
 let lastRequest: { index: number; appModel: string; appEffort: unknown; model: string; effort: unknown; at: number } | null = null
 // The slash command this mod last typed into the prompt box.
 let lastTyped = ''
@@ -1213,7 +1214,7 @@ export function mostlyCached(usage: unknown): boolean {
 }
 
 /** Save mode on or off: Auto stays at medium or below until the limit resets. The hot band's button and
- *  /effortless save. Says what it did. */
+ *  /pilot save. Says what it did. */
 async function toggleSave($: EngineInterface): Promise<string> {
   const saving = (await read($, saveUntil)) !== null
   const heat = await read($, hot)
@@ -1223,7 +1224,7 @@ async function toggleSave($: EngineInterface): Promise<string> {
 }
 
 /** Below this a cold cache costs too little to warn about: the next message rereads the chat at full price once. */
-const COLD_MIN_TOKENS = 150_000
+const COLD_MIN_TOKENS = 400_000
 
 /** The context's tokens when the cold band is worth showing: the cache is cold, the band not closed, and the chat big
  * enough that rereading it matters. Null otherwise, and while the size is not known yet. */
@@ -1295,7 +1296,7 @@ async function restoreCache($: EngineInterface) {
 }
 const rememberCache = ($: EngineInterface) => update($, cacheMemo, () => ({ expires: cacheExpires, ttl: cacheTtl, last: lastResponseAt }))
 /** Writes the minutes left when they changed; the session's one timer (started in session.start) calls it. */
-// What /effortless swamp shows as a test: a swamped chat's context.
+// What /pilot swamp shows as a test: a swamped chat's context.
 const SWAMP_TOKENS = 150_000
 // Closed, the band stays away until the context has grown this much more.
 const SWAMP_REGROW = 50_000
@@ -1453,12 +1454,12 @@ async function setTurnBusy($: EngineInterface, busy: boolean) {
   if (was !== busy) $.ui.invalidate('ui.render')
 }
 
-/** A context share to draw the bars with instead of the real one, from ~/.claude/effortless-preview.json
+/** A context share to draw the bars with instead of the real one, from ~/.claude/pilot-preview.json
  * ({"contextPercent": 45}), so how a level looks can be checked on screen without filling a chat. No file, no change. */
 async function previewPercent($: EngineInterface): Promise<number | undefined> {
   const home = (await envUserProfile($)) ?? (await envHome($))
   if (!home) return undefined
-  const text = await $.fs.read(`${home}/.claude/effortless-preview.json`).catch(() => '')
+  const text = await $.fs.read(`${home}/.claude/pilot-preview.json`).catch(() => '')
   if (!text) return undefined
   try {
     const n = Number((JSON.parse(text) as { contextPercent?: unknown }).contextPercent)
@@ -1530,7 +1531,7 @@ async function cacheMinutes($: EngineInterface): Promise<number> {
 /** A response came back: the cache is warm again for its whole lifetime, and the countdown restarts. */
 let usageLogged = false
 let lastResponseAt: number | undefined
-// Main-conversation replies this copy has seen, for /effortless debug.
+// Main-conversation replies this copy has seen, for /pilot debug.
 let repliesSeen = 0
 async function cacheTouched($: EngineInterface, usage: unknown) {
   const now = await $.clock.now()
@@ -1713,7 +1714,7 @@ export function handoffWhat(choice: HandoffChoice, skill: string): { by: string;
   return { by, then }
 }
 
-/** What a handoff fork came to, in a few words for /effortless debug: its reason when it wrote nothing. */
+/** What a handoff fork came to, in a few words for /pilot debug: its reason when it wrote nothing. */
 export function forkOutcome(result: unknown, ms: number): string {
   const took = `${(ms / 1000).toFixed(1)}s`
   if (result instanceof Error) return `threw: ${result.message.slice(0, 120)} (${took})`
@@ -1815,13 +1816,13 @@ async function loadInstalledSkills($: EngineInterface) {
   const installed = await $.command.list().catch(() => [])
   // At most 25, handoff-like ones first: a picker with hundreds of options is more than the slot takes.
   const names = [...new Set(installed.filter(c => c.source === 'user' || c.source === 'plugin').map(c => c.name))]
-    .filter(name => !name.startsWith('effortless'))
+    .filter(name => !name.startsWith('pilot'))
     .sort((a, b) => Number(!/handoff/i.test(a)) - Number(!/handoff/i.test(b)) || a.localeCompare(b))
     .slice(0, 25)
   await update($, installedSkills, () => names)
 }
 
-/** Opens the effortless settings panel above the prompt: the app does not let a plugin open its /plugin dialog. */
+/** Opens the pilot settings panel above the prompt: the app does not let a plugin open its /plugin dialog. */
 async function openPluginSettings($: EngineInterface) {
   await loadInstalledSkills($)
   await update($, settingsOpen, () => true)
@@ -2117,7 +2118,7 @@ function tokens(n: number): string {
 const share = (part: number, whole: number) => `${Math.round((part / whole) * 100)} %`
 
 /**
- * What /effortless stats answers: what the prompts Auto steered cost, measured, split by kind and by effort,
+ * What /pilot stats answers: what the prompts Auto steered cost, measured, split by kind and by effort,
  * and what the judge took. No "saved" figure: what a prompt would have cost at another effort is not known,
  * since effort mostly changes how many tool calls it makes. Cost is in tokens weighted as priced (WEIGHT).
  */
@@ -2300,13 +2301,13 @@ function effortOf(v: Snap, inUse: ModelKey): Effort | undefined {
   return EFFORTS.includes(v.shownByApp as Effort) ? (v.shownByApp as Effort) : undefined
 }
 
-// For /effortless debug: how often the app asked for the band, when, and the last error drawing it.
-// /effortless probe N: 1 a bare box, 2 the panel's frame and header only, 3 the panel without pickers or fields.
+// For /pilot debug: how often the app asked for the band, when, and the last error drawing it.
+// /pilot probe N: 1 a bare box, 2 the panel's frame and header only, 3 the panel without pickers or fields.
 let probeLevel = 0
 let renderCalls = 0
 let lastRenderProps = ''
 let lastRenderBranch = ''
-// Every time the app asked for the band, with what it sent, written to ~/.claude/effortless-render-<chat>.log each second
+// Every time the app asked for the band, with what it sent, written to ~/.claude/pilot-render-<chat>.log each second
 // (the last 300): how often the band is really redrawn in the app, which the render rig cannot see (hover flicker).
 const renderLog: string[] = []
 let renderLogWritten = 0
@@ -2316,7 +2317,7 @@ async function writeRenderLog($: EngineInterface) {
   renderLogWritten = renderLog.length
   const home = (await envUserProfile($)) ?? (await envHome($))
   // One file per chat: a shared file was overwritten whole by whichever chat drew last.
-  if (home) await $.fs.write(`${home}/.claude/effortless-render-${loadedSession}.log`, renderLog.slice(-300).join('\n') + '\n').catch(() => undefined)
+  if (home) await $.fs.write(`${home}/.claude/pilot-render-${loadedSession}.log`, renderLog.slice(-300).join('\n') + '\n').catch(() => undefined)
 }
 let lastRenderAt = 0
 let loadedSession = '-'
@@ -2326,10 +2327,10 @@ let firstDrawLogged = false
 let drawsTimed = 0
 let lastRenderError = ''
 let sessionStarted = 0
-// When the app's SessionStart came and what it said, for /effortless debug: a cold band that shows late is either a
+// When the app's SessionStart came and what it said, for /pilot debug: a cold band that shows late is either a
 // late signal or a redraw the app did not take.
 let classicStart: { at: number; said: string } | null = null
-// /effortless cold shows the band whatever the chat's size, until the next response (a test of the band itself).
+// /pilot cold shows the band whatever the chat's size, until the next response (a test of the band itself).
 let coldForced = false
 let handoffTimer: { cancel: () => void } | undefined
 const HANDOFF_POLL_MS = 1000
@@ -2371,7 +2372,7 @@ function markWarm(modelId: string, usage: unknown, now: number) {
 }
 const isWarm = (key: ModelKey, now: number) => (warmUntil[key] ?? 0) > now
 
-// When Haiku last wrote a compaction (for /effortless debug).
+// When Haiku last wrote a compaction (for /pilot debug).
 let lastHaikuCompact = 0
 
 // The moving art's timer: one at a time, blitting the next frame to the band that drew it. A blit the surface refuses
@@ -2556,7 +2557,7 @@ function binSvg(color: string): string {
 }
 const GITHUB_MARK = 'M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z'
 const GITHUB_MARK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="#ffffff" d="${GITHUB_MARK}"/></svg>`
-const REPO_URL = 'https://github.com/HeyCubit/effortless'
+const REPO_URL = 'https://github.com/P1tak4s/pilot'
 // GitHub's own dark ground, and the width of the panel that carries the star link on the Updated card.
 const GITHUB_BLACK = '#000000'
 const STAR_PANEL = 32
@@ -2581,7 +2582,7 @@ function uninstallButton($: EngineInterface, els: ReturnType<EngineInterface['ui
       $.ui.invalidate('ui.render')
       return
     }
-    $.ui.toast('effortless is uninstalled. Thanks for trying it.')
+    $.ui.toast('pilot is uninstalled.')
     const reloaded = await $.command.run({ command: 'reload-plugins', args: RELOAD_ARGS } as never).then(() => true, () => false)
     if (!reloaded) await typeCommand($, `/reload-plugins ${RELOAD_ARGS}`)
   }
@@ -2642,14 +2643,12 @@ function handoffCardTree($: EngineInterface, e: RenderInput<'AssistantMessage'> 
   )
 }
 
-/** Where the mod learns of a new version: the newest entry of public.json on main, written only by tools/publish.sh.
- * Releases between publishes (releases.json) reach the dev channel, never this card. */
-// The API, not raw.githubusercontent.com: the raw file sits behind a cache that lagged two releases behind.
-const WHATS_NEW_URL = 'https://heycubit.github.io/effortless/whats-new/'
+/** What changed in each release: the public repo's commits, one per release. */
+const WHATS_NEW_URL = 'https://github.com/P1tak4s/pilot/commits/main'
 /** The site, the link Share copies for a friend. */
-const SITE_URL = 'https://heycubit.github.io/effortless/'
-/** Where a bug is reported: a page on the site that opens a prefilled GitHub issue. */
-const REPORT_BUG_URL = 'https://heycubit.github.io/effortless/report/'
+const SITE_URL = 'https://pilot-plugin.vercel.app'
+/** Where a bug is reported: a new GitHub issue on the public repo, the version filled in. */
+const REPORT_BUG_URL = 'https://github.com/P1tak4s/pilot/issues/new'
 /** This install's version, read from its plugin.json at session start: the report page fills it in. */
 let ownVersion = ''
 /** How often a session looks for a new version, and how long ✕ on the offer keeps it away. */
@@ -2665,17 +2664,6 @@ export function isNewer(a: string, b: string): boolean {
   for (let i = 0; i < 3; i++) if ((pa[i] ?? 0) !== (pb[i] ?? 0)) return (pa[i] ?? 0) > (pb[i] ?? 0)
   return false
 }
-/** The newest release in releases.json's text (newest first), or nothing when it does not parse. */
-export function latestRelease(text: string): { version: string; note: string } | undefined {
-  try {
-    const list = JSON.parse(text) as { version?: unknown; note?: unknown }[]
-    const top = Array.isArray(list) ? list[0] : undefined
-    if (!top || typeof top.version !== 'string' || !/^\d+\.\d+\.\d+$/.test(top.version)) return undefined
-    return { version: top.version, note: typeof top.note === 'string' ? top.note : '' }
-  } catch {
-    return undefined
-  }
-}
 /** Whether ✕ still keeps `version` away at `now`: the same version, put away less than UPDATE_SNOOZE_MS ago. */
 export function updateSnoozed(hidden: { version: string; at: number } | null, version: string, now: number): boolean {
   return !!hidden && hidden.version === version && now - hidden.at < UPDATE_SNOOZE_MS
@@ -2690,13 +2678,10 @@ async function installedVersion($: EngineInterface): Promise<string | undefined>
   }
 }
 /** Looks for a newer version and offers it, unless ✕ put that version away less than UPDATE_SNOOZE_MS ago. */
-// What the last check found, for /effortless update to say (installed, git, web, marketplace).
+// What the last check found, for /pilot update to say (installed, git, web, marketplace).
 let lastUpdateCheck = 'not checked yet'
-/** public.json as it is on stable, read with git: a depth-1 fetch without file contents into a small repo of its own, then
- * the one file. Git has no cache in the way, unlike the host's web fetch, and works on the dev channel too. */
 /** The newest public pilot: the version in plugin.json on main of the public repo, over the web; where that fails,
- * the marketplace's own copy after `claude plugin marketplace update pilot`. (Was HeyCubit/effortless's public.json,
- * which stays at 1.71 and so never offered pilot anything.) */
+ * the marketplace's own copy after `claude plugin marketplace update pilot`. */
 const PILOT_PLUGIN_URL = 'https://api.github.com/repos/P1tak4s/pilot/contents/.claude-plugin/plugin.json?ref=main'
 export function pluginVersion(text: string): { version: string; note: string } | undefined {
   try {
@@ -2864,7 +2849,7 @@ async function runUpdate($: EngineInterface, card: UpdateCard) {
     if (r.exitCode !== 0) throw new Error(updateFailure(r.stderr || r.stdout) || `claude ${args.join(' ')} failed`)
   }
   try {
-    // This install's own marketplace: effortless for users, effortless-dev on the dev channel.
+    // This install's own marketplace.
     await step(['plugin', 'marketplace', 'update', pluginId($).split('@')[1]])
     await step(['plugin', 'update', pluginId($)])
   } catch (error) {
@@ -2921,10 +2906,10 @@ function updateCardTree($: EngineInterface, e: RenderInput<'AbovePrompt'>, card:
   const { Box, Text, Svg, Button, Link } = themedEls($.ui.resolve(e))
   const landed = card.stage === 'done'
   const words = {
-    offer: [`✦ effortless ${card.version} is out`, card.note || 'A new version is ready.'],
+    offer: [`✦ pilot ${card.version} is out`, card.note || 'A new version is ready.'],
     updating: ['✦ Updating…', `Getting ${card.version}. Takes a few seconds.`],
     done: [`✦ Updated to ${card.version}`, card.detail ?? 'Loaded in this chat.'],
-    failed: ['✦ Update failed', card.detail ?? 'Try again, or run claude plugin update effortless@effortless.'],
+    failed: ['✦ Update failed', card.detail ?? `Try again, or run claude plugin update ${pluginId($)}.`],
   }[card.stage]
   const share = async () => {
     const r = await $.ui.copy({ text: SITE_URL, surface: e.surface }).catch(() => ({ isCopied: false as const }))
@@ -2997,11 +2982,11 @@ function updateCardTree($: EngineInterface, e: RenderInput<'AbovePrompt'>, card:
       backgroundColor={landed ? UPDATED_BG : BRAND_BG} borderStyle="round" borderColor={landed ? UPDATED_EDGE : BRAND_EDGE}>
       {landed ? (
         <Box key="update-glow" position="absolute" top={-1} left={0} bottom={-1}>
-          <Svg source={UPDATED_GLOW_SVG} alt="effortless" width={FROST_WIDTH * 2} height={FROST_HEIGHT * 2} />
+          <Svg source={UPDATED_GLOW_SVG} alt="pilot" width={FROST_WIDTH * 2} height={FROST_HEIGHT * 2} />
         </Box>
       ) : (
         <Box key="update-art" position="absolute" top={-1} right={0} bottom={-1}>
-          <Svg source={card.stage === 'updating' ? HANDOFF_SVG : BRAND_SVG} alt={card.stage === 'updating' ? 'updating' : 'effortless'} width={FROST_WIDTH * 2} height={FROST_HEIGHT * 2} />
+          <Svg source={card.stage === 'updating' ? HANDOFF_SVG : BRAND_SVG} alt={card.stage === 'updating' ? 'updating' : 'pilot'} width={FROST_WIDTH * 2} height={FROST_HEIGHT * 2} />
         </Box>
       )}
       <Box key="update-words" position="relative" flexDirection="column" flexShrink={1} minWidth={0}>
@@ -3149,7 +3134,7 @@ const KIND_SLIDE_DELAY_MS = 70
 let kindFlipAt = 0
 /** How long the bar's edges glow after Auto is switched on. */
 const AUTO_GLOW_MS = 2600
-const AUTO_GLOW_W = 760
+const AUTO_GLOW_W = 1100
 const AUTO_GLOW_H = 37
 /** The image starts inside the band's side borders but over its top and bottom ones (the layer's top and bottom are the
  * band's outer edge, its sides the inner), so the line is inset 0.75 px at the sides and 1.75 px at top and bottom: 1 px
@@ -3161,9 +3146,8 @@ const AUTO_GLOW_H = 37
 /** The cold band's rim: the Auto glow's light in ice, breathing slowly for as long as the band shows, so a cold chat
  * looks alive rather than parked. Placed by the clock (inPhase), so a redraw picks up where the breath was. */
 const COLD_GLOW_MS = 4200
-/** This install's id: effortless@effortless for users, effortless@effortless-dev on the dev channel. Read off the
- * cache path (…/plugins/cache/<marketplace>/effortless/<version>). */
-const pluginId = ($: EngineInterface) => `effortless@${$.plugin.root.match(/cache[\\/]([^\\/]+)[\\/]/)?.[1] ?? 'effortless'}`
+/** This install's id, pilot@pilot for users. Read off the cache path (…/plugins/cache/<marketplace>/pilot/<version>). */
+const pluginId = ($: EngineInterface) => `pilot@${$.plugin.root.match(/cache[\\/]([^\\/]+)[\\/]/)?.[1] ?? 'pilot'}`
 
 /** The rim in the brand's violet while the judge decides: it lights up and stays at full while it thinks, then fades from
  * full once the verdict is in. Two images, each placed by the clock on every draw (inPhase): the app swaps the whole
@@ -3259,7 +3243,7 @@ let autoFlipAt = 0
 let helpersSeen: string | undefined
 let helpersFlipAt = 0
 
-/** The dashboard: what effortless is doing, and Auto, Handoff and settings. The slot above the prompt at rest. */
+/** The dashboard: what pilot is doing, and Auto, Handoff and settings. The slot above the prompt at rest. */
 async function dashboardBand($: EngineInterface, e: RenderInput<'AbovePrompt'>) {
   const els = themedEls($.ui.resolve(e))
   const { Box, Text, Button } = els
@@ -3392,7 +3376,7 @@ async function dashboardBand($: EngineInterface, e: RenderInput<'AbovePrompt'>) 
         // Auto off: the art goes, so the bar reads as resting, not working.
         v.auto ? (
           <Box key="dash-art" position="absolute" top={-1} right={0} bottom={-1}>
-            <Svg source={DASH_SVG} alt="effortless" width={FROST_WIDTH * 2} height={FROST_HEIGHT * 2} />
+            <Svg source={DASH_SVG} alt="pilot" width={FROST_WIDTH * 2} height={FROST_HEIGHT * 2} />
           </Box>
         ) : null
       ) : null}
@@ -3415,7 +3399,7 @@ async function dashboardBand($: EngineInterface, e: RenderInput<'AbovePrompt'>) 
           {Svg ? (
             // The mark, as it is, where the ✦ stood; faded while Auto is off.
             <Box key="dash-mark" flexShrink={0} marginRight={1} alignItems="center">
-              <Svg source={v.auto ? MARK_SVG : DASH_MARK_OFF} alt="effortless" width={DASH_MARK_SIZE} height={DASH_MARK_SIZE} />
+              <Svg source={v.auto ? MARK_SVG : DASH_MARK_OFF} alt="pilot" width={DASH_MARK_SIZE} height={DASH_MARK_SIZE} />
             </Box>
           ) : <Text color={v.auto ? ACCENT : DASH_DIM} bold>✦ </Text>}
           {/* A new effort shows in violet, then white (effortFlash): plain text in the app's font. An animated image of the
@@ -3704,7 +3688,7 @@ async function effortRows($: EngineInterface, e: RenderInput<'AbovePrompt'>, opt
   const { auto, autoModel, current, judging, wanted, shownByApp } = v
   const inUse = v.modelNow ?? (await sessionModel($))
   const effortNow = effortOf(v, inUse)
-  // The model row is paused: effort first. EFFORTLESS_MODEL_UI=1 brings it back.
+  // The model row is paused: effort first. PILOT_MODEL_UI=1 brings it back.
   const showModel = (await envModelUi($)) === '1'
 
   const setEffort = (level: Effort) => () => pickEffort($, level)
@@ -3869,7 +3853,7 @@ async function helperEffortOf($: EngineInterface, id: string): Promise<Effort | 
   return match.effort
 }
 
-/** Counts one request of a helper the judge steered, for /effortless stats. */
+/** Counts one request of a helper the judge steered, for /pilot stats. */
 async function helperTally($: EngineInterface, usage: Parameters<typeof weighted>[0]) {
   await update($, saved, old => {
     const t = asSpent(old)
@@ -3988,15 +3972,19 @@ export const register: Register = (on, options) => {
   on('prompt.context', async ($, e, next) => {
     const result = await next(e)
     const saved = (await $.store.get('guide').catch(() => null)) as string | null
-    return (saved ?? (guideOn ? 'on' : 'off')) === 'on' ? { ...result, blocks: [...result.blocks, { name: 'effortless-guide', text: GUIDE_PROMPT }] } : result
+    const api = apiGuideBlock()
+    const blocks = (saved ?? (guideOn ? 'on' : 'off')) === 'on' ? [{ name: 'pilot-guide', text: GUIDE_PROMPT }] : []
+    return blocks.length || api ? { ...result, blocks: [...result.blocks, ...blocks, ...(api ? [api] : [])] } : result
   })
+  // Coding jobs on the person's own API key (Anthropic, OpenAI or an Anthropic-compatible endpoint).
+  configureApiWorker(options)
   applyTheme()
   pluginOptions = options
   on('session.compact', async ($, e, next) => {
     // A subagent's own compaction, the session's model by choice: Claude Code's own.
     if (e.agentId !== undefined || config.compactWith !== 'haiku') return next(e)
     // Ahead-of-time summaries would be written by the chat's model and then not used: none.
-    if (e.trigger === 'precompute') return { skip: 'effortless compacts with Haiku when it is time' }
+    if (e.trigger === 'precompute') return { skip: 'pilot compacts with Haiku when it is time' }
     // The transcript comes with the event; read it if not (a test's engine hands none).
     const messages = Array.isArray(e.messages) && e.messages.length ? e.messages : await $.session.messages().catch(() => [])
     const got = await haikuCompaction($, messages, e.instructions).catch((error: unknown) => ({ fail: String(error).slice(0, 80) }))
@@ -4009,7 +3997,7 @@ export const register: Register = (on, options) => {
       messages: [
         {
           role: 'user' as const,
-          text: `This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation, written by Haiku 5.5 for effortless.\n\n${got.text}\n\nContinue the conversation from where it left off without asking the user any further questions.`,
+          text: `This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation, written by Haiku 5.5 for pilot.\n\n${got.text}\n\nContinue the conversation from where it left off without asking the user any further questions.`,
           toolUses: [],
         },
       ],
@@ -4045,8 +4033,12 @@ export const register: Register = (on, options) => {
       // The setup is the slim settings, opened once with a welcome line: the defaults are already good, one look is enough.
       setupDone !== true ? $.store.set('setupDone', true).then(() => $.store.set('welcome', true)).then(() => update($, settingsOpen, () => true)) : null,
     ])
-    // The command file lists /effortless before the session starts; registering it here makes plain /effortless the
+    // The command file lists /pilot before the session starts; registering it here makes plain /pilot the
     // mod's own command afterwards, instead of the file run as a skill.
+    void loadApiFile($).catch(() => undefined).then(() => startApiWorker($)).catch(() => undefined)
+    void readFallback($).then(() => {
+      if (isFallbackOn()) $.ui.toast('pilot: this chat runs on your API key (paid per use). /pilot api off to go back.')
+    }).catch(() => undefined)
     void $.command.register({ name: 'pilot', description: 'pilot: settings, debug, handoff, setup, bench, auto, stats.' }).catch(() => undefined)
     void $.fs.read(`${$.plugin.root}/.claude-plugin/plugin.json`).then(t => { ownVersion = String(JSON.parse(String(t)).version ?? '') }).catch(() => undefined)
     void afterLoad($).catch(() => undefined)
@@ -4063,6 +4055,12 @@ export const register: Register = (on, options) => {
   // A chat opened again later (resume, fork): the mod starts afresh and has seen no response, so the countdown would
   // stay blank on a cache long cold. The app says how long ago the last response was, and whether the cache has
   // likely lapsed: the countdown starts from there.
+  // The chat's permission mode with every prompt, so the API worker runs no job in plan mode.
+  on('classic.UserPromptSubmit', async ($, e, next) => {
+    noteChatMode((e as { permission_mode?: unknown }).permission_mode)
+    return next(e)
+  })
+
   on('classic.SessionStart', async ($, e, next) => {
     const result = await next(e)
     const r = e as { source?: string; seconds_since_last_response?: number; prompt_cache_likely_expired?: boolean }
@@ -4111,13 +4109,13 @@ export const register: Register = (on, options) => {
     return result
   })
 
-  // /effortless is a command file in the plugin (commands/pilot.md), so the app lists it before the session has
+  // /pilot is a command file in the plugin (commands/pilot.md), so the app lists it before the session has
   // started; this hook answers it, and the file's text never reaches the model. Both spellings the app may use.
   on('command.run', async ($, e, next) => {
     if (e.command !== 'pilot' && e.command !== 'pilot:pilot') return next(e)
     const wanted = await read($, suggestion)
     const arg = e.args.trim().toLowerCase()
-    // /effortless card offer|updating|done|failed: draws that update card with made-up text, to look at it before a publish.
+    // /pilot card offer|updating|done|failed: draws that update card with made-up text, to look at it before a publish.
     if (arg.startsWith('card')) {
       const stage = arg.slice(4).trim() || 'done'
       const stages = ['offer', 'updating', 'done', 'failed']
@@ -4125,19 +4123,19 @@ export const register: Register = (on, options) => {
         await update($, updateCard, () => null)
         return { text: 'The preview card is gone.' }
       }
-      if (!stages.includes(stage)) return { text: 'Use /effortless card offer, updating, done, failed or off.' }
+      if (!stages.includes(stage)) return { text: 'Use /pilot card offer, updating, done, failed or off.' }
       const version = (await installedVersion($)) ?? '1.0.0'
       await update($, updateCard, () => ({
         stage: stage as UpdateCard['stage'], version, note: 'A short release note, as users see it.', at: Date.now(),
         ...(stage === 'failed' ? { detail: 'A made-up failure, for the look of the card.' } : {}),
       }))
       $.ui.invalidate('ui.render')
-      return { text: `The update card shows its "${stage}" look (a preview). /effortless card off clears it.` }
+      return { text: `The update card shows its "${stage}" look (a preview). /pilot card off clears it.` }
     }
     if (arg === 'update') {
       await checkUpdate($).catch(() => undefined)
       const card = await read($, updateCard)
-      if (!card || card.stage === 'done') return { text: `effortless ${(await installedVersion($)) ?? ''} is the newest (${lastUpdateCheck}).` }
+      if (!card || card.stage === 'done') return { text: `pilot ${(await installedVersion($)) ?? ''} is the newest (${lastUpdateCheck}).` }
       void runUpdate($, card)
       return { text: `Updating to ${card.version}…` }
     }
@@ -4148,7 +4146,7 @@ export const register: Register = (on, options) => {
         await update($, agentFiles, () => demoFiles(now))
         await update($, agentSteps, () => demoSteps())
       }
-      await $.ui.open({ id: 'effortless-agents', title: 'Agents' })
+      await $.ui.open({ id: 'pilot-agents', title: 'Agents' })
       return { text: arg === 'agents demo' ? 'The agent panel shows sample agents (a preview).' : 'The agent panel is open.' }
     }
     if (arg === 'auto') {
@@ -4210,7 +4208,7 @@ export const register: Register = (on, options) => {
           `hidden: ${config.hide.join(',') || 'nothing'}`,
           `model: ${config.modelAuto === 'on' ? `cheaper when it can, now ${routed ?? 'the chat\'s'}` : 'always the chat\'s'}`,
           lastRequest
-            ? `last request: app asked ${lastRequest.appModel} at ${lastRequest.appEffort ?? 'none'}, sent ${lastRequest.model} at ${lastRequest.effort ?? 'none'}${lastRequest.model === lastRequest.appModel && lastRequest.effort === lastRequest.appEffort ? ' (unchanged)' : ' (changed by effortless)'}, ${ago(lastRequest.at)}`
+            ? `last request: app asked ${lastRequest.appModel} at ${lastRequest.appEffort ?? 'none'}, sent ${lastRequest.model} at ${lastRequest.effort ?? 'none'}${lastRequest.model === lastRequest.appModel && lastRequest.effort === lastRequest.appEffort ? ' (unchanged)' : ' (changed by pilot)'}, ${ago(lastRequest.at)}`
             : 'last request: none yet',
           `compact with: ${config.compactWith}${lastHaikuCompact ? `, last by Haiku ${ago(lastHaikuCompact)}` : ''}`,
         ].join(' | ') +
@@ -4221,7 +4219,7 @@ model used: ${lastRequest ? `${lastRequest.model} at ${lastRequest.effort ?? 'no
     }
     if (arg === 'settings') {
       await openPluginSettings($)
-      return { text: 'The effortless settings are open above the prompt.' }
+      return { text: 'The pilot settings are open above the prompt.' }
     }
     if (arg === 'setup') {
       await $.store.set('welcome', true)
@@ -4229,12 +4227,18 @@ model used: ${lastRequest ? `${lastRequest.model} at ${lastRequest.effort ?? 'no
       $.ui.invalidate('ui.render')
       return { text: 'The pilot setup is open above the prompt.' }
     }
+    // /pilot api on|off: the chat itself on the Anthropic API key, e.g. while the usage limit is out.
+    if (arg === 'api' || arg.startsWith('api ')) {
+      const want = arg.slice(3).trim()
+      if (want !== 'on' && want !== 'off') return { text: `The chat runs on ${isFallbackOn() ? 'your API key' : 'your subscription'}. Use /pilot api on or /pilot api off.` }
+      return { text: await setFallback($, want === 'on') }
+    }
     if (arg === 'bench') {
       const cases = (JSON.parse(await $.fs.read(`${$.plugin.root}/bench/judge-cases.json`)) as { cases: BenchCase[] }).cases
       const answers = await runBench($, cases)
       const report = benchReport(cases, answers)
       const stamp = new Date(await $.clock.now()).toISOString().slice(0, 16).replace(/[:T]/g, '-')
-      const out = `effortless-bench-${stamp}`
+      const out = `pilot-bench-${stamp}`
       await $.fs.write(`${out}.json`, JSON.stringify({ cases: cases.length, answers }, null, 2))
       await $.fs.write(`${out}.md`, report)
       return { text: `${report}
@@ -4271,7 +4275,7 @@ Saved to ${out}.md and .json` }
     const wantsEffort = await read($, isAuto)
     const wantsModel = await read($, isAutoModel)
     // A typed slash command is judged only when it is a skill or a custom command (what the person added); the app's own
-    // (/compact, /clear, /model) and effortless's never are. The judge is told what the command is, since its name alone says little.
+    // (/compact, /clear, /model) and pilot's never are. The judge is told what the command is, since its name alone says little.
     const slash = e.text.trim().startsWith('/')
     const skill = slash && byPerson ? await typedSkill($, e.text) : undefined
     if (!byPerson || (slash && !skill) || (!wantsEffort && !wantsModel)) return next(e)
@@ -4387,7 +4391,7 @@ Saved to ${out}.md and .json` }
         }
         if (wantsModel && verdict.model !== inUse && verdict.model !== declined) {
           await update($, suggestion, () => verdict.model)
-          $.ui.toast(`Suggestion: switch to ${verdict.model}? /effortless switch or /effortless keep`)
+          $.ui.toast(`Suggestion: switch to ${verdict.model}? /pilot switch or /pilot keep`)
         } else if (verdict.model === inUse) {
           await update($, suggestion, () => null)
         }
@@ -4457,7 +4461,7 @@ Saved to ${out}.md and .json` }
       if (picked && picked.by !== 'manual' && result.usage) await tally($, picked.effort, result.usage)
       return result
     }
-    // A helper the judge picked an effort for at its spawn runs every request at it. Haiku takes no effort.
+    // A helper the judge picked an effort for at its spawn runs every request at it. Haiku is left alone: its effort comes from the agent definition.
     if (e.agentId !== undefined && config.helpers === 'on' && typeof e.effort === 'string' && keyOf(e.model) !== 'haiku') {
       const effort = await helperEffortOf($, e.agentId)
       if (effort) {
@@ -4468,7 +4472,7 @@ Saved to ${out}.md and .json` }
       }
     }
     const p = await read($, pick)
-    // Haiku takes no effort: decided by the model this request names, never by a stored pick.
+    // Haiku is left alone (its effort comes from the agent definition): decided by the model this request names, never by a stored pick.
     if (!p || keyOf(e.model) === 'haiku' || !cacheSafe(e.model)) return yield* send(e)
     // Auto off: the app's own effort goes out. A pick the judge made while Auto was on is not the person's choice, and
     // with the app already on the effort they want, the mod would never see a change to give way to.
@@ -4499,7 +4503,7 @@ Saved to ${out}.md and .json` }
   // The only desktop UI: the effort in use, as purple text in the prompt footer, under the chat box, and a small
   // button that switches Auto off and on. A Button cannot be coloured and the footer draws no outline or tint, so
   // plain Text is what is purple. While the judge decides it says "Deciding…", for a moment after Auto switches the level it says
-  // "Low → High", and while Auto is off it says "Off" in the dim colour. Auto is switched with /effortless auto.
+  // "Low → High", and while Auto is off it says "Off" in the dim colour. Auto is switched with /pilot auto.
   on('ui.render', { component: 'SessionMode' }, async ($, e, next) => {
     // The dashboard look keeps all of this in the band above the prompt; the app's own footer shows.
     if (e.surface !== 'desktop' || config.layout === 'default') return next(e)
@@ -4644,6 +4648,8 @@ Saved to ${out}.md and .json` }
   })
 
   on('tool.call', async ($, e, next) => {
+    const worker = await apiWorkerCall($, e)
+    if (worker) return worker
     const id = e.agentId
     const input = e as unknown as Record<string, unknown>
     const touch = touchOf(e.tool, input)
@@ -4672,7 +4678,7 @@ Saved to ${out}.md and .json` }
     return result
   })
 
-  on('ui.render', { component: 'Pane', requestId: 'effortless-agents' }, async ($, e) => {
+  on('ui.render', { component: 'Pane', requestId: 'pilot-agents' }, async ($, e) => {
     const els = themedEls($.ui.resolve(e))
     const agents = await read($, agentsState)
     const open = await read($, agentsOpen)
@@ -4715,7 +4721,7 @@ Saved to ${out}.md and .json` }
 
   // Above the prompt: the terminal's rows (effort steps, Auto, and the model row when it is switched on).
   // On desktop nothing is drawn here, except the question when the judge suggests another model.
-  // Draws the bands and the settings panel. Counted and guarded so /effortless debug can say whether the app asks
+  // Draws the bands and the settings panel. Counted and guarded so /pilot debug can say whether the app asks
   // for it at all and whether drawing failed: an error here otherwise only leaves the slot empty.
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     // Setup changes a reload cut off are saved from here: the reloaded plugin draws before anything else runs.
@@ -4882,7 +4888,7 @@ Saved to ${out}.md and .json` }
       if (probeLevel === 1) {
         return (
           <Box key="probe" borderStyle="round" borderColor={BRAND_EDGE} paddingX={1}>
-            <Text>effortless probe 1: a bare box</Text>
+            <Text>pilot probe 1: a bare box</Text>
           </Box>
         )
       }
@@ -4893,7 +4899,7 @@ Saved to ${out}.md and .json` }
       const headRow = (kids: unknown[]) => term
         ? <Box key="settings-head" flexDirection="row" flexWrap="wrap" justifyContent="space-between" columnGap={2}>{kids}</Box>
         : kids
-      const bugUrl = ownVersion ? `${REPORT_BUG_URL}?effortless=${encodeURIComponent(ownVersion)}` : REPORT_BUG_URL
+      const bugUrl = ownVersion ? `${REPORT_BUG_URL}?body=${encodeURIComponent(`pilot ${ownVersion}`)}` : REPORT_BUG_URL
       return (
         // The dashboard's look: the neutral band and its quiet edge, purple only on the star, no art behind the rows (it
         // made them busy). The entrance
@@ -4906,7 +4912,7 @@ Saved to ${out}.md and .json` }
             <Box key="settings-bar" position="absolute" top={-1} left={0} right={0} height={3.5} overflow="hidden" backgroundColor={DASH_HEAD}>
               {/* The mark, big, tilted and cut off by the bar's edges, behind the title and the buttons. */}
               <Box key="settings-bar-mark" position="absolute" top={-2} right={20} marginTop={1}>
-                <Svg source={SETTINGS_MARK} alt="effortless mark" width={140} height={140} />
+                <Svg source={SETTINGS_MARK} alt="pilot mark" width={140} height={140} />
               </Box>
               {/* A hairline along the bar's bottom: a one-pixel image stretched across (a Box cannot draw one pixel). */}
               <Box key="settings-rule" position="absolute" bottom={0} left={0} right={0} height={1} alignItems="flex-end">
@@ -5106,20 +5112,23 @@ Saved to ${out}.md and .json` }
     // band's Handoff; Go keeps the choice for next time. Enter presses Go once the bar holds the keyboard.
     // The compact bar: an optional note for the summary, then Compact (or Enter).
     if (e.surface !== 'terminal' && (await read($, compactAsk))) {
-      const { Input } = themedEls($.ui.resolve(e))
+      const els = themedEls($.ui.resolve(e))
+      const { Input } = els
       const go = () => compactCold($, compactNote)
-      // Built like the slim bar: one row, real Buttons holding their words. The old drawn pill, blank overlay buttons
-      // and absolute art rendered in VS Code as a tall violet block with blank white and blue buttons.
+      const ctx = lastContext && lastContext.window ? Math.round(lastContext.percent) : null
+      const by = config.compactWith === 'haiku' ? 'Haiku summarises' : 'the chat model summarises'
+      // The app's webview knows no position (absolute art stacked up as a tall block), draws every Button in one of two
+      // styles (variant is dropped) and wraps rows by default. So: no border or fill, like the slim bar; one row that
+      // never wraps; the mark inline; the field's own submit button as the one filled action, so "Compact" is said once.
       return (
-        <Box key="compact-bar" flexDirection="row" alignItems="center" columnGap={1} paddingX={1}
-          backgroundColor={BRAND_BG} borderStyle="round" borderColor={BRAND_EDGE}>
-          <Text bold color={ACCENT}>✦ Compact</Text>
-          <Button key="compact-to-handoff" plain dimColor onPress={async () => { await update($, compactAsk, () => false); await openHandoffBar($) }}>{' Handoff instead '}</Button>
-          <Box key="compact-field" flexGrow={1} flexShrink={1} minWidth={6}>
-            <Input key="compact-note" placeholder="Summary (optional)"
+        <Box key="compact-bar" flexDirection="row" flexWrap="nowrap" alignItems="center" columnGap={1} paddingX={1}>
+          {markTitle(els, 'compact-title', ACCENT, 'Compact')}
+          <Text key="compact-what" dimColor wrap="truncate">{ctx !== null ? `${ctx}% context · ${by}` : by}</Text>
+          <Box key="compact-field" flexGrow={1} flexShrink={1} minWidth={16}>
+            <Input key="compact-note" placeholder="What to keep (optional)" submitLabel="Compact ↵"
                 onInput={v => { compactNote = v }} onSubmit={v => { compactNote = v; void go() }} />
           </Box>
-          <Button key="compact-go" variant="secondary" onPress={go}>{' Compact ↵ '}</Button>
+          <Button key="compact-to-handoff" plain dimColor onPress={async () => { await update($, compactAsk, () => false); await openHandoffBar($) }}>{' Handoff '}</Button>
           <Button key="compact-close" plain dimColor onPress={() => update($, compactAsk, () => false)}>{' ✕ '}</Button>
         </Box>
       )
@@ -5163,9 +5172,8 @@ Saved to ${out}.md and .json` }
       if (e.surface === 'terminal') return terminalPanel($, e, 'handoff-bar', '⇥ Handoff', line, controls)
       // One plain row like the slim bar: the absolute art and action layer drew as a tall block in VS Code.
       return (
-        <Box key="handoff-bar" flexDirection="row" alignItems="center" columnGap={1} paddingX={1}
-          backgroundColor={BRAND_BG} borderStyle="round" borderColor={BRAND_EDGE}>
-          <Text color={ACCENT} bold>⇥ Handoff</Text>
+        <Box key="handoff-bar" flexDirection="row" flexWrap="nowrap" alignItems="center" columnGap={1} paddingX={1}>
+          {markTitle(themedEls($.ui.resolve(e)), 'handoff-title', ACCENT, 'Handoff')}
           <Text key="handoff-what" dimColor wrap="truncate">{line}</Text>
           <Box flexGrow={1} />
           <Button key="handoff-to-compact" plain dimColor onPress={async () => { await closeHandoffBar($); await openCompact($, e) }}>{' Compact instead '}</Button>
@@ -5201,7 +5209,7 @@ Saved to ${out}.md and .json` }
         <Box key="setup" position="relative" flexDirection="row" alignItems="center" paddingX={1} overflow="hidden"
           backgroundColor={BRAND_BG} borderStyle="round" borderColor={BRAND_EDGE}>
           <Box key="setup-art" position="absolute" top={-1} right={0} bottom={-1}>
-            <Svg source={BRAND_SVG} alt="effortless" width={FROST_WIDTH * 2} height={FROST_HEIGHT * 2} />
+            <Svg source={BRAND_SVG} alt="pilot" width={FROST_WIDTH * 2} height={FROST_HEIGHT * 2} />
           </Box>
           <Box key="setup-words" position="relative" flexDirection="column" flexShrink={1} minWidth={0}>
             <Text color={ACCENT} bold wrap="truncate">
@@ -5352,12 +5360,16 @@ Saved to ${out}.md and .json` }
       const saving = (await read($, saveUntil)) !== null
       const window = heat.kind === 'five_hour' ? '5h' : 'weekly'
       const resets = resetLabel(heat.resetsAt, await $.clock.now())
+      // The limit is out: the chat can go on on the Anthropic key, if one is set.
+      const useKey = heat.percent >= 100 && canFallback()
       if (e.surface === 'terminal')
         return terminalBand($, e, {
           key: 'hot', kind: 'hot', color: EMBER, bg: EMBER_BG, edge: EMBER_EDGE, title: 'Running hot',
           detail: `${Math.round(heat.percent)}% of your ${window} limit used${resets ? ` · resets ${resets}` : ''}`,
           buttons: [
-            <Button key="hot-save" variant="primary" hotkey="s" label={saving ? 'Save mode on' : 'Save mode'}
+            ...(useKey ? [<Button key="hot-key" variant="primary" hotkey="k" label={isFallbackOn() ? 'On API key' : 'Use API key'}
+              onPress={async () => { $.ui.toast(`pilot: ${await setFallback($, !isFallbackOn())}`); $.ui.invalidate('ui.render') }} />] : []),
+            <Button key="hot-save" variant={useKey ? undefined : 'primary'} hotkey="s" label={saving ? 'Save mode on' : 'Save mode'}
               onPress={async () => { $.ui.toast(`pilot: ${await toggleSave($)}`) }} />,
             <Button key="hot-close" plain role="dismiss" label="✕" onPress={() => closeHot($, heat)} />,
           ],
@@ -5377,9 +5389,13 @@ Saved to ${out}.md and .json` }
           <Text wrap="truncate">{`${Math.round(heat.percent)}% of your ${window} limit used${resets ? ` · resets ${resets}` : ''}`}</Text>
           <Box flexGrow={1} minWidth={30} />
           <Box key="hot-actions" position="absolute" top={0} right={1} bottom={0} flexDirection="row" gap={1} alignItems="center">
+            {useKey ? (
+              <Button key="hot-key" variant="primary" label={isFallbackOn() ? 'On API key' : 'Use API key'}
+                onPress={async () => { $.ui.toast(`pilot: ${await setFallback($, !isFallbackOn())}`); $.ui.invalidate('ui.render') }} />
+            ) : null}
             <Button
               key="hot-save"
-              variant="primary"
+              variant={useKey ? undefined : 'primary'}
               label={saving ? 'Save mode on' : 'Save mode'}
               onPress={async () => {
                 $.ui.toast(`pilot: ${await toggleSave($)}`)
@@ -5392,7 +5408,7 @@ Saved to ${out}.md and .json` }
     }
     // A handoff or compact running or just done: said above the prompt, where it is seen at once.
     // A new version: offered, updating, or just updated (gone after UPDATED_CARD_MS or ✕). Desktop only; the terminal
-    // has /effortless update.
+    // has /pilot update.
     const savedAt = (await $.store.get('settingsSavedAt').catch(() => null)) as number | null
     if (typeof savedAt === 'number') {
       const since = (await $.clock.now().catch(() => Date.now())) - savedAt
@@ -5411,7 +5427,10 @@ Saved to ${out}.md and .json` }
     const compacting = await read($, isCompacting)
     const coldTokens = compacting ? null : await coldWorth($)
     if (coldTokens !== null) {
-      const line = `Next message rereads ${kTokens(coldTokens)} tokens at full price.`
+      // The slot the app gives the band is narrower than it was (it has a frame of its own now): the long line ended in
+      // an ellipsis in front of the buttons, so a narrow band says the same in fewer words.
+      const narrow = typeof e.props.bodyColumns === 'number' && e.props.bodyColumns < 115
+      const line = narrow ? `Rereads ${kTokens(coldTokens)} tokens at full price.` : `Next message rereads ${kTokens(coldTokens)} tokens at full price.`
       if (e.surface === 'terminal')
         return terminalBand($, e, {
           key: 'cold', kind: 'cold', color: ICE, bg: ICE_BG, edge: ICE_EDGE, title: 'Chat went cold',

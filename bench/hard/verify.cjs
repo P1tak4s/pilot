@@ -10,7 +10,7 @@ const jobsAt = args.indexOf('--jobs')
 const JOBS = jobsAt >= 0 ? Number(args[jobsAt + 1]) : 4
 const file = path.resolve(args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--jobs') || path.join(__dirname, 'tasks.json'))
 const tasks = file.endsWith('.json') ? JSON.parse(fs.readFileSync(file, 'utf8')) : require(file)
-const B = path.join(process.env.TEMP || os.tmpdir(), 'effbench-hard-verify')
+const B = path.join(process.env.TEMP || os.tmpdir(), 'pilotbench-hard-verify')
 fs.rmSync(B, { recursive: true, force: true })
 fs.mkdirSync(path.join(B, 'pristine'), { recursive: true })
 cp.execFileSync('git', ['-C', REPO, 'archive', 'HEAD', '-o', path.join(B, 'src.tar')])

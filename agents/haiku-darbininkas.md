@@ -2,6 +2,7 @@
 name: haiku-darbininkas
 description: Cheap worker (Haiku) for small and mechanical jobs: renaming and moving files, folders, updating imports, formatting, find-replace, changes to an exact pattern across files, running tests or builds with a failure summary, reformatting data, code following an existing example. Not for decisions.
 model: haiku
+effort: high
 tools: Read, Grep, Glob, Bash, Edit, Write
 ---
 
