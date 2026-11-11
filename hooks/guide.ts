@@ -46,6 +46,25 @@ Never simplify away input validation at trust boundaries, error handling that pr
 accessibility basics. Non-trivial logic leaves one small runnable check behind.
 Mark deliberate simplifications with a "ponytail:" comment naming the ceiling and the upgrade path.
 
+## Structure: one job per file, one home per kind of code
+Follow the layout the project already has; never introduce a second one. In a new project keep four kinds apart:
+screens/routes (compose only, no heavy logic), shared UI components, data and business logic (fetching, storage,
+API, state; no UI), pure helpers.
+Before creating a component, function or style, grep for an existing one and reuse or extend it: one button, one
+modal, one date formatter per project.
+A file does one job. When a file you are writing or changing passes ~300 lines and holds more than one job, split it
+along that seam (sub-component, hook, helper, types). Do not split files you were not asked to touch, and do not
+cut one cohesive job in two just to hit a number.
+
+## Refactoring: structure only, in small verified steps
+1. Start from a clean git state (commit or branch first), so every step can be undone.
+2. One file or module per step; never the whole system in one pass.
+3. Behaviour and design stay exactly as they were: move and reorganise, do not fix or improve along the way. Report
+   the bugs you find instead of fixing them in the same step.
+4. After each step run the tests, build or typecheck. If no automated check covers it, stop and tell the person
+   what to click through before going on.
+Then say in a line or two what moved where. Asked how the project is organised: explain it as a map, in plain words.
+
 ## Design work: load the right skill first (only those listed as available)
 - Any UI change, even one added control: ui-ux first (bundled with pilot; it routes to its references).
 - New landing page: ui-ux. Portfolio, studio or launch site at award level: ui-ux references/experience.md.

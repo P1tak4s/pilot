@@ -8,6 +8,8 @@ A Claude Code plugin that spends your usage where it matters. Website: **[pilot-
 - **Working guide.** Claude hands reading, searching, mechanical edits and test runs to Haiku subagents, keeps
   judgement for itself, writes the shortest code that works, loads the right design skill and the security skill
   when a change needs them.
+- **Tidy structure.** One job per file, one home per kind of code, a search for an existing component before a new
+  one, and refactoring in small steps that never change behaviour.
 - **Fable plans, Opus builds.** On a model above Opus, the chat plans, decides and checks the diff, and an Opus
   subagent writes the code. Money, security and migrations stay with the chat's model.
 - **One quiet line** above the prompt: effort, model, context, and a thin line that moves while Claude works.
